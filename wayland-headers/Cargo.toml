@@ -1,0 +1,4 @@
+[package]
+name = "wayland-headers"
+version.workspace = true
+edition.workspace = true

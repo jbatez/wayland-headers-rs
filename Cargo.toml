@@ -1,0 +1,9 @@
+[workspace]
+resolver = "3"
+members = [
+    "wayland-headers",
+]
+
+[workspace.package]
+version = "0.1.0+1.24.0"
+edition = "2024"
