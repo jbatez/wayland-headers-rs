@@ -3,5 +3,9 @@ name = "wayland-headers"
 version.workspace = true
 edition.workspace = true
 
+[dependencies.libc]
+version = "0.2"
+default-features = false
+
 [features]
 std = []
