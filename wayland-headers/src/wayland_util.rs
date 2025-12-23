@@ -11,6 +11,7 @@ pub struct wl_object {
 
 pub const WL_MAX_MESSAGE_SIZE: usize = 4096;
 
+#[derive(Clone, Copy)]
 #[repr(C)]
 pub struct wl_message {
     pub name: *const c_char,
@@ -18,6 +19,7 @@ pub struct wl_message {
     pub types: *mut *const wl_interface,
 }
 
+#[derive(Clone, Copy)]
 #[repr(C)]
 pub struct wl_interface {
     pub name: *const c_char,
@@ -28,6 +30,7 @@ pub struct wl_interface {
     pub events: *const wl_message,
 }
 
+#[derive(Clone, Copy)]
 #[repr(C)]
 pub struct wl_list {
     pub prev: *mut wl_list,
@@ -43,6 +46,7 @@ unsafe extern "C" {
     pub fn wl_list_insert_list(list: *mut wl_list, other: *mut wl_list);
 }
 
+#[derive(Clone, Copy)]
 #[repr(C)]
 pub struct wl_array {
     pub size: usize,
