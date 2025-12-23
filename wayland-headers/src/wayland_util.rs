@@ -110,7 +110,7 @@ pub type wl_dispatcher_func_t = Option<
 pub type wl_log_func_t = Option<
     unsafe extern "C" fn(
         fmt: *const c_char,
-        args: *const c_void, // TODO: VaList
+        args: *mut c_void, // TODO: VaList
     ),
 >;
 
