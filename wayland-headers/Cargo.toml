@@ -1,7 +1,8 @@
 [package]
 name = "wayland-headers"
 version.workspace = true
-edition.workspace = true
+edition = "2024"
+rust-version = "1.85.0"
 
 [dependencies.libc]
 version = "0.2"
