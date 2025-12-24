@@ -27,3 +27,30 @@ impl Iterator for WlListForEachIter {
         }
     }
 }
+
+pub struct WlListForEachSafeIter {
+    next: *const wl_list,
+    head: *const wl_list,
+}
+
+impl WlListForEachSafeIter {
+    pub unsafe fn new(head: *const wl_list) -> Self {
+        Self {
+            next: unsafe { (*head).next },
+            head,
+        }
+    }
+}
+
+impl Iterator for WlListForEachSafeIter {
+    type Item = NonNull<wl_list>;
+    fn next(&mut self) -> Option<Self::Item> {
+        let pos = self.next;
+        self.next = unsafe { (*pos).next };
+        if pos != self.head {
+            NonNull::new(pos.cast_mut())
+        } else {
+            None
+        }
+    }
+}

@@ -82,7 +82,24 @@ macro_rules! wl_list_for_each {
 }
 pub use wl_list_for_each;
 
-// TODO: wl_list_for_each_safe
+// TODO: Document.
+#[macro_export]
+macro_rules! wl_list_for_each_safe {
+    ($pos:ident: *const $Container:ty, $head:expr, $member:ident, $body:expr) => {{
+        for $pos in $crate::_macro_helpers::WlListForEachSafeIter::new($head) {
+            let $pos = $crate::wl_container_of!($pos.as_ptr(), *const $Container, $member);
+            $body
+        }
+    }};
+    ($pos:ident: *mut $Container:ty, $head:expr, $member:ident, $body:expr) => {{
+        for $pos in $crate::_macro_helpers::WlListForEachSafeIter::new($head) {
+            let $pos = $crate::wl_container_of!($pos.as_ptr(), *mut $Container, $member);
+            $body
+        }
+    }};
+}
+pub use wl_list_for_each_safe;
+
 // TODO: wl_list_for_each_reverse
 // TODO: wl_list_for_each_reverse_safe
 
@@ -169,64 +186,89 @@ mod tests {
     #[link(name = "wayland-client")]
     unsafe extern "C" {}
 
+    struct Foo {
+        _m: i32,
+        link: wl_list,
+    }
+
+    impl Foo {
+        fn new() -> Self {
+            Self {
+                _m: 0,
+                link: wl_list {
+                    prev: null_mut(),
+                    next: null_mut(),
+                },
+            }
+        }
+    }
+
     #[test]
     fn test_wl_container_of() {
-        struct S {
-            _m1: i32,
-            m2: i32,
-        }
+        let mut foo = Foo::new();
+        assert_eq!(
+            unsafe { wl_container_of!(&foo.link, *const Foo, link) },
+            &raw const foo
+        );
+        assert_eq!(
+            unsafe { wl_container_of!(&foo.link, *mut Foo, link) },
+            &raw mut foo
+        );
+    }
 
+    fn with_test_list<F>(f: F)
+    where
+        F: FnOnce(&mut wl_list, [&mut Foo; 3]),
+    {
         unsafe {
-            let mut s = S { _m1: 0, m2: 0 };
-            assert_eq!(wl_container_of!(&s.m2, *const S, m2), &raw const s);
-            assert_eq!(wl_container_of!(&s.m2, *mut S, m2), &raw mut s);
+            let mut list = MaybeUninit::uninit();
+            wl_list_init(list.as_mut_ptr());
+            let list = &mut *list.as_mut_ptr();
+
+            let mut e1 = Foo::new();
+            wl_list_insert(list, &mut e1.link);
+
+            let mut e2 = Foo::new();
+            wl_list_insert(&mut e1.link, &mut e2.link);
+
+            let mut e3 = Foo::new();
+            wl_list_insert(&mut e2.link, &mut e3.link);
+
+            f(list, [&mut e1, &mut e2, &mut e3]);
         }
     }
 
     #[test]
     fn test_wl_list_for_each() {
-        struct Foo {
-            val: i32,
-            link: wl_list,
-        }
-
-        impl Foo {
-            fn new(val: i32) -> Self {
-                Self {
-                    val,
-                    link: wl_list {
-                        prev: null_mut(),
-                        next: null_mut(),
-                    },
-                }
-            }
-        }
-
-        unsafe {
-            let mut list = MaybeUninit::uninit();
-            wl_list_init(list.as_mut_ptr());
-            let mut list = list.assume_init();
-
-            let mut e1 = Foo::new(1);
-            wl_list_insert(&mut list, &mut e1.link);
-
-            let mut e2 = Foo::new(2);
-            wl_list_insert(&mut e1.link, &mut e2.link);
-
-            let mut e3 = Foo::new(3);
-            wl_list_insert(&mut e2.link, &mut e3.link);
-
-            let mut expected = 0;
-            wl_list_for_each!(foo: *const Foo, &list, link, {
-                expected += 1;
-                assert_eq!((*foo).val, expected);
+        with_test_list(|list, elems| unsafe {
+            let mut i = 0;
+            wl_list_for_each!(foo: *const Foo, list, link, {
+                assert_eq!(foo, elems[i] as *const _);
+                i += 1;
             });
 
-            let mut expected = 0;
-            wl_list_for_each!(foo: *mut Foo, &list, link, {
-                expected += 1;
-                assert_eq!((*foo).val, expected);
+            let mut i = 0;
+            wl_list_for_each!(foo: *mut Foo, list, link, {
+                assert_eq!(foo, elems[i] as *mut _);
+                i += 1;
             });
-        }
+        });
+    }
+
+    #[test]
+    fn test_wl_list_for_each_safe() {
+        with_test_list(|list, elems| unsafe {
+            let mut i = 0;
+            wl_list_for_each_safe!(foo: *const Foo, list, link, {
+                assert_eq!(foo, elems[i] as *const _);
+                i += 1;
+            });
+
+            let mut i = 0;
+            wl_list_for_each_safe!(foo: *mut Foo, list, link, {
+                assert_eq!(foo, elems[i] as *mut _);
+                i += 1;
+            });
+        });
     }
 }
