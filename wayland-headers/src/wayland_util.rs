@@ -46,6 +46,46 @@ unsafe extern "C" {
     pub fn wl_list_insert_list(list: *mut wl_list, other: *mut wl_list);
 }
 
+// TODO: Document.
+#[macro_export]
+macro_rules! wl_container_of {
+    ($ptr:expr, *const $Container:ty, $member:ident) => {{
+        let ptr: *const _ = $ptr;
+        let ptr = ptr as *mut $crate::_macro_helpers::u8;
+        let offset = $crate::_macro_helpers::offset_of!($Container, $member);
+        ptr.sub(offset) as *const $Container
+    }};
+    ($ptr:expr, *mut $Container:ty, $member:ident) => {{
+        let ptr: *const _ = $ptr;
+        let ptr = ptr as *mut $crate::_macro_helpers::u8;
+        let offset = $crate::_macro_helpers::offset_of!($Container, $member);
+        ptr.sub(offset) as *mut $Container
+    }};
+}
+pub use wl_container_of;
+
+// TODO: Document.
+#[macro_export]
+macro_rules! wl_list_for_each {
+    ($pos:ident: *const $Container:ty, $head:expr, $member:ident, $body:expr) => {{
+        for $pos in $crate::_macro_helpers::WlListForEachIter::new($head) {
+            let $pos = $crate::wl_container_of!($pos.as_ptr(), *const $Container, $member);
+            $body
+        }
+    }};
+    ($pos:ident: *mut $Container:ty, $head:expr, $member:ident, $body:expr) => {{
+        for $pos in $crate::_macro_helpers::WlListForEachIter::new($head) {
+            let $pos = $crate::wl_container_of!($pos.as_ptr(), *mut $Container, $member);
+            $body
+        }
+    }};
+}
+pub use wl_list_for_each;
+
+// TODO: wl_list_for_each_safe
+// TODO: wl_list_for_each_reverse
+// TODO: wl_list_for_each_reverse_safe
+
 #[derive(Clone, Copy)]
 #[repr(C)]
 pub struct wl_array {
@@ -60,6 +100,8 @@ unsafe extern "C" {
     pub fn wl_array_add(array: *mut wl_array, size: usize) -> *mut c_void;
     pub fn wl_array_copy(array: *mut wl_array, source: *mut wl_array) -> c_int;
 }
+
+// TODO: wl_array_for_each
 
 pub type wl_fixed_t = i32;
 
@@ -118,4 +160,73 @@ pub type wl_iterator_result = c_int;
 pub const WL_ITERATOR_STOP: wl_iterator_result = 0;
 pub const WL_ITERATOR_CONTINUE: wl_iterator_result = 1;
 
-// TODO: wl_list_for_each
+#[cfg(test)]
+mod tests {
+    use core::{mem::MaybeUninit, ptr::null_mut};
+
+    use super::*;
+
+    #[link(name = "wayland-client")]
+    unsafe extern "C" {}
+
+    #[test]
+    fn test_wl_container_of() {
+        struct S {
+            _m1: i32,
+            m2: i32,
+        }
+
+        unsafe {
+            let mut s = S { _m1: 0, m2: 0 };
+            assert_eq!(wl_container_of!(&s.m2, *const S, m2), &raw const s);
+            assert_eq!(wl_container_of!(&s.m2, *mut S, m2), &raw mut s);
+        }
+    }
+
+    #[test]
+    fn test_wl_list_for_each() {
+        struct Foo {
+            val: i32,
+            link: wl_list,
+        }
+
+        impl Foo {
+            fn new(val: i32) -> Self {
+                Self {
+                    val,
+                    link: wl_list {
+                        prev: null_mut(),
+                        next: null_mut(),
+                    },
+                }
+            }
+        }
+
+        unsafe {
+            let mut list = MaybeUninit::uninit();
+            wl_list_init(list.as_mut_ptr());
+            let mut list = list.assume_init();
+
+            let mut e1 = Foo::new(1);
+            wl_list_insert(&mut list, &mut e1.link);
+
+            let mut e2 = Foo::new(2);
+            wl_list_insert(&mut e1.link, &mut e2.link);
+
+            let mut e3 = Foo::new(3);
+            wl_list_insert(&mut e2.link, &mut e3.link);
+
+            let mut expected = 0;
+            wl_list_for_each!(foo: *const Foo, &list, link, {
+                expected += 1;
+                assert_eq!((*foo).val, expected);
+            });
+
+            let mut expected = 0;
+            wl_list_for_each!(foo: *mut Foo, &list, link, {
+                expected += 1;
+                assert_eq!((*foo).val, expected);
+            });
+        }
+    }
+}
