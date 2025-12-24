@@ -100,8 +100,41 @@ macro_rules! wl_list_for_each_safe {
 }
 pub use wl_list_for_each_safe;
 
-// TODO: wl_list_for_each_reverse
-// TODO: wl_list_for_each_reverse_safe
+// TODO: Document.
+#[macro_export]
+macro_rules! wl_list_for_each_reverse {
+    ($pos:ident: *const $Container:ty, $head:expr, $member:ident, $body:expr) => {{
+        for $pos in $crate::_macro_helpers::WlListForEachReverseIter::new($head) {
+            let $pos = $crate::wl_container_of!($pos.as_ptr(), *const $Container, $member);
+            $body
+        }
+    }};
+    ($pos:ident: *mut $Container:ty, $head:expr, $member:ident, $body:expr) => {{
+        for $pos in $crate::_macro_helpers::WlListForEachReverseIter::new($head) {
+            let $pos = $crate::wl_container_of!($pos.as_ptr(), *mut $Container, $member);
+            $body
+        }
+    }};
+}
+pub use wl_list_for_each_reverse;
+
+// TODO: Document.
+#[macro_export]
+macro_rules! wl_list_for_each_reverse_safe {
+    ($pos:ident: *const $Container:ty, $head:expr, $member:ident, $body:expr) => {{
+        for $pos in $crate::_macro_helpers::WlListForEachReverseSafeIter::new($head) {
+            let $pos = $crate::wl_container_of!($pos.as_ptr(), *const $Container, $member);
+            $body
+        }
+    }};
+    ($pos:ident: *mut $Container:ty, $head:expr, $member:ident, $body:expr) => {{
+        for $pos in $crate::_macro_helpers::WlListForEachReverseSafeIter::new($head) {
+            let $pos = $crate::wl_container_of!($pos.as_ptr(), *mut $Container, $member);
+            $body
+        }
+    }};
+}
+pub use wl_list_for_each_reverse_safe;
 
 #[derive(Clone, Copy)]
 #[repr(C)]
@@ -268,6 +301,40 @@ mod tests {
             wl_list_for_each_safe!(foo: *mut Foo, list, link, {
                 assert_eq!(foo, elems[i] as *mut _);
                 i += 1;
+            });
+        });
+    }
+
+    #[test]
+    fn test_wl_list_for_each_reverse() {
+        with_test_list(|list, elems| unsafe {
+            let mut i = elems.len();
+            wl_list_for_each_reverse!(foo: *const Foo, list, link, {
+                i -= 1;
+                assert_eq!(foo, elems[i] as *const _);
+            });
+
+            let mut i = elems.len();
+            wl_list_for_each_reverse!(foo: *mut Foo, list, link, {
+                i -= 1;
+                assert_eq!(foo, elems[i] as *mut _);
+            });
+        });
+    }
+
+    #[test]
+    fn test_wl_list_for_each_reverse_safe() {
+        with_test_list(|list, elems| unsafe {
+            let mut i = elems.len();
+            wl_list_for_each_reverse_safe!(foo: *const Foo, list, link, {
+                i -= 1;
+                assert_eq!(foo, elems[i] as *const _);
+            });
+
+            let mut i = elems.len();
+            wl_list_for_each_reverse_safe!(foo: *mut Foo, list, link, {
+                i -= 1;
+                assert_eq!(foo, elems[i] as *mut _);
             });
         });
     }
