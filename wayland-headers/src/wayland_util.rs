@@ -3,48 +3,23 @@ use core::{
     marker::{PhantomData, PhantomPinned},
 };
 
-#[repr(C)]
-pub struct wl_object {
-    _data: (),
-    _marker: PhantomData<(*mut u8, PhantomPinned)>,
+// TODO: Document.
+#[macro_export]
+macro_rules! wl_array_for_each {
+    ($pos:ident: *const $T:ty, $array:expr, $body:expr) => {{
+        for $pos in $crate::_macro_helpers::WlArrayForEachIter::<$T>::new($array) {
+            let $pos = $pos.as_ptr().cast_const();
+            $body
+        }
+    }};
+    ($pos:ident: *mut $T:ty, $array:expr, $body:expr) => {{
+        for $pos in $crate::_macro_helpers::WlArrayForEachIter::<$T>::new($array) {
+            let $pos = $pos.as_ptr();
+            $body
+        }
+    }};
 }
-
-pub const WL_MAX_MESSAGE_SIZE: usize = 4096;
-
-#[derive(Clone, Copy)]
-#[repr(C)]
-pub struct wl_message {
-    pub name: *const c_char,
-    pub signature: *const c_char,
-    pub types: *mut *const wl_interface,
-}
-
-#[derive(Clone, Copy)]
-#[repr(C)]
-pub struct wl_interface {
-    pub name: *const c_char,
-    pub version: c_int,
-    pub method_count: c_int,
-    pub methods: *const wl_message,
-    pub event_count: c_int,
-    pub events: *const wl_message,
-}
-
-#[derive(Clone, Copy)]
-#[repr(C)]
-pub struct wl_list {
-    pub prev: *mut wl_list,
-    pub next: *mut wl_list,
-}
-
-unsafe extern "C" {
-    pub fn wl_list_init(list: *mut wl_list);
-    pub fn wl_list_insert(list: *mut wl_list, elm: *mut wl_list);
-    pub fn wl_list_remove(elm: *mut wl_list);
-    pub fn wl_list_length(list: *const wl_list) -> c_int;
-    pub fn wl_list_empty(list: *const wl_list) -> c_int;
-    pub fn wl_list_insert_list(list: *mut wl_list, other: *mut wl_list);
-}
+pub use wl_array_for_each;
 
 // TODO: Document.
 #[macro_export]
@@ -84,24 +59,6 @@ pub use wl_list_for_each;
 
 // TODO: Document.
 #[macro_export]
-macro_rules! wl_list_for_each_safe {
-    ($pos:ident: *const $T:ty, $head:expr, $member:ident, $body:expr) => {{
-        for $pos in $crate::_macro_helpers::WlListForEachSafeIter::new($head) {
-            let $pos = $crate::wl_container_of!($pos.as_ptr(), *const $T, $member);
-            $body
-        }
-    }};
-    ($pos:ident: *mut $T:ty, $head:expr, $member:ident, $body:expr) => {{
-        for $pos in $crate::_macro_helpers::WlListForEachSafeIter::new($head) {
-            let $pos = $crate::wl_container_of!($pos.as_ptr(), *mut $T, $member);
-            $body
-        }
-    }};
-}
-pub use wl_list_for_each_safe;
-
-// TODO: Document.
-#[macro_export]
 macro_rules! wl_list_for_each_reverse {
     ($pos:ident: *const $T:ty, $head:expr, $member:ident, $body:expr) => {{
         for $pos in $crate::_macro_helpers::WlListForEachReverseIter::new($head) {
@@ -136,6 +93,24 @@ macro_rules! wl_list_for_each_reverse_safe {
 }
 pub use wl_list_for_each_reverse_safe;
 
+// TODO: Document.
+#[macro_export]
+macro_rules! wl_list_for_each_safe {
+    ($pos:ident: *const $T:ty, $head:expr, $member:ident, $body:expr) => {{
+        for $pos in $crate::_macro_helpers::WlListForEachSafeIter::new($head) {
+            let $pos = $crate::wl_container_of!($pos.as_ptr(), *const $T, $member);
+            $body
+        }
+    }};
+    ($pos:ident: *mut $T:ty, $head:expr, $member:ident, $body:expr) => {{
+        for $pos in $crate::_macro_helpers::WlListForEachSafeIter::new($head) {
+            let $pos = $crate::wl_container_of!($pos.as_ptr(), *mut $T, $member);
+            $body
+        }
+    }};
+}
+pub use wl_list_for_each_safe;
+
 #[derive(Clone, Copy)]
 #[repr(C)]
 pub struct wl_array {
@@ -144,36 +119,47 @@ pub struct wl_array {
     pub data: *mut c_void,
 }
 
+#[derive(Clone, Copy)]
+#[repr(C)]
+pub struct wl_interface {
+    pub name: *const c_char,
+    pub version: c_int,
+    pub method_count: c_int,
+    pub methods: *const wl_message,
+    pub event_count: c_int,
+    pub events: *const wl_message,
+}
+
+#[derive(Clone, Copy)]
+#[repr(C)]
+pub struct wl_list {
+    pub prev: *mut wl_list,
+    pub next: *mut wl_list,
+}
+
+#[derive(Clone, Copy)]
+#[repr(C)]
+pub struct wl_message {
+    pub name: *const c_char,
+    pub signature: *const c_char,
+    pub types: *mut *const wl_interface,
+}
+
+#[repr(C)]
+pub struct wl_object {
+    _data: (),
+    _marker: PhantomData<(*mut u8, PhantomPinned)>,
+}
+
+pub const WL_ITERATOR_CONTINUE: wl_iterator_result = 1;
+pub const WL_ITERATOR_STOP: wl_iterator_result = 0;
+pub const WL_MAX_MESSAGE_SIZE: usize = 4096;
+
 unsafe extern "C" {
-    pub fn wl_array_init(array: *mut wl_array);
-    pub fn wl_array_release(array: *mut wl_array);
     pub fn wl_array_add(array: *mut wl_array, size: usize) -> *mut c_void;
     pub fn wl_array_copy(array: *mut wl_array, source: *mut wl_array) -> c_int;
-}
-
-// TODO: Document.
-#[macro_export]
-macro_rules! wl_array_for_each {
-    ($pos:ident: *const $T:ty, $array:expr, $body:expr) => {{
-        for $pos in $crate::_macro_helpers::WlArrayForEachIter::<$T>::new($array) {
-            let $pos = $pos.as_ptr().cast_const();
-            $body
-        }
-    }};
-    ($pos:ident: *mut $T:ty, $array:expr, $body:expr) => {{
-        for $pos in $crate::_macro_helpers::WlArrayForEachIter::<$T>::new($array) {
-            let $pos = $pos.as_ptr();
-            $body
-        }
-    }};
-}
-pub use wl_array_for_each;
-
-pub type wl_fixed_t = i32;
-
-#[inline]
-pub fn wl_fixed_to_double(f: wl_fixed_t) -> c_double {
-    (f as c_double) / 256.0
+    pub fn wl_array_init(array: *mut wl_array);
+    pub fn wl_array_release(array: *mut wl_array);
 }
 
 /// Available if built with `std`.
@@ -184,25 +170,27 @@ pub fn wl_fixed_from_double(d: c_double) -> wl_fixed_t {
 }
 
 #[inline]
-pub fn wl_fixed_to_int(f: wl_fixed_t) -> c_int {
-    f / 256
-}
-
-#[inline]
 pub fn wl_fixed_from_int(i: c_int) -> wl_fixed_t {
     i * 256
 }
 
-#[repr(C)]
-pub union wl_argument {
-    pub i: i32,
-    pub u: u32,
-    pub f: wl_fixed_t,
-    pub s: *const c_char,
-    pub o: *mut wl_object,
-    pub n: u32,
-    pub a: *mut wl_array,
-    pub h: i32,
+#[inline]
+pub fn wl_fixed_to_double(f: wl_fixed_t) -> c_double {
+    (f as c_double) / 256.0
+}
+
+#[inline]
+pub fn wl_fixed_to_int(f: wl_fixed_t) -> c_int {
+    f / 256
+}
+
+unsafe extern "C" {
+    pub fn wl_list_empty(list: *const wl_list) -> c_int;
+    pub fn wl_list_init(list: *mut wl_list);
+    pub fn wl_list_insert(list: *mut wl_list, elm: *mut wl_list);
+    pub fn wl_list_insert_list(list: *mut wl_list, other: *mut wl_list);
+    pub fn wl_list_length(list: *const wl_list) -> c_int;
+    pub fn wl_list_remove(elm: *mut wl_list);
 }
 
 pub type wl_dispatcher_func_t = Option<
@@ -215,6 +203,9 @@ pub type wl_dispatcher_func_t = Option<
     ) -> c_int,
 >;
 
+pub type wl_fixed_t = i32;
+pub type wl_iterator_result = c_int;
+
 pub type wl_log_func_t = Option<
     unsafe extern "C" fn(
         fmt: *const c_char,
@@ -222,9 +213,17 @@ pub type wl_log_func_t = Option<
     ),
 >;
 
-pub type wl_iterator_result = c_int;
-pub const WL_ITERATOR_STOP: wl_iterator_result = 0;
-pub const WL_ITERATOR_CONTINUE: wl_iterator_result = 1;
+#[repr(C)]
+pub union wl_argument {
+    pub i: i32,
+    pub u: u32,
+    pub f: wl_fixed_t,
+    pub s: *const c_char,
+    pub o: *mut wl_object,
+    pub n: u32,
+    pub a: *mut wl_array,
+    pub h: i32,
+}
 
 #[cfg(test)]
 mod tests {
@@ -249,6 +248,33 @@ mod tests {
                     next: null_mut(),
                 },
             }
+        }
+    }
+
+    #[test]
+    fn test_wl_array_for_each() {
+        unsafe {
+            let mut array = MaybeUninit::uninit();
+            wl_array_init(array.as_mut_ptr());
+            let data = wl_array_add(array.as_mut_ptr(), size_of::<Foo>() * 3);
+
+            let mut i = 0;
+            wl_array_for_each!(foo: *const Foo, array.as_ptr(), {
+                assert!(i < 3);
+                assert_eq!(foo, data.cast::<Foo>().add(i));
+                i += 1;
+            });
+            assert_eq!(i, 3);
+
+            let mut i = 0;
+            wl_array_for_each!(foo: *mut Foo, array.as_ptr(), {
+                assert!(i < 3);
+                assert_eq!(foo, data.cast::<Foo>().add(i));
+                i += 1;
+            });
+            assert_eq!(i, 3);
+
+            wl_array_release(array.as_mut_ptr());
         }
     }
 
@@ -307,26 +333,6 @@ mod tests {
     }
 
     #[test]
-    fn test_wl_list_for_each_safe() {
-        with_test_list(|list, elems| unsafe {
-            let mut i = 0;
-            wl_list_for_each_safe!(foo: *const Foo, list, link, {
-                assert_eq!(foo, elems[i] as *const _);
-                i += 1;
-            });
-            assert_eq!(i, 3);
-
-            let mut i = 0;
-            wl_list_for_each_safe!(foo: *mut Foo, list, link, {
-                assert_eq!(foo, elems[i] as *mut _);
-                wl_list_remove(&raw mut (*foo).link);
-                i += 1;
-            });
-            assert_eq!(i, 3);
-        });
-    }
-
-    #[test]
     fn test_wl_list_for_each_reverse() {
         with_test_list(|list, elems| unsafe {
             let mut i = elems.len();
@@ -366,27 +372,22 @@ mod tests {
     }
 
     #[test]
-    fn test_wl_array_for_each() {
-        unsafe {
-            let mut array = MaybeUninit::uninit();
-            wl_array_init(array.as_mut_ptr());
-            let data = wl_array_add(array.as_mut_ptr(), size_of::<Foo>() * 3);
-
+    fn test_wl_list_for_each_safe() {
+        with_test_list(|list, elems| unsafe {
             let mut i = 0;
-            wl_array_for_each!(foo: *const Foo, array.as_ptr(), {
-                assert!(i < 3);
-                assert_eq!(foo, data.cast::<Foo>().add(i));
+            wl_list_for_each_safe!(foo: *const Foo, list, link, {
+                assert_eq!(foo, elems[i] as *const _);
                 i += 1;
             });
             assert_eq!(i, 3);
 
             let mut i = 0;
-            wl_array_for_each!(foo: *mut Foo, array.as_ptr(), {
-                assert!(i < 3);
-                assert_eq!(foo, data.cast::<Foo>().add(i));
+            wl_list_for_each_safe!(foo: *mut Foo, list, link, {
+                assert_eq!(foo, elems[i] as *mut _);
+                wl_list_remove(&raw mut (*foo).link);
                 i += 1;
             });
             assert_eq!(i, 3);
-        }
+        });
     }
 }
