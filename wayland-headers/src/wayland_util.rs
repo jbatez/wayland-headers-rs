@@ -51,15 +51,15 @@ unsafe extern "C" {
 macro_rules! wl_container_of {
     ($ptr:expr, *const $Container:ty, $member:ident) => {{
         let ptr: *const _ = $ptr;
-        let ptr = ptr as *mut $crate::_macro_helpers::u8;
+        let ptr = ptr.cast::<$crate::_macro_helpers::u8>();
         let offset = $crate::_macro_helpers::offset_of!($Container, $member);
-        ptr.sub(offset) as *const $Container
+        ptr.sub(offset).cast::<$Container>()
     }};
     ($ptr:expr, *mut $Container:ty, $member:ident) => {{
         let ptr: *const _ = $ptr;
-        let ptr = ptr as *mut $crate::_macro_helpers::u8;
+        let ptr = ptr.cast::<$crate::_macro_helpers::u8>();
         let offset = $crate::_macro_helpers::offset_of!($Container, $member);
-        ptr.sub(offset) as *mut $Container
+        ptr.sub(offset).cast::<$Container>().cast_mut()
     }};
 }
 pub use wl_container_of;
@@ -67,15 +67,15 @@ pub use wl_container_of;
 // TODO: Document.
 #[macro_export]
 macro_rules! wl_list_for_each {
-    ($pos:ident: *const $Container:ty, $head:expr, $member:ident, $body:expr) => {{
+    ($pos:ident: *const $T:ty, $head:expr, $member:ident, $body:expr) => {{
         for $pos in $crate::_macro_helpers::WlListForEachIter::new($head) {
-            let $pos = $crate::wl_container_of!($pos.as_ptr(), *const $Container, $member);
+            let $pos = $crate::wl_container_of!($pos.as_ptr(), *const $T, $member);
             $body
         }
     }};
-    ($pos:ident: *mut $Container:ty, $head:expr, $member:ident, $body:expr) => {{
+    ($pos:ident: *mut $T:ty, $head:expr, $member:ident, $body:expr) => {{
         for $pos in $crate::_macro_helpers::WlListForEachIter::new($head) {
-            let $pos = $crate::wl_container_of!($pos.as_ptr(), *mut $Container, $member);
+            let $pos = $crate::wl_container_of!($pos.as_ptr(), *mut $T, $member);
             $body
         }
     }};
@@ -85,15 +85,15 @@ pub use wl_list_for_each;
 // TODO: Document.
 #[macro_export]
 macro_rules! wl_list_for_each_safe {
-    ($pos:ident: *const $Container:ty, $head:expr, $member:ident, $body:expr) => {{
+    ($pos:ident: *const $T:ty, $head:expr, $member:ident, $body:expr) => {{
         for $pos in $crate::_macro_helpers::WlListForEachSafeIter::new($head) {
-            let $pos = $crate::wl_container_of!($pos.as_ptr(), *const $Container, $member);
+            let $pos = $crate::wl_container_of!($pos.as_ptr(), *const $T, $member);
             $body
         }
     }};
-    ($pos:ident: *mut $Container:ty, $head:expr, $member:ident, $body:expr) => {{
+    ($pos:ident: *mut $T:ty, $head:expr, $member:ident, $body:expr) => {{
         for $pos in $crate::_macro_helpers::WlListForEachSafeIter::new($head) {
-            let $pos = $crate::wl_container_of!($pos.as_ptr(), *mut $Container, $member);
+            let $pos = $crate::wl_container_of!($pos.as_ptr(), *mut $T, $member);
             $body
         }
     }};
@@ -103,15 +103,15 @@ pub use wl_list_for_each_safe;
 // TODO: Document.
 #[macro_export]
 macro_rules! wl_list_for_each_reverse {
-    ($pos:ident: *const $Container:ty, $head:expr, $member:ident, $body:expr) => {{
+    ($pos:ident: *const $T:ty, $head:expr, $member:ident, $body:expr) => {{
         for $pos in $crate::_macro_helpers::WlListForEachReverseIter::new($head) {
-            let $pos = $crate::wl_container_of!($pos.as_ptr(), *const $Container, $member);
+            let $pos = $crate::wl_container_of!($pos.as_ptr(), *const $T, $member);
             $body
         }
     }};
-    ($pos:ident: *mut $Container:ty, $head:expr, $member:ident, $body:expr) => {{
+    ($pos:ident: *mut $T:ty, $head:expr, $member:ident, $body:expr) => {{
         for $pos in $crate::_macro_helpers::WlListForEachReverseIter::new($head) {
-            let $pos = $crate::wl_container_of!($pos.as_ptr(), *mut $Container, $member);
+            let $pos = $crate::wl_container_of!($pos.as_ptr(), *mut $T, $member);
             $body
         }
     }};
@@ -121,15 +121,15 @@ pub use wl_list_for_each_reverse;
 // TODO: Document.
 #[macro_export]
 macro_rules! wl_list_for_each_reverse_safe {
-    ($pos:ident: *const $Container:ty, $head:expr, $member:ident, $body:expr) => {{
+    ($pos:ident: *const $T:ty, $head:expr, $member:ident, $body:expr) => {{
         for $pos in $crate::_macro_helpers::WlListForEachReverseSafeIter::new($head) {
-            let $pos = $crate::wl_container_of!($pos.as_ptr(), *const $Container, $member);
+            let $pos = $crate::wl_container_of!($pos.as_ptr(), *const $T, $member);
             $body
         }
     }};
-    ($pos:ident: *mut $Container:ty, $head:expr, $member:ident, $body:expr) => {{
+    ($pos:ident: *mut $T:ty, $head:expr, $member:ident, $body:expr) => {{
         for $pos in $crate::_macro_helpers::WlListForEachReverseSafeIter::new($head) {
-            let $pos = $crate::wl_container_of!($pos.as_ptr(), *mut $Container, $member);
+            let $pos = $crate::wl_container_of!($pos.as_ptr(), *mut $T, $member);
             $body
         }
     }};
@@ -151,7 +151,23 @@ unsafe extern "C" {
     pub fn wl_array_copy(array: *mut wl_array, source: *mut wl_array) -> c_int;
 }
 
-// TODO: wl_array_for_each
+// TODO: Document.
+#[macro_export]
+macro_rules! wl_array_for_each {
+    ($pos:ident: *const $T:ty, $array:expr, $body:expr) => {{
+        for $pos in $crate::_macro_helpers::WlArrayForEachIter::<$T>::new($array) {
+            let $pos = $pos.as_ptr().cast_const();
+            $body
+        }
+    }};
+    ($pos:ident: *mut $T:ty, $array:expr, $body:expr) => {{
+        for $pos in $crate::_macro_helpers::WlArrayForEachIter::<$T>::new($array) {
+            let $pos = $pos.as_ptr();
+            $body
+        }
+    }};
+}
+pub use wl_array_for_each;
 
 pub type wl_fixed_t = i32;
 
@@ -279,12 +295,14 @@ mod tests {
                 assert_eq!(foo, elems[i] as *const _);
                 i += 1;
             });
+            assert_eq!(i, 3);
 
             let mut i = 0;
             wl_list_for_each!(foo: *mut Foo, list, link, {
                 assert_eq!(foo, elems[i] as *mut _);
                 i += 1;
             });
+            assert_eq!(i, 3);
         });
     }
 
@@ -296,6 +314,7 @@ mod tests {
                 assert_eq!(foo, elems[i] as *const _);
                 i += 1;
             });
+            assert_eq!(i, 3);
 
             let mut i = 0;
             wl_list_for_each_safe!(foo: *mut Foo, list, link, {
@@ -303,6 +322,7 @@ mod tests {
                 wl_list_remove(&raw mut (*foo).link);
                 i += 1;
             });
+            assert_eq!(i, 3);
         });
     }
 
@@ -314,12 +334,14 @@ mod tests {
                 i -= 1;
                 assert_eq!(foo, elems[i] as *const _);
             });
+            assert_eq!(i, 0);
 
             let mut i = elems.len();
             wl_list_for_each_reverse!(foo: *mut Foo, list, link, {
                 i -= 1;
                 assert_eq!(foo, elems[i] as *mut _);
             });
+            assert_eq!(i, 0);
         });
     }
 
@@ -331,6 +353,7 @@ mod tests {
                 i -= 1;
                 assert_eq!(foo, elems[i] as *const _);
             });
+            assert_eq!(i, 0);
 
             let mut i = elems.len();
             wl_list_for_each_reverse_safe!(foo: *mut Foo, list, link, {
@@ -338,6 +361,32 @@ mod tests {
                 assert_eq!(foo, elems[i] as *mut _);
                 wl_list_remove(&raw mut (*foo).link);
             });
+            assert_eq!(i, 0);
         });
+    }
+
+    #[test]
+    fn test_wl_array_for_each() {
+        unsafe {
+            let mut array = MaybeUninit::uninit();
+            wl_array_init(array.as_mut_ptr());
+            let data = wl_array_add(array.as_mut_ptr(), size_of::<Foo>() * 3);
+
+            let mut i = 0;
+            wl_array_for_each!(foo: *const Foo, array.as_ptr(), {
+                assert!(i < 3);
+                assert_eq!(foo, data.cast::<Foo>().add(i));
+                i += 1;
+            });
+            assert_eq!(i, 3);
+
+            let mut i = 0;
+            wl_array_for_each!(foo: *mut Foo, array.as_ptr(), {
+                assert!(i < 3);
+                assert_eq!(foo, data.cast::<Foo>().add(i));
+                i += 1;
+            });
+            assert_eq!(i, 3);
+        }
     }
 }
