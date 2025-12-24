@@ -300,6 +300,7 @@ mod tests {
             let mut i = 0;
             wl_list_for_each_safe!(foo: *mut Foo, list, link, {
                 assert_eq!(foo, elems[i] as *mut _);
+                wl_list_remove(&raw mut (*foo).link);
                 i += 1;
             });
         });
@@ -335,6 +336,7 @@ mod tests {
             wl_list_for_each_reverse_safe!(foo: *mut Foo, list, link, {
                 i -= 1;
                 assert_eq!(foo, elems[i] as *mut _);
+                wl_list_remove(&raw mut (*foo).link);
             });
         });
     }
