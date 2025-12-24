@@ -117,3 +117,5 @@ pub type wl_log_func_t = Option<
 pub type wl_iterator_result = c_int;
 pub const WL_ITERATOR_STOP: wl_iterator_result = 0;
 pub const WL_ITERATOR_CONTINUE: wl_iterator_result = 1;
+
+// TODO: wl_list_for_each
