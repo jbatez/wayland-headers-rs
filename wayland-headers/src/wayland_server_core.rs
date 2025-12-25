@@ -212,7 +212,11 @@ unsafe extern "C" {
     pub fn wl_client_get_link(client: *mut wl_client) -> *mut wl_list;
 
     pub fn wl_client_from_link(link: *mut wl_list) -> *mut wl_client;
+}
 
+// TODO: wl_client_for_each
+
+unsafe extern "C" {
     pub fn wl_client_destroy(client: *mut wl_client);
 
     pub fn wl_client_flush(client: *mut wl_client);
@@ -299,12 +303,14 @@ pub struct wl_signal {
 
 #[inline]
 pub unsafe fn wl_signal_init(signal: *mut wl_signal) {
-    unsafe { wl_list_init(&raw mut (*signal).listener_list) }
+    unsafe { wl_list_init(&mut (*signal).listener_list) }
 }
 
 #[inline]
 pub unsafe fn wl_signal_add(signal: *mut wl_signal, listener: *mut wl_listener) {
-    unsafe { wl_list_insert((*signal).listener_list.prev, &raw mut (*listener).link) }
+    unsafe {
+        wl_list_insert((*signal).listener_list.prev, &mut (*listener).link);
+    }
 }
 
 #[inline]
@@ -316,7 +322,7 @@ pub unsafe fn wl_signal_get(signal: *mut wl_signal, notify: wl_notify_func_t) ->
                 return l;
             }
         });
-        null_mut()
+        return null_mut();
     }
 }
 
