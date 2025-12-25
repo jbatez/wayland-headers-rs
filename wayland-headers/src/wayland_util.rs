@@ -6,18 +6,18 @@ use core::{
 // TODO: Document.
 #[macro_export]
 macro_rules! wl_array_for_each {
-    ($pos:ident: *const $T:ty, $array:expr, $body:expr) => {{
+    ($pos:ident: *const $T:ty, $array:expr, $body:expr) => {
         for $pos in $crate::_macro_helpers::WlArrayForEachIter::<$T>::new($array) {
             let $pos = $pos.as_ptr().cast_const();
             $body
         }
-    }};
-    ($pos:ident: *mut $T:ty, $array:expr, $body:expr) => {{
+    };
+    ($pos:ident: *mut $T:ty, $array:expr, $body:expr) => {
         for $pos in $crate::_macro_helpers::WlArrayForEachIter::<$T>::new($array) {
             let $pos = $pos.as_ptr();
             $body
         }
-    }};
+    };
 }
 pub use wl_array_for_each;
 
@@ -42,72 +42,72 @@ pub use wl_container_of;
 // TODO: Document.
 #[macro_export]
 macro_rules! wl_list_for_each {
-    ($pos:ident: *const $T:ty, $head:expr, $member:ident, $body:expr) => {{
+    ($pos:ident: *const $T:ty, $head:expr, $member:ident, $body:expr) => {
         for $pos in $crate::_macro_helpers::WlListForEachIter::new($head) {
             let $pos = $crate::wl_container_of!($pos.as_ptr(), *const $T, $member);
             $body
         }
-    }};
-    ($pos:ident: *mut $T:ty, $head:expr, $member:ident, $body:expr) => {{
+    };
+    ($pos:ident: *mut $T:ty, $head:expr, $member:ident, $body:expr) => {
         for $pos in $crate::_macro_helpers::WlListForEachIter::new($head) {
             let $pos = $crate::wl_container_of!($pos.as_ptr(), *mut $T, $member);
             $body
         }
-    }};
+    };
 }
 pub use wl_list_for_each;
 
 // TODO: Document.
 #[macro_export]
 macro_rules! wl_list_for_each_reverse {
-    ($pos:ident: *const $T:ty, $head:expr, $member:ident, $body:expr) => {{
+    ($pos:ident: *const $T:ty, $head:expr, $member:ident, $body:expr) => {
         for $pos in $crate::_macro_helpers::WlListForEachReverseIter::new($head) {
             let $pos = $crate::wl_container_of!($pos.as_ptr(), *const $T, $member);
             $body
         }
-    }};
-    ($pos:ident: *mut $T:ty, $head:expr, $member:ident, $body:expr) => {{
+    };
+    ($pos:ident: *mut $T:ty, $head:expr, $member:ident, $body:expr) => {
         for $pos in $crate::_macro_helpers::WlListForEachReverseIter::new($head) {
             let $pos = $crate::wl_container_of!($pos.as_ptr(), *mut $T, $member);
             $body
         }
-    }};
+    };
 }
 pub use wl_list_for_each_reverse;
 
 // TODO: Document.
 #[macro_export]
 macro_rules! wl_list_for_each_reverse_safe {
-    ($pos:ident: *const $T:ty, $head:expr, $member:ident, $body:expr) => {{
+    ($pos:ident: *const $T:ty, $head:expr, $member:ident, $body:expr) => {
         for $pos in $crate::_macro_helpers::WlListForEachReverseSafeIter::new($head) {
             let $pos = $crate::wl_container_of!($pos.as_ptr(), *const $T, $member);
             $body
         }
-    }};
-    ($pos:ident: *mut $T:ty, $head:expr, $member:ident, $body:expr) => {{
+    };
+    ($pos:ident: *mut $T:ty, $head:expr, $member:ident, $body:expr) => {
         for $pos in $crate::_macro_helpers::WlListForEachReverseSafeIter::new($head) {
             let $pos = $crate::wl_container_of!($pos.as_ptr(), *mut $T, $member);
             $body
         }
-    }};
+    };
 }
 pub use wl_list_for_each_reverse_safe;
 
 // TODO: Document.
 #[macro_export]
 macro_rules! wl_list_for_each_safe {
-    ($pos:ident: *const $T:ty, $head:expr, $member:ident, $body:expr) => {{
+    ($pos:ident: *const $T:ty, $head:expr, $member:ident, $body:expr) => {
         for $pos in $crate::_macro_helpers::WlListForEachSafeIter::new($head) {
             let $pos = $crate::wl_container_of!($pos.as_ptr(), *const $T, $member);
             $body
         }
-    }};
-    ($pos:ident: *mut $T:ty, $head:expr, $member:ident, $body:expr) => {{
+    };
+    ($pos:ident: *mut $T:ty, $head:expr, $member:ident, $body:expr) => {
         for $pos in $crate::_macro_helpers::WlListForEachSafeIter::new($head) {
             let $pos = $crate::wl_container_of!($pos.as_ptr(), *mut $T, $member);
             $body
         }
-    }};
+    };
 }
 pub use wl_list_for_each_safe;
 

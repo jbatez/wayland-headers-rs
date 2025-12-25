@@ -214,7 +214,17 @@ unsafe extern "C" {
     pub fn wl_client_from_link(link: *mut wl_list) -> *mut wl_client;
 }
 
-// TODO: wl_client_for_each
+// TODO: Document.
+#[macro_export]
+macro_rules! wl_client_for_each {
+    ($client:ident: $T:ty, $list:expr, $body:expr) => {
+        for $client in $crate::_macro_helpers::WlListForEachIter::new($list) {
+            let $client: $T = $crate::wayland_server_core::wl_client_from_link($client.as_ptr());
+            $body
+        }
+    };
+}
+pub use wl_client_for_each;
 
 unsafe extern "C" {
     pub fn wl_client_destroy(client: *mut wl_client);
@@ -437,8 +447,31 @@ unsafe extern "C" {
     ) -> *mut wl_listener;
 }
 
-// TODO: wl_resource_for_each
-// TODO: wl_resource_for_each_safe
+// TODO: Document.
+#[macro_export]
+macro_rules! wl_resource_for_each {
+    ($resource:ident: $T:ty, $list:expr, $body:expr) => {
+        for $resource in $crate::_macro_helpers::WlListForEachIter::new($list) {
+            let $resource: $T =
+                $crate::wayland_server_core::wl_resource_from_link($client.as_ptr());
+            $body
+        }
+    };
+}
+pub use wl_resource_for_each;
+
+// TODO: Document.
+#[macro_export]
+macro_rules! wl_resource_for_each_safe {
+    ($resource:ident: $T:ty, $list:expr, $body:expr) => {
+        for $resource in $crate::_macro_helpers::WlListForEachSafeIter::new($list) {
+            let $resource: $T =
+                $crate::wayland_server_core::wl_resource_from_link($client.as_ptr());
+            $body
+        }
+    };
+}
+pub use wl_resource_for_each_safe;
 
 #[repr(C)]
 pub struct wl_shm_buffer {
