@@ -1,6 +1,7 @@
 use core::{
     ffi::{c_char, c_int, c_void},
     marker::{PhantomData, PhantomPinned},
+    ptr::null_mut,
 };
 
 use libc::{gid_t, pid_t, uid_t};
@@ -306,18 +307,27 @@ pub unsafe fn wl_signal_add(signal: *mut wl_signal, listener: *mut wl_listener) 
     unsafe { wl_list_insert((*signal).listener_list.prev, &raw mut (*listener).link) }
 }
 
-// TODO:
-// #[inline]
-// pub unsafe fn wl_signal_get(signal: *mut wl_signal, notify: wl_notify_func_t) -> *mut wl_listener
-// {
-//     // ...
-// }
+#[inline]
+pub unsafe fn wl_signal_get(signal: *mut wl_signal, notify: wl_notify_func_t) -> *mut wl_listener {
+    unsafe {
+        wl_list_for_each!(l: *mut wl_listener, &(*signal).listener_list, link, {
+            #[allow(unpredictable_function_pointer_comparisons)]
+            if (*l).notify == notify {
+                return l;
+            }
+        });
+        null_mut()
+    }
+}
 
-// #[inline]
-// pub unsafe fn wl_signal_emit(signal: *mut wl_signal, data: *mut c_void)
-// {
-//     // ...
-// }
+#[inline]
+pub unsafe fn wl_signal_emit(signal: *mut wl_signal, data: *mut c_void) {
+    unsafe {
+        wl_list_for_each_safe!(l: *mut wl_listener, &(*signal).listener_list, link, {
+            (*l).notify.unwrap_unchecked()(l, data);
+        });
+    }
+}
 
 unsafe extern "C" {
     pub fn wl_signal_emit_mutable(signal: *mut wl_signal, data: *mut c_void);
