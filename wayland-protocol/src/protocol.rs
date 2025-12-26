@@ -26,22 +26,22 @@ pub struct Interface {
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub enum InterfaceContent {
     Description(Description),
-    Request(RequestOrEvent),
-    Event(RequestOrEvent),
+    Request(Message),
+    Event(Message),
     Enum(Enum),
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
-pub struct RequestOrEvent {
+pub struct Message {
     pub deprecated_since: Option<String>,
     pub name: Option<String>,
     pub since: Option<String>,
     pub typ: Option<String>,
-    pub contents: Vec<RequestOrEventContent>,
+    pub contents: Vec<MessageContent>,
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
-pub enum RequestOrEventContent {
+pub enum MessageContent {
     Description(Description),
     Arg(Arg),
 }

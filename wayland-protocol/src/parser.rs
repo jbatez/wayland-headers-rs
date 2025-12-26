@@ -225,11 +225,11 @@ impl<'a> Parser<'a> {
                     contents.push(InterfaceContent::Description(description));
                 }
                 b"request" => {
-                    let request = this.parse_request_or_event(elem);
+                    let request = this.parse_message(elem);
                     contents.push(InterfaceContent::Request(request));
                 }
                 b"event" => {
-                    let event = this.parse_request_or_event(elem);
+                    let event = this.parse_message(elem);
                     contents.push(InterfaceContent::Event(event));
                 }
                 b"enum" => {
@@ -249,7 +249,7 @@ impl<'a> Parser<'a> {
         }
     }
 
-    fn parse_request_or_event(&mut self, elem: Elem) -> RequestOrEvent {
+    fn parse_message(&mut self, elem: Elem) -> Message {
         let mut deprecated_since = None;
         let mut name = None;
         let mut since = None;
@@ -272,11 +272,11 @@ impl<'a> Parser<'a> {
             Content::Elem(elem) => match elem.start.name().as_ref() {
                 b"description" => {
                     let description = this.parse_description(elem);
-                    contents.push(RequestOrEventContent::Description(description));
+                    contents.push(MessageContent::Description(description));
                 }
                 b"arg" => {
                     let arg = this.parse_arg(elem);
-                    contents.push(RequestOrEventContent::Arg(arg));
+                    contents.push(MessageContent::Arg(arg));
                 }
                 _ => {
                     panic!("unexpected elem: {elem:?}");
@@ -284,7 +284,7 @@ impl<'a> Parser<'a> {
             },
         });
 
-        RequestOrEvent {
+        Message {
             deprecated_since,
             name,
             since,
