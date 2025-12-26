@@ -33,10 +33,10 @@ pub enum InterfaceContent {
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct RequestOrEvent {
-    pub name: Option<String>,
-    pub typ: Option<String>,
-    pub since: Option<String>,
     pub deprecated_since: Option<String>,
+    pub name: Option<String>,
+    pub since: Option<String>,
+    pub typ: Option<String>,
     pub contents: Vec<RequestOrEventContent>,
 }
 
@@ -48,18 +48,18 @@ pub enum RequestOrEventContent {
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct Arg {
-    pub name: Option<String>,
-    pub typ: Option<String>,
-    pub interface: Option<String>,
-    pub enu: Option<String>,
     pub allow_null: Option<String>,
+    pub enu: Option<String>,
+    pub interface: Option<String>,
+    pub name: Option<String>,
     pub summary: Option<String>,
+    pub typ: Option<String>,
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct Enum {
-    pub name: Option<String>,
     pub bitfield: Option<String>,
+    pub name: Option<String>,
     pub since: Option<String>,
     pub contents: Vec<EnumContent>,
 }
@@ -73,7 +73,7 @@ pub enum EnumContent {
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct Entry {
     pub name: Option<String>,
-    pub value: Option<String>,
     pub since: Option<String>,
     pub summary: Option<String>,
+    pub value: Option<String>,
 }

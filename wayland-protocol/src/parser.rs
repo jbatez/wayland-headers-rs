@@ -250,18 +250,18 @@ impl<'a> Parser<'a> {
     }
 
     fn parse_request_or_event(&mut self, elem: Elem) -> RequestOrEvent {
-        let mut name = None;
-        let mut typ = None;
-        let mut since = None;
         let mut deprecated_since = None;
+        let mut name = None;
+        let mut since = None;
+        let mut typ = None;
 
         for attr in elem.start.attributes() {
             let attr = attr.unwrap();
             match attr.key.as_ref() {
-                b"name" => self.save_attr(attr, &mut name),
-                b"type" => self.save_attr(attr, &mut typ),
-                b"since" => self.save_attr(attr, &mut since),
                 b"deprecated-since" => self.save_attr(attr, &mut deprecated_since),
+                b"name" => self.save_attr(attr, &mut name),
+                b"since" => self.save_attr(attr, &mut since),
+                b"type" => self.save_attr(attr, &mut typ),
                 _ => panic!("unexpected attr: {attr:?}"),
             }
         }
@@ -285,56 +285,56 @@ impl<'a> Parser<'a> {
         });
 
         RequestOrEvent {
-            name,
-            typ,
-            since,
             deprecated_since,
+            name,
+            since,
+            typ,
             contents,
         }
     }
 
     fn parse_arg(&mut self, elem: Elem) -> Arg {
-        let mut name = None;
-        let mut typ = None;
-        let mut interface = None;
-        let mut enu = None;
         let mut allow_null = None;
+        let mut enu = None;
+        let mut interface = None;
+        let mut name = None;
         let mut summary = None;
+        let mut typ = None;
 
         for attr in elem.start.attributes() {
             let attr = attr.unwrap();
             match attr.key.as_ref() {
-                b"name" => self.save_attr(attr, &mut name),
-                b"type" => self.save_attr(attr, &mut typ),
-                b"interface" => self.save_attr(attr, &mut interface),
-                b"enum" => self.save_attr(attr, &mut enu),
                 b"allow-null" => self.save_attr(attr, &mut allow_null),
+                b"enum" => self.save_attr(attr, &mut enu),
+                b"interface" => self.save_attr(attr, &mut interface),
+                b"name" => self.save_attr(attr, &mut name),
                 b"summary" => self.save_attr(attr, &mut summary),
+                b"type" => self.save_attr(attr, &mut typ),
                 _ => panic!("unexpected attr: {attr:?}"),
             }
         }
 
         assert_eq!(elem.is_empty, true);
         Arg {
-            name,
-            typ,
-            interface,
-            enu,
             allow_null,
+            enu,
+            interface,
+            name,
             summary,
+            typ,
         }
     }
 
     fn parse_enum(&mut self, elem: Elem) -> Enum {
-        let mut name = None;
         let mut bitfield = None;
+        let mut name = None;
         let mut since = None;
 
         for attr in elem.start.attributes() {
             let attr = attr.unwrap();
             match attr.key.as_ref() {
-                b"name" => self.save_attr(attr, &mut name),
                 b"bitfield" => self.save_attr(attr, &mut bitfield),
+                b"name" => self.save_attr(attr, &mut name),
                 b"since" => self.save_attr(attr, &mut since),
                 _ => panic!("unexpected attr: {attr:?}"),
             }
@@ -359,8 +359,8 @@ impl<'a> Parser<'a> {
         });
 
         Enum {
-            name,
             bitfield,
+            name,
             since,
             contents,
         }
@@ -368,17 +368,17 @@ impl<'a> Parser<'a> {
 
     fn parse_entry(&mut self, elem: Elem) -> Entry {
         let mut name = None;
-        let mut value = None;
         let mut since = None;
         let mut summary = None;
+        let mut value = None;
 
         for attr in elem.start.attributes() {
             let attr = attr.unwrap();
             match attr.key.as_ref() {
                 b"name" => self.save_attr(attr, &mut name),
-                b"value" => self.save_attr(attr, &mut value),
                 b"since" => self.save_attr(attr, &mut since),
                 b"summary" => self.save_attr(attr, &mut summary),
+                b"value" => self.save_attr(attr, &mut value),
                 _ => panic!("unexpected attr: {attr:?}"),
             }
         }
@@ -386,9 +386,9 @@ impl<'a> Parser<'a> {
         assert_eq!(elem.is_empty, true);
         Entry {
             name,
-            value,
             since,
             summary,
+            value,
         }
     }
 }
