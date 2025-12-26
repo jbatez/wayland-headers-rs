@@ -2,8 +2,12 @@
 resolver = "3"
 members = [
     "wayland-headers",
+    "wayland-headers-generator",
     "wayland-protocol",
 ]
 
 [workspace.package]
 version = "0.1.0+1.24.0"
+
+[workspace.dependencies]
+wayland-protocol = { path = "wayland-protocol", version = "0.1.0" }

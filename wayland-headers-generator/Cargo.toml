@@ -1,0 +1,8 @@
+[package]
+name = "wayland-headers-generator"
+version.workspace = true
+edition = "2024"
+rust-version = "1.85.0"
+
+[dependencies]
+wayland-protocol.workspace = true
