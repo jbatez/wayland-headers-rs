@@ -1025,6 +1025,13 @@ pub unsafe extern "C" fn wl_callback_add_listener(
 }
 
 #[inline]
+pub unsafe extern "C" fn wl_callback_destroy(
+    wl_callback: *mut wl_callback,
+) {
+    unsafe { wl_proxy_destroy(wl_callback.cast()) }
+}
+
+#[inline]
 pub unsafe extern "C" fn wl_callback_get_user_data(
     wl_callback: *mut wl_callback,
 ) -> *mut c_void {
@@ -1049,6 +1056,13 @@ pub unsafe extern "C" fn wl_callback_set_user_data(
             user_data,
         )
     }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_compositor_destroy(
+    wl_compositor: *mut wl_compositor,
+) {
+    unsafe { wl_proxy_destroy(wl_compositor.cast()) }
 }
 
 #[inline]
@@ -1094,6 +1108,13 @@ pub unsafe extern "C" fn wl_data_device_add_listener(
 }
 
 #[inline]
+pub unsafe extern "C" fn wl_data_device_destroy(
+    wl_data_device: *mut wl_data_device,
+) {
+    unsafe { wl_proxy_destroy(wl_data_device.cast()) }
+}
+
+#[inline]
 pub unsafe extern "C" fn wl_data_device_get_user_data(
     wl_data_device: *mut wl_data_device,
 ) -> *mut c_void {
@@ -1105,6 +1126,13 @@ pub unsafe extern "C" fn wl_data_device_get_version(
     wl_data_device: *mut wl_data_device,
 ) -> u32 {
     unsafe { wl_proxy_get_version(wl_data_device.cast()) }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_data_device_manager_destroy(
+    wl_data_device_manager: *mut wl_data_device_manager,
+) {
+    unsafe { wl_proxy_destroy(wl_data_device_manager.cast()) }
 }
 
 #[inline]
@@ -1316,6 +1344,13 @@ pub unsafe extern "C" fn wl_keyboard_add_listener(
 }
 
 #[inline]
+pub unsafe extern "C" fn wl_keyboard_destroy(
+    wl_keyboard: *mut wl_keyboard,
+) {
+    unsafe { wl_proxy_destroy(wl_keyboard.cast()) }
+}
+
+#[inline]
 pub unsafe extern "C" fn wl_keyboard_get_user_data(
     wl_keyboard: *mut wl_keyboard,
 ) -> *mut c_void {
@@ -1358,6 +1393,13 @@ pub unsafe extern "C" fn wl_output_add_listener(
 }
 
 #[inline]
+pub unsafe extern "C" fn wl_output_destroy(
+    wl_output: *mut wl_output,
+) {
+    unsafe { wl_proxy_destroy(wl_output.cast()) }
+}
+
+#[inline]
 pub unsafe extern "C" fn wl_output_get_user_data(
     wl_output: *mut wl_output,
 ) -> *mut c_void {
@@ -1397,6 +1439,13 @@ pub unsafe extern "C" fn wl_pointer_add_listener(
             data,
         )
     }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_pointer_destroy(
+    wl_pointer: *mut wl_pointer,
+) {
+    unsafe { wl_proxy_destroy(wl_pointer.cast()) }
 }
 
 #[inline]
@@ -1469,6 +1518,13 @@ pub unsafe extern "C" fn wl_registry_add_listener(
 }
 
 #[inline]
+pub unsafe extern "C" fn wl_registry_destroy(
+    wl_registry: *mut wl_registry,
+) {
+    unsafe { wl_proxy_destroy(wl_registry.cast()) }
+}
+
+#[inline]
 pub unsafe extern "C" fn wl_registry_get_user_data(
     wl_registry: *mut wl_registry,
 ) -> *mut c_void {
@@ -1511,6 +1567,13 @@ pub unsafe extern "C" fn wl_seat_add_listener(
 }
 
 #[inline]
+pub unsafe extern "C" fn wl_seat_destroy(
+    wl_seat: *mut wl_seat,
+) {
+    unsafe { wl_proxy_destroy(wl_seat.cast()) }
+}
+
+#[inline]
 pub unsafe extern "C" fn wl_seat_get_user_data(
     wl_seat: *mut wl_seat,
 ) -> *mut c_void {
@@ -1535,6 +1598,13 @@ pub unsafe extern "C" fn wl_seat_set_user_data(
             user_data,
         )
     }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_shell_destroy(
+    wl_shell: *mut wl_shell,
+) {
+    unsafe { wl_proxy_destroy(wl_shell.cast()) }
 }
 
 #[inline]
@@ -1580,6 +1650,13 @@ pub unsafe extern "C" fn wl_shell_surface_add_listener(
 }
 
 #[inline]
+pub unsafe extern "C" fn wl_shell_surface_destroy(
+    wl_shell_surface: *mut wl_shell_surface,
+) {
+    unsafe { wl_proxy_destroy(wl_shell_surface.cast()) }
+}
+
+#[inline]
 pub unsafe extern "C" fn wl_shell_surface_get_user_data(
     wl_shell_surface: *mut wl_shell_surface,
 ) -> *mut c_void {
@@ -1619,6 +1696,13 @@ pub unsafe extern "C" fn wl_shm_add_listener(
             data,
         )
     }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_shm_destroy(
+    wl_shm: *mut wl_shm,
+) {
+    unsafe { wl_proxy_destroy(wl_shm.cast()) }
 }
 
 #[inline]
@@ -1784,6 +1868,13 @@ pub unsafe extern "C" fn wl_touch_add_listener(
             data,
         )
     }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_touch_destroy(
+    wl_touch: *mut wl_touch,
+) {
+    unsafe { wl_proxy_destroy(wl_touch.cast()) }
 }
 
 #[inline]

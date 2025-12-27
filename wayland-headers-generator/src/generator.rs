@@ -278,7 +278,23 @@ pub unsafe extern \"C\" fn {name}(
         self.add_get_user_data_fn(interface);
         self.add_get_version_fn(interface);
 
-        // TODO
+        let mut has_destructor = false;
+        let mut has_destroy = false;
+        for content in &interface.contents {
+            if let InterfaceContent::Request(request) = content {
+                if request.typ.as_ref().map(String::as_str) == Some("destructor") {
+                    has_destructor = true;
+                }
+                if request.name.as_ref().unwrap() == "destroy" {
+                    has_destroy = true;
+                }
+            }
+        }
+
+        assert!(has_destructor || !has_destroy);
+        if !has_destroy && interface.name.as_ref().unwrap() != "wl_display" {
+            self.add_destroy_fn(interface);
+        }
     }
 
     fn add_set_user_data_fn(&mut self, interface: &Interface) {
@@ -332,6 +348,23 @@ pub unsafe extern \"C\" fn {name}(
     {interface_name}: *mut {interface_name},
 ) -> u32 {{
     unsafe {{ wl_proxy_get_version({interface_name}.cast()) }}
+}}"
+        );
+
+        self.module.functions.push((name, text));
+    }
+
+    fn add_destroy_fn(&mut self, interface: &Interface) {
+        let interface_name = interface.name.as_ref().unwrap();
+        let name = format!("{interface_name}_destroy");
+
+        let text = format!(
+            "\
+#[inline]
+pub unsafe extern \"C\" fn {name}(
+    {interface_name}: *mut {interface_name},
+) {{
+    unsafe {{ wl_proxy_destroy({interface_name}.cast()) }}
 }}"
         );
 
