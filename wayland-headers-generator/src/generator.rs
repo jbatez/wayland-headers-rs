@@ -419,10 +419,53 @@ pub unsafe extern \"C\" fn {name}(
                 text += " -> *mut c_void";
             }
         }
-        text += " {\n";
 
-        text += "    todo!();\n";
+        text += &format!(" {{\n");
+        text += &format!("    unsafe {{\n");
+        text += &format!("        wl_proxy_marshal_flags(\n");
+        text += &format!("            {interface_name}.cast(),\n");
+        text += &format!("            {},\n", name.to_ascii_uppercase());
 
+        // interface
+        text += "            ";
+        if let Some(ret_arg) = ret_arg {
+            if let Some(ret_interface) = ret_arg.interface.as_ref() {
+                text += &format!("&{ret_interface}_interface,\n");
+            } else {
+                text += "interface,\n";
+            }
+        } else {
+            text += "null(),\n";
+        }
+
+        // version
+        text += "            ";
+        if let Some(ret_arg) = ret_arg
+            && ret_arg.interface.is_none()
+        {
+            text += "version,\n";
+        } else {
+            text += &format!("wl_proxy_get_version({interface_name}.cast()),\n");
+        }
+
+        // flags
+        text += "            ";
+        if request.typ.as_ref().map(String::as_str) == Some("destructor") {
+            text += "WL_MARSHAL_FLAG_DESTROY,\n";
+        } else {
+            text += "0,\n";
+        }
+
+        // return
+        text += "        )";
+        if ret_arg.is_some() {
+            text += ".cast()\n";
+        } else {
+            text += ";\n"
+        }
+
+        // done
+        text += "    }\n";
         text += "}";
         self.module.functions.push((name, text));
     }

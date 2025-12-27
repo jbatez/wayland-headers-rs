@@ -986,7 +986,15 @@ pub unsafe extern "C" fn wl_buffer_add_listener(
 pub unsafe extern "C" fn wl_buffer_destroy(
     wl_buffer: *mut wl_buffer,
 ) {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_buffer.cast(),
+            WL_BUFFER_DESTROY,
+            null(),
+            wl_proxy_get_version(wl_buffer.cast()),
+            WL_MARSHAL_FLAG_DESTROY,
+        );
+    }
 }
 
 #[inline]
@@ -1069,14 +1077,30 @@ pub unsafe extern "C" fn wl_callback_set_user_data(
 pub unsafe extern "C" fn wl_compositor_create_region(
     wl_compositor: *mut wl_compositor,
 ) -> *mut wl_region {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_compositor.cast(),
+            WL_COMPOSITOR_CREATE_REGION,
+            &wl_region_interface,
+            wl_proxy_get_version(wl_compositor.cast()),
+            0,
+        ).cast()
+    }
 }
 
 #[inline]
 pub unsafe extern "C" fn wl_compositor_create_surface(
     wl_compositor: *mut wl_compositor,
 ) -> *mut wl_surface {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_compositor.cast(),
+            WL_COMPOSITOR_CREATE_SURFACE,
+            &wl_surface_interface,
+            wl_proxy_get_version(wl_compositor.cast()),
+            0,
+        ).cast()
+    }
 }
 
 #[inline]
@@ -1153,7 +1177,15 @@ pub unsafe extern "C" fn wl_data_device_get_version(
 pub unsafe extern "C" fn wl_data_device_manager_create_data_source(
     wl_data_device_manager: *mut wl_data_device_manager,
 ) -> *mut wl_data_source {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_data_device_manager.cast(),
+            WL_DATA_DEVICE_MANAGER_CREATE_DATA_SOURCE,
+            &wl_data_source_interface,
+            wl_proxy_get_version(wl_data_device_manager.cast()),
+            0,
+        ).cast()
+    }
 }
 
 #[inline]
@@ -1168,7 +1200,15 @@ pub unsafe extern "C" fn wl_data_device_manager_get_data_device(
     wl_data_device_manager: *mut wl_data_device_manager,
     seat: *mut wl_seat,
 ) -> *mut wl_data_device {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_data_device_manager.cast(),
+            WL_DATA_DEVICE_MANAGER_GET_DATA_DEVICE,
+            &wl_data_device_interface,
+            wl_proxy_get_version(wl_data_device_manager.cast()),
+            0,
+        ).cast()
+    }
 }
 
 #[inline]
@@ -1202,7 +1242,15 @@ pub unsafe extern "C" fn wl_data_device_manager_set_user_data(
 pub unsafe extern "C" fn wl_data_device_release(
     wl_data_device: *mut wl_data_device,
 ) {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_data_device.cast(),
+            WL_DATA_DEVICE_RELEASE,
+            null(),
+            wl_proxy_get_version(wl_data_device.cast()),
+            WL_MARSHAL_FLAG_DESTROY,
+        );
+    }
 }
 
 #[inline]
@@ -1211,7 +1259,15 @@ pub unsafe extern "C" fn wl_data_device_set_selection(
     source: *mut wl_data_source,
     serial: u32,
 ) {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_data_device.cast(),
+            WL_DATA_DEVICE_SET_SELECTION,
+            null(),
+            wl_proxy_get_version(wl_data_device.cast()),
+            0,
+        );
+    }
 }
 
 #[inline]
@@ -1235,7 +1291,15 @@ pub unsafe extern "C" fn wl_data_device_start_drag(
     icon: *mut wl_surface,
     serial: u32,
 ) {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_data_device.cast(),
+            WL_DATA_DEVICE_START_DRAG,
+            null(),
+            wl_proxy_get_version(wl_data_device.cast()),
+            0,
+        );
+    }
 }
 
 #[inline]
@@ -1244,7 +1308,15 @@ pub unsafe extern "C" fn wl_data_offer_accept(
     serial: u32,
     mime_type: *const c_char,
 ) {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_data_offer.cast(),
+            WL_DATA_OFFER_ACCEPT,
+            null(),
+            wl_proxy_get_version(wl_data_offer.cast()),
+            0,
+        );
+    }
 }
 
 #[inline]
@@ -1266,14 +1338,30 @@ pub unsafe extern "C" fn wl_data_offer_add_listener(
 pub unsafe extern "C" fn wl_data_offer_destroy(
     wl_data_offer: *mut wl_data_offer,
 ) {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_data_offer.cast(),
+            WL_DATA_OFFER_DESTROY,
+            null(),
+            wl_proxy_get_version(wl_data_offer.cast()),
+            WL_MARSHAL_FLAG_DESTROY,
+        );
+    }
 }
 
 #[inline]
 pub unsafe extern "C" fn wl_data_offer_finish(
     wl_data_offer: *mut wl_data_offer,
 ) {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_data_offer.cast(),
+            WL_DATA_OFFER_FINISH,
+            null(),
+            wl_proxy_get_version(wl_data_offer.cast()),
+            0,
+        );
+    }
 }
 
 #[inline]
@@ -1296,7 +1384,15 @@ pub unsafe extern "C" fn wl_data_offer_receive(
     mime_type: *const c_char,
     fd: i32,
 ) {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_data_offer.cast(),
+            WL_DATA_OFFER_RECEIVE,
+            null(),
+            wl_proxy_get_version(wl_data_offer.cast()),
+            0,
+        );
+    }
 }
 
 #[inline]
@@ -1305,7 +1401,15 @@ pub unsafe extern "C" fn wl_data_offer_set_actions(
     dnd_actions: u32,
     preferred_action: u32,
 ) {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_data_offer.cast(),
+            WL_DATA_OFFER_SET_ACTIONS,
+            null(),
+            wl_proxy_get_version(wl_data_offer.cast()),
+            0,
+        );
+    }
 }
 
 #[inline]
@@ -1340,7 +1444,15 @@ pub unsafe extern "C" fn wl_data_source_add_listener(
 pub unsafe extern "C" fn wl_data_source_destroy(
     wl_data_source: *mut wl_data_source,
 ) {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_data_source.cast(),
+            WL_DATA_SOURCE_DESTROY,
+            null(),
+            wl_proxy_get_version(wl_data_source.cast()),
+            WL_MARSHAL_FLAG_DESTROY,
+        );
+    }
 }
 
 #[inline]
@@ -1362,7 +1474,15 @@ pub unsafe extern "C" fn wl_data_source_offer(
     wl_data_source: *mut wl_data_source,
     mime_type: *const c_char,
 ) {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_data_source.cast(),
+            WL_DATA_SOURCE_OFFER,
+            null(),
+            wl_proxy_get_version(wl_data_source.cast()),
+            0,
+        );
+    }
 }
 
 #[inline]
@@ -1370,7 +1490,15 @@ pub unsafe extern "C" fn wl_data_source_set_actions(
     wl_data_source: *mut wl_data_source,
     dnd_actions: u32,
 ) {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_data_source.cast(),
+            WL_DATA_SOURCE_SET_ACTIONS,
+            null(),
+            wl_proxy_get_version(wl_data_source.cast()),
+            0,
+        );
+    }
 }
 
 #[inline]
@@ -1405,7 +1533,15 @@ pub unsafe extern "C" fn wl_display_add_listener(
 pub unsafe extern "C" fn wl_display_get_registry(
     wl_display: *mut wl_display,
 ) -> *mut wl_registry {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_display.cast(),
+            WL_DISPLAY_GET_REGISTRY,
+            &wl_registry_interface,
+            wl_proxy_get_version(wl_display.cast()),
+            0,
+        ).cast()
+    }
 }
 
 #[inline]
@@ -1439,14 +1575,30 @@ pub unsafe extern "C" fn wl_display_set_user_data(
 pub unsafe extern "C" fn wl_display_sync(
     wl_display: *mut wl_display,
 ) -> *mut wl_callback {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_display.cast(),
+            WL_DISPLAY_SYNC,
+            &wl_callback_interface,
+            wl_proxy_get_version(wl_display.cast()),
+            0,
+        ).cast()
+    }
 }
 
 #[inline]
 pub unsafe extern "C" fn wl_fixes_destroy(
     wl_fixes: *mut wl_fixes,
 ) {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_fixes.cast(),
+            WL_FIXES_DESTROY,
+            null(),
+            wl_proxy_get_version(wl_fixes.cast()),
+            WL_MARSHAL_FLAG_DESTROY,
+        );
+    }
 }
 
 #[inline]
@@ -1454,7 +1606,15 @@ pub unsafe extern "C" fn wl_fixes_destroy_registry(
     wl_fixes: *mut wl_fixes,
     registry: *mut wl_registry,
 ) {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_fixes.cast(),
+            WL_FIXES_DESTROY_REGISTRY,
+            null(),
+            wl_proxy_get_version(wl_fixes.cast()),
+            0,
+        );
+    }
 }
 
 #[inline]
@@ -1524,7 +1684,15 @@ pub unsafe extern "C" fn wl_keyboard_get_version(
 pub unsafe extern "C" fn wl_keyboard_release(
     wl_keyboard: *mut wl_keyboard,
 ) {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_keyboard.cast(),
+            WL_KEYBOARD_RELEASE,
+            null(),
+            wl_proxy_get_version(wl_keyboard.cast()),
+            WL_MARSHAL_FLAG_DESTROY,
+        );
+    }
 }
 
 #[inline]
@@ -1580,7 +1748,15 @@ pub unsafe extern "C" fn wl_output_get_version(
 pub unsafe extern "C" fn wl_output_release(
     wl_output: *mut wl_output,
 ) {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_output.cast(),
+            WL_OUTPUT_RELEASE,
+            null(),
+            wl_proxy_get_version(wl_output.cast()),
+            WL_MARSHAL_FLAG_DESTROY,
+        );
+    }
 }
 
 #[inline]
@@ -1636,7 +1812,15 @@ pub unsafe extern "C" fn wl_pointer_get_version(
 pub unsafe extern "C" fn wl_pointer_release(
     wl_pointer: *mut wl_pointer,
 ) {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_pointer.cast(),
+            WL_POINTER_RELEASE,
+            null(),
+            wl_proxy_get_version(wl_pointer.cast()),
+            WL_MARSHAL_FLAG_DESTROY,
+        );
+    }
 }
 
 #[inline]
@@ -1647,7 +1831,15 @@ pub unsafe extern "C" fn wl_pointer_set_cursor(
     hotspot_x: i32,
     hotspot_y: i32,
 ) {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_pointer.cast(),
+            WL_POINTER_SET_CURSOR,
+            null(),
+            wl_proxy_get_version(wl_pointer.cast()),
+            0,
+        );
+    }
 }
 
 #[inline]
@@ -1671,14 +1863,30 @@ pub unsafe extern "C" fn wl_region_add(
     width: i32,
     height: i32,
 ) {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_region.cast(),
+            WL_REGION_ADD,
+            null(),
+            wl_proxy_get_version(wl_region.cast()),
+            0,
+        );
+    }
 }
 
 #[inline]
 pub unsafe extern "C" fn wl_region_destroy(
     wl_region: *mut wl_region,
 ) {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_region.cast(),
+            WL_REGION_DESTROY,
+            null(),
+            wl_proxy_get_version(wl_region.cast()),
+            WL_MARSHAL_FLAG_DESTROY,
+        );
+    }
 }
 
 #[inline]
@@ -1716,7 +1924,15 @@ pub unsafe extern "C" fn wl_region_subtract(
     width: i32,
     height: i32,
 ) {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_region.cast(),
+            WL_REGION_SUBTRACT,
+            null(),
+            wl_proxy_get_version(wl_region.cast()),
+            0,
+        );
+    }
 }
 
 #[inline]
@@ -1741,7 +1957,15 @@ pub unsafe extern "C" fn wl_registry_bind(
     interface: *const wl_interface,
     version: u32,
 ) -> *mut c_void {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_registry.cast(),
+            WL_REGISTRY_BIND,
+            interface,
+            version,
+            0,
+        ).cast()
+    }
 }
 
 #[inline]
@@ -1804,21 +2028,45 @@ pub unsafe extern "C" fn wl_seat_destroy(
 pub unsafe extern "C" fn wl_seat_get_keyboard(
     wl_seat: *mut wl_seat,
 ) -> *mut wl_keyboard {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_seat.cast(),
+            WL_SEAT_GET_KEYBOARD,
+            &wl_keyboard_interface,
+            wl_proxy_get_version(wl_seat.cast()),
+            0,
+        ).cast()
+    }
 }
 
 #[inline]
 pub unsafe extern "C" fn wl_seat_get_pointer(
     wl_seat: *mut wl_seat,
 ) -> *mut wl_pointer {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_seat.cast(),
+            WL_SEAT_GET_POINTER,
+            &wl_pointer_interface,
+            wl_proxy_get_version(wl_seat.cast()),
+            0,
+        ).cast()
+    }
 }
 
 #[inline]
 pub unsafe extern "C" fn wl_seat_get_touch(
     wl_seat: *mut wl_seat,
 ) -> *mut wl_touch {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_seat.cast(),
+            WL_SEAT_GET_TOUCH,
+            &wl_touch_interface,
+            wl_proxy_get_version(wl_seat.cast()),
+            0,
+        ).cast()
+    }
 }
 
 #[inline]
@@ -1839,7 +2087,15 @@ pub unsafe extern "C" fn wl_seat_get_version(
 pub unsafe extern "C" fn wl_seat_release(
     wl_seat: *mut wl_seat,
 ) {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_seat.cast(),
+            WL_SEAT_RELEASE,
+            null(),
+            wl_proxy_get_version(wl_seat.cast()),
+            WL_MARSHAL_FLAG_DESTROY,
+        );
+    }
 }
 
 #[inline]
@@ -1867,7 +2123,15 @@ pub unsafe extern "C" fn wl_shell_get_shell_surface(
     wl_shell: *mut wl_shell,
     surface: *mut wl_surface,
 ) -> *mut wl_shell_surface {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_shell.cast(),
+            WL_SHELL_GET_SHELL_SURFACE,
+            &wl_shell_surface_interface,
+            wl_proxy_get_version(wl_shell.cast()),
+            0,
+        ).cast()
+    }
 }
 
 #[inline]
@@ -1939,7 +2203,15 @@ pub unsafe extern "C" fn wl_shell_surface_move(
     seat: *mut wl_seat,
     serial: u32,
 ) {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_shell_surface.cast(),
+            WL_SHELL_SURFACE_MOVE,
+            null(),
+            wl_proxy_get_version(wl_shell_surface.cast()),
+            0,
+        );
+    }
 }
 
 #[inline]
@@ -1947,7 +2219,15 @@ pub unsafe extern "C" fn wl_shell_surface_pong(
     wl_shell_surface: *mut wl_shell_surface,
     serial: u32,
 ) {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_shell_surface.cast(),
+            WL_SHELL_SURFACE_PONG,
+            null(),
+            wl_proxy_get_version(wl_shell_surface.cast()),
+            0,
+        );
+    }
 }
 
 #[inline]
@@ -1957,7 +2237,15 @@ pub unsafe extern "C" fn wl_shell_surface_resize(
     serial: u32,
     edges: u32,
 ) {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_shell_surface.cast(),
+            WL_SHELL_SURFACE_RESIZE,
+            null(),
+            wl_proxy_get_version(wl_shell_surface.cast()),
+            0,
+        );
+    }
 }
 
 #[inline]
@@ -1965,7 +2253,15 @@ pub unsafe extern "C" fn wl_shell_surface_set_class(
     wl_shell_surface: *mut wl_shell_surface,
     class_: *const c_char,
 ) {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_shell_surface.cast(),
+            WL_SHELL_SURFACE_SET_CLASS,
+            null(),
+            wl_proxy_get_version(wl_shell_surface.cast()),
+            0,
+        );
+    }
 }
 
 #[inline]
@@ -1975,7 +2271,15 @@ pub unsafe extern "C" fn wl_shell_surface_set_fullscreen(
     framerate: u32,
     output: *mut wl_output,
 ) {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_shell_surface.cast(),
+            WL_SHELL_SURFACE_SET_FULLSCREEN,
+            null(),
+            wl_proxy_get_version(wl_shell_surface.cast()),
+            0,
+        );
+    }
 }
 
 #[inline]
@@ -1983,7 +2287,15 @@ pub unsafe extern "C" fn wl_shell_surface_set_maximized(
     wl_shell_surface: *mut wl_shell_surface,
     output: *mut wl_output,
 ) {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_shell_surface.cast(),
+            WL_SHELL_SURFACE_SET_MAXIMIZED,
+            null(),
+            wl_proxy_get_version(wl_shell_surface.cast()),
+            0,
+        );
+    }
 }
 
 #[inline]
@@ -1996,7 +2308,15 @@ pub unsafe extern "C" fn wl_shell_surface_set_popup(
     y: i32,
     flags: u32,
 ) {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_shell_surface.cast(),
+            WL_SHELL_SURFACE_SET_POPUP,
+            null(),
+            wl_proxy_get_version(wl_shell_surface.cast()),
+            0,
+        );
+    }
 }
 
 #[inline]
@@ -2004,14 +2324,30 @@ pub unsafe extern "C" fn wl_shell_surface_set_title(
     wl_shell_surface: *mut wl_shell_surface,
     title: *const c_char,
 ) {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_shell_surface.cast(),
+            WL_SHELL_SURFACE_SET_TITLE,
+            null(),
+            wl_proxy_get_version(wl_shell_surface.cast()),
+            0,
+        );
+    }
 }
 
 #[inline]
 pub unsafe extern "C" fn wl_shell_surface_set_toplevel(
     wl_shell_surface: *mut wl_shell_surface,
 ) {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_shell_surface.cast(),
+            WL_SHELL_SURFACE_SET_TOPLEVEL,
+            null(),
+            wl_proxy_get_version(wl_shell_surface.cast()),
+            0,
+        );
+    }
 }
 
 #[inline]
@@ -2022,7 +2358,15 @@ pub unsafe extern "C" fn wl_shell_surface_set_transient(
     y: i32,
     flags: u32,
 ) {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_shell_surface.cast(),
+            WL_SHELL_SURFACE_SET_TRANSIENT,
+            null(),
+            wl_proxy_get_version(wl_shell_surface.cast()),
+            0,
+        );
+    }
 }
 
 #[inline]
@@ -2059,7 +2403,15 @@ pub unsafe extern "C" fn wl_shm_create_pool(
     fd: i32,
     size: i32,
 ) -> *mut wl_shm_pool {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_shm.cast(),
+            WL_SHM_CREATE_POOL,
+            &wl_shm_pool_interface,
+            wl_proxy_get_version(wl_shm.cast()),
+            0,
+        ).cast()
+    }
 }
 
 #[inline]
@@ -2092,14 +2444,30 @@ pub unsafe extern "C" fn wl_shm_pool_create_buffer(
     stride: i32,
     format: u32,
 ) -> *mut wl_buffer {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_shm_pool.cast(),
+            WL_SHM_POOL_CREATE_BUFFER,
+            &wl_buffer_interface,
+            wl_proxy_get_version(wl_shm_pool.cast()),
+            0,
+        ).cast()
+    }
 }
 
 #[inline]
 pub unsafe extern "C" fn wl_shm_pool_destroy(
     wl_shm_pool: *mut wl_shm_pool,
 ) {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_shm_pool.cast(),
+            WL_SHM_POOL_DESTROY,
+            null(),
+            wl_proxy_get_version(wl_shm_pool.cast()),
+            WL_MARSHAL_FLAG_DESTROY,
+        );
+    }
 }
 
 #[inline]
@@ -2121,7 +2489,15 @@ pub unsafe extern "C" fn wl_shm_pool_resize(
     wl_shm_pool: *mut wl_shm_pool,
     size: i32,
 ) {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_shm_pool.cast(),
+            WL_SHM_POOL_RESIZE,
+            null(),
+            wl_proxy_get_version(wl_shm_pool.cast()),
+            0,
+        );
+    }
 }
 
 #[inline]
@@ -2141,7 +2517,15 @@ pub unsafe extern "C" fn wl_shm_pool_set_user_data(
 pub unsafe extern "C" fn wl_shm_release(
     wl_shm: *mut wl_shm,
 ) {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_shm.cast(),
+            WL_SHM_RELEASE,
+            null(),
+            wl_proxy_get_version(wl_shm.cast()),
+            WL_MARSHAL_FLAG_DESTROY,
+        );
+    }
 }
 
 #[inline]
@@ -2161,7 +2545,15 @@ pub unsafe extern "C" fn wl_shm_set_user_data(
 pub unsafe extern "C" fn wl_subcompositor_destroy(
     wl_subcompositor: *mut wl_subcompositor,
 ) {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_subcompositor.cast(),
+            WL_SUBCOMPOSITOR_DESTROY,
+            null(),
+            wl_proxy_get_version(wl_subcompositor.cast()),
+            WL_MARSHAL_FLAG_DESTROY,
+        );
+    }
 }
 
 #[inline]
@@ -2170,7 +2562,15 @@ pub unsafe extern "C" fn wl_subcompositor_get_subsurface(
     surface: *mut wl_surface,
     parent: *mut wl_surface,
 ) -> *mut wl_subsurface {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_subcompositor.cast(),
+            WL_SUBCOMPOSITOR_GET_SUBSURFACE,
+            &wl_subsurface_interface,
+            wl_proxy_get_version(wl_subcompositor.cast()),
+            0,
+        ).cast()
+    }
 }
 
 #[inline]
@@ -2204,7 +2604,15 @@ pub unsafe extern "C" fn wl_subcompositor_set_user_data(
 pub unsafe extern "C" fn wl_subsurface_destroy(
     wl_subsurface: *mut wl_subsurface,
 ) {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_subsurface.cast(),
+            WL_SUBSURFACE_DESTROY,
+            null(),
+            wl_proxy_get_version(wl_subsurface.cast()),
+            WL_MARSHAL_FLAG_DESTROY,
+        );
+    }
 }
 
 #[inline]
@@ -2226,7 +2634,15 @@ pub unsafe extern "C" fn wl_subsurface_place_above(
     wl_subsurface: *mut wl_subsurface,
     sibling: *mut wl_surface,
 ) {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_subsurface.cast(),
+            WL_SUBSURFACE_PLACE_ABOVE,
+            null(),
+            wl_proxy_get_version(wl_subsurface.cast()),
+            0,
+        );
+    }
 }
 
 #[inline]
@@ -2234,14 +2650,30 @@ pub unsafe extern "C" fn wl_subsurface_place_below(
     wl_subsurface: *mut wl_subsurface,
     sibling: *mut wl_surface,
 ) {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_subsurface.cast(),
+            WL_SUBSURFACE_PLACE_BELOW,
+            null(),
+            wl_proxy_get_version(wl_subsurface.cast()),
+            0,
+        );
+    }
 }
 
 #[inline]
 pub unsafe extern "C" fn wl_subsurface_set_desync(
     wl_subsurface: *mut wl_subsurface,
 ) {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_subsurface.cast(),
+            WL_SUBSURFACE_SET_DESYNC,
+            null(),
+            wl_proxy_get_version(wl_subsurface.cast()),
+            0,
+        );
+    }
 }
 
 #[inline]
@@ -2250,14 +2682,30 @@ pub unsafe extern "C" fn wl_subsurface_set_position(
     x: i32,
     y: i32,
 ) {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_subsurface.cast(),
+            WL_SUBSURFACE_SET_POSITION,
+            null(),
+            wl_proxy_get_version(wl_subsurface.cast()),
+            0,
+        );
+    }
 }
 
 #[inline]
 pub unsafe extern "C" fn wl_subsurface_set_sync(
     wl_subsurface: *mut wl_subsurface,
 ) {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_subsurface.cast(),
+            WL_SUBSURFACE_SET_SYNC,
+            null(),
+            wl_proxy_get_version(wl_subsurface.cast()),
+            0,
+        );
+    }
 }
 
 #[inline]
@@ -2295,14 +2743,30 @@ pub unsafe extern "C" fn wl_surface_attach(
     x: i32,
     y: i32,
 ) {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_surface.cast(),
+            WL_SURFACE_ATTACH,
+            null(),
+            wl_proxy_get_version(wl_surface.cast()),
+            0,
+        );
+    }
 }
 
 #[inline]
 pub unsafe extern "C" fn wl_surface_commit(
     wl_surface: *mut wl_surface,
 ) {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_surface.cast(),
+            WL_SURFACE_COMMIT,
+            null(),
+            wl_proxy_get_version(wl_surface.cast()),
+            0,
+        );
+    }
 }
 
 #[inline]
@@ -2313,7 +2777,15 @@ pub unsafe extern "C" fn wl_surface_damage(
     width: i32,
     height: i32,
 ) {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_surface.cast(),
+            WL_SURFACE_DAMAGE,
+            null(),
+            wl_proxy_get_version(wl_surface.cast()),
+            0,
+        );
+    }
 }
 
 #[inline]
@@ -2324,21 +2796,45 @@ pub unsafe extern "C" fn wl_surface_damage_buffer(
     width: i32,
     height: i32,
 ) {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_surface.cast(),
+            WL_SURFACE_DAMAGE_BUFFER,
+            null(),
+            wl_proxy_get_version(wl_surface.cast()),
+            0,
+        );
+    }
 }
 
 #[inline]
 pub unsafe extern "C" fn wl_surface_destroy(
     wl_surface: *mut wl_surface,
 ) {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_surface.cast(),
+            WL_SURFACE_DESTROY,
+            null(),
+            wl_proxy_get_version(wl_surface.cast()),
+            WL_MARSHAL_FLAG_DESTROY,
+        );
+    }
 }
 
 #[inline]
 pub unsafe extern "C" fn wl_surface_frame(
     wl_surface: *mut wl_surface,
 ) -> *mut wl_callback {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_surface.cast(),
+            WL_SURFACE_FRAME,
+            &wl_callback_interface,
+            wl_proxy_get_version(wl_surface.cast()),
+            0,
+        ).cast()
+    }
 }
 
 #[inline]
@@ -2361,7 +2857,15 @@ pub unsafe extern "C" fn wl_surface_offset(
     x: i32,
     y: i32,
 ) {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_surface.cast(),
+            WL_SURFACE_OFFSET,
+            null(),
+            wl_proxy_get_version(wl_surface.cast()),
+            0,
+        );
+    }
 }
 
 #[inline]
@@ -2369,7 +2873,15 @@ pub unsafe extern "C" fn wl_surface_set_buffer_scale(
     wl_surface: *mut wl_surface,
     scale: i32,
 ) {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_surface.cast(),
+            WL_SURFACE_SET_BUFFER_SCALE,
+            null(),
+            wl_proxy_get_version(wl_surface.cast()),
+            0,
+        );
+    }
 }
 
 #[inline]
@@ -2377,7 +2889,15 @@ pub unsafe extern "C" fn wl_surface_set_buffer_transform(
     wl_surface: *mut wl_surface,
     transform: i32,
 ) {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_surface.cast(),
+            WL_SURFACE_SET_BUFFER_TRANSFORM,
+            null(),
+            wl_proxy_get_version(wl_surface.cast()),
+            0,
+        );
+    }
 }
 
 #[inline]
@@ -2385,7 +2905,15 @@ pub unsafe extern "C" fn wl_surface_set_input_region(
     wl_surface: *mut wl_surface,
     region: *mut wl_region,
 ) {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_surface.cast(),
+            WL_SURFACE_SET_INPUT_REGION,
+            null(),
+            wl_proxy_get_version(wl_surface.cast()),
+            0,
+        );
+    }
 }
 
 #[inline]
@@ -2393,7 +2921,15 @@ pub unsafe extern "C" fn wl_surface_set_opaque_region(
     wl_surface: *mut wl_surface,
     region: *mut wl_region,
 ) {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_surface.cast(),
+            WL_SURFACE_SET_OPAQUE_REGION,
+            null(),
+            wl_proxy_get_version(wl_surface.cast()),
+            0,
+        );
+    }
 }
 
 #[inline]
@@ -2449,7 +2985,15 @@ pub unsafe extern "C" fn wl_touch_get_version(
 pub unsafe extern "C" fn wl_touch_release(
     wl_touch: *mut wl_touch,
 ) {
-    todo!();
+    unsafe {
+        wl_proxy_marshal_flags(
+            wl_touch.cast(),
+            WL_TOUCH_RELEASE,
+            null(),
+            wl_proxy_get_version(wl_touch.cast()),
+            WL_MARSHAL_FLAG_DESTROY,
+        );
+    }
 }
 
 #[inline]
