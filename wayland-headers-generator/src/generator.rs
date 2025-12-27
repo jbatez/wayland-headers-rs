@@ -1,4 +1,4 @@
-use std::collections::{HashMap, HashSet};
+use std::collections::HashMap;
 
 use wayland_protocol::*;
 
@@ -42,7 +42,7 @@ impl Generator {
         let side_name = side.name();
         let mut generator = Generator::new(format!("wayland_{side_name}_protocol"));
         generator.add_import_side_core(side_name);
-        generator.get_protocol_enum_types(protocol);
+        generator.determine_protocol_enum_types(protocol);
         generator.visit_protocol(protocol, side);
         generator.module.write_file();
     }
@@ -52,31 +52,31 @@ impl Generator {
         self.module.imports.push(text);
     }
 
-    fn get_protocol_enum_types(&mut self, protocol: &Protocol) {
+    fn determine_protocol_enum_types(&mut self, protocol: &Protocol) {
         for content in &protocol.contents {
             if let ProtocolContent::Interface(interface) = content {
-                self.get_interface_enum_types(interface);
+                self.determine_interface_enum_types(interface);
             }
         }
     }
 
-    fn get_interface_enum_types(&mut self, interface: &Interface) {
+    fn determine_interface_enum_types(&mut self, interface: &Interface) {
         for content in &interface.contents {
             if let InterfaceContent::Request(message) | InterfaceContent::Event(message) = content {
-                self.get_message_enum_types(interface, message);
+                self.determine_message_enum_types(interface, message);
             }
         }
     }
 
-    fn get_message_enum_types(&mut self, interface: &Interface, message: &Message) {
+    fn determine_message_enum_types(&mut self, interface: &Interface, message: &Message) {
         for content in &message.contents {
             if let MessageContent::Arg(arg) = content {
-                self.get_arg_enum_type(interface, arg);
+                self.determine_arg_enum_type(interface, arg);
             }
         }
     }
 
-    fn get_arg_enum_type(&mut self, interface: &Interface, arg: &Arg) {
+    fn determine_arg_enum_type(&mut self, interface: &Interface, arg: &Arg) {
         if let Some(enum_name) = arg.enu.as_ref() {
             let full_enum_name = if enum_name.contains('.') {
                 enum_name.to_owned()
@@ -112,7 +112,7 @@ impl Generator {
 
     fn visit_interface(&mut self, interface: &Interface, side: Side) {
         self.add_extern_type(interface, side);
-        self.add_extern_static(interface);
+        self.add_extern_static_interface(interface);
 
         for content in &interface.contents {
             match content {
@@ -142,7 +142,7 @@ pub struct {name} {{
         self.module.structs.push((name.to_owned(), text));
     }
 
-    fn add_extern_static(&mut self, interface: &Interface) {
+    fn add_extern_static_interface(&mut self, interface: &Interface) {
         let interface_name = interface.name.as_ref().unwrap();
         let name = format!("{interface_name}_interface");
         let text = format!("    pub static {name}: wl_interface;");
@@ -160,12 +160,17 @@ pub struct {name} {{
     fn visit_enum(&mut self, interface: &Interface, enu: &Enum) {
         for content in &enu.contents {
             if let EnumContent::Entry(entry) = content {
-                self.visit_entry(interface, enu, entry);
+                self.visit_enum_entry(interface, enu, entry);
             }
         }
     }
 
-    fn visit_entry(&mut self, interface: &Interface, enu: &Enum, entry: &Entry) {
+    fn visit_enum_entry(&mut self, interface: &Interface, enu: &Enum, entry: &Entry) {
+        self.add_enum_entry_const(interface, enu, entry);
+        self.add_enum_entry_since_version_const(interface, enu, entry);
+    }
+
+    fn add_enum_entry_const(&mut self, interface: &Interface, enu: &Enum, entry: &Entry) {
         let interface_name = interface.name.as_ref().unwrap();
         let enum_name = enu.name.as_ref().unwrap();
         let entry_name = entry.name.as_ref().unwrap();
@@ -184,11 +189,23 @@ pub struct {name} {{
         let value = entry.value.as_ref().unwrap();
         let text = format!("pub const {name}: {typ} = {value};");
         self.module.constants.push((name.clone(), text));
+    }
 
+    fn add_enum_entry_since_version_const(
+        &mut self,
+        interface: &Interface,
+        enu: &Enum,
+        entry: &Entry,
+    ) {
         if let Some(since) = entry.since.as_ref()
             && since != "1"
         {
-            let name = format!("{name}_SINCE_VERSION");
+            let interface_name = interface.name.as_ref().unwrap();
+            let enum_name = enu.name.as_ref().unwrap();
+            let entry_name = entry.name.as_ref().unwrap();
+            let name = format!("{interface_name}_{enum_name}_{entry_name}_since_version");
+            let name = name.to_ascii_uppercase();
+
             let text = format!("pub const {name}: u32 = {since};");
             self.module.constants.push((name, text));
         }
