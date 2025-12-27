@@ -151,20 +151,20 @@ pub const WL_KEYBOARD_KEY_STATE_REPEATED: u32 = 2;
 pub const WL_KEYBOARD_KEY_STATE_REPEATED_SINCE_VERSION: u32 = 10;
 pub const WL_OUTPUT_MODE_CURRENT: u32 = 0x1;
 pub const WL_OUTPUT_MODE_PREFERRED: u32 = 0x2;
-pub const WL_OUTPUT_SUBPIXEL_HORIZONTAL_BGR: i32 = 3;
-pub const WL_OUTPUT_SUBPIXEL_HORIZONTAL_RGB: i32 = 2;
-pub const WL_OUTPUT_SUBPIXEL_NONE: i32 = 1;
-pub const WL_OUTPUT_SUBPIXEL_UNKNOWN: i32 = 0;
-pub const WL_OUTPUT_SUBPIXEL_VERTICAL_BGR: i32 = 5;
-pub const WL_OUTPUT_SUBPIXEL_VERTICAL_RGB: i32 = 4;
-pub const WL_OUTPUT_TRANSFORM_180: i32 = 2;
-pub const WL_OUTPUT_TRANSFORM_270: i32 = 3;
-pub const WL_OUTPUT_TRANSFORM_90: i32 = 1;
-pub const WL_OUTPUT_TRANSFORM_FLIPPED: i32 = 4;
-pub const WL_OUTPUT_TRANSFORM_FLIPPED_180: i32 = 6;
-pub const WL_OUTPUT_TRANSFORM_FLIPPED_270: i32 = 7;
-pub const WL_OUTPUT_TRANSFORM_FLIPPED_90: i32 = 5;
-pub const WL_OUTPUT_TRANSFORM_NORMAL: i32 = 0;
+pub const WL_OUTPUT_SUBPIXEL_HORIZONTAL_BGR: u32 = 3;
+pub const WL_OUTPUT_SUBPIXEL_HORIZONTAL_RGB: u32 = 2;
+pub const WL_OUTPUT_SUBPIXEL_NONE: u32 = 1;
+pub const WL_OUTPUT_SUBPIXEL_UNKNOWN: u32 = 0;
+pub const WL_OUTPUT_SUBPIXEL_VERTICAL_BGR: u32 = 5;
+pub const WL_OUTPUT_SUBPIXEL_VERTICAL_RGB: u32 = 4;
+pub const WL_OUTPUT_TRANSFORM_180: u32 = 2;
+pub const WL_OUTPUT_TRANSFORM_270: u32 = 3;
+pub const WL_OUTPUT_TRANSFORM_90: u32 = 1;
+pub const WL_OUTPUT_TRANSFORM_FLIPPED: u32 = 4;
+pub const WL_OUTPUT_TRANSFORM_FLIPPED_180: u32 = 6;
+pub const WL_OUTPUT_TRANSFORM_FLIPPED_270: u32 = 7;
+pub const WL_OUTPUT_TRANSFORM_FLIPPED_90: u32 = 5;
+pub const WL_OUTPUT_TRANSFORM_NORMAL: u32 = 0;
 pub const WL_POINTER_AXIS_HORIZONTAL_SCROLL: u32 = 1;
 pub const WL_POINTER_AXIS_RELATIVE_DIRECTION_IDENTICAL: u32 = 0;
 pub const WL_POINTER_AXIS_RELATIVE_DIRECTION_INVERTED: u32 = 1;
@@ -330,6 +330,422 @@ pub const WL_SURFACE_ERROR_INVALID_OFFSET: u32 = 3;
 pub const WL_SURFACE_ERROR_INVALID_SCALE: u32 = 0;
 pub const WL_SURFACE_ERROR_INVALID_SIZE: u32 = 2;
 pub const WL_SURFACE_ERROR_INVALID_TRANSFORM: u32 = 1;
+
+#[inline]
+pub fn wl_data_device_error_is_valid(value: u32, version: u32) -> bool {
+    match value {
+        WL_DATA_DEVICE_ERROR_ROLE => version >= 1,
+        WL_DATA_DEVICE_ERROR_USED_SOURCE => version >= 1,
+        _ => false,
+    }
+}
+
+#[inline]
+pub fn wl_data_device_manager_dnd_action_is_valid(value: u32, version: u32) -> bool {
+    let mut valid = 0;
+    if version >= 1 {
+        valid |= WL_DATA_DEVICE_MANAGER_DND_ACTION_NONE;
+    }
+    if version >= 1 {
+        valid |= WL_DATA_DEVICE_MANAGER_DND_ACTION_COPY;
+    }
+    if version >= 1 {
+        valid |= WL_DATA_DEVICE_MANAGER_DND_ACTION_MOVE;
+    }
+    if version >= 1 {
+        valid |= WL_DATA_DEVICE_MANAGER_DND_ACTION_ASK;
+    }
+    (value & !valid) == 0
+}
+
+#[inline]
+pub fn wl_data_offer_error_is_valid(value: u32, version: u32) -> bool {
+    match value {
+        WL_DATA_OFFER_ERROR_INVALID_FINISH => version >= 1,
+        WL_DATA_OFFER_ERROR_INVALID_ACTION_MASK => version >= 1,
+        WL_DATA_OFFER_ERROR_INVALID_ACTION => version >= 1,
+        WL_DATA_OFFER_ERROR_INVALID_OFFER => version >= 1,
+        _ => false,
+    }
+}
+
+#[inline]
+pub fn wl_data_source_error_is_valid(value: u32, version: u32) -> bool {
+    match value {
+        WL_DATA_SOURCE_ERROR_INVALID_ACTION_MASK => version >= 1,
+        WL_DATA_SOURCE_ERROR_INVALID_SOURCE => version >= 1,
+        _ => false,
+    }
+}
+
+#[inline]
+pub fn wl_display_error_is_valid(value: u32, version: u32) -> bool {
+    match value {
+        WL_DISPLAY_ERROR_INVALID_OBJECT => version >= 1,
+        WL_DISPLAY_ERROR_INVALID_METHOD => version >= 1,
+        WL_DISPLAY_ERROR_NO_MEMORY => version >= 1,
+        WL_DISPLAY_ERROR_IMPLEMENTATION => version >= 1,
+        _ => false,
+    }
+}
+
+#[inline]
+pub fn wl_keyboard_key_state_is_valid(value: u32, version: u32) -> bool {
+    match value {
+        WL_KEYBOARD_KEY_STATE_RELEASED => version >= 1,
+        WL_KEYBOARD_KEY_STATE_PRESSED => version >= 1,
+        WL_KEYBOARD_KEY_STATE_REPEATED => version >= 10,
+        _ => false,
+    }
+}
+
+#[inline]
+pub fn wl_keyboard_keymap_format_is_valid(value: u32, version: u32) -> bool {
+    match value {
+        WL_KEYBOARD_KEYMAP_FORMAT_NO_KEYMAP => version >= 1,
+        WL_KEYBOARD_KEYMAP_FORMAT_XKB_V1 => version >= 1,
+        _ => false,
+    }
+}
+
+#[inline]
+pub fn wl_output_mode_is_valid(value: u32, version: u32) -> bool {
+    let mut valid = 0;
+    if version >= 1 {
+        valid |= WL_OUTPUT_MODE_CURRENT;
+    }
+    if version >= 1 {
+        valid |= WL_OUTPUT_MODE_PREFERRED;
+    }
+    (value & !valid) == 0
+}
+
+#[inline]
+pub fn wl_output_subpixel_is_valid(value: u32, version: u32) -> bool {
+    match value {
+        WL_OUTPUT_SUBPIXEL_UNKNOWN => version >= 1,
+        WL_OUTPUT_SUBPIXEL_NONE => version >= 1,
+        WL_OUTPUT_SUBPIXEL_HORIZONTAL_RGB => version >= 1,
+        WL_OUTPUT_SUBPIXEL_HORIZONTAL_BGR => version >= 1,
+        WL_OUTPUT_SUBPIXEL_VERTICAL_RGB => version >= 1,
+        WL_OUTPUT_SUBPIXEL_VERTICAL_BGR => version >= 1,
+        _ => false,
+    }
+}
+
+#[inline]
+pub fn wl_output_transform_is_valid(value: u32, version: u32) -> bool {
+    match value {
+        WL_OUTPUT_TRANSFORM_NORMAL => version >= 1,
+        WL_OUTPUT_TRANSFORM_90 => version >= 1,
+        WL_OUTPUT_TRANSFORM_180 => version >= 1,
+        WL_OUTPUT_TRANSFORM_270 => version >= 1,
+        WL_OUTPUT_TRANSFORM_FLIPPED => version >= 1,
+        WL_OUTPUT_TRANSFORM_FLIPPED_90 => version >= 1,
+        WL_OUTPUT_TRANSFORM_FLIPPED_180 => version >= 1,
+        WL_OUTPUT_TRANSFORM_FLIPPED_270 => version >= 1,
+        _ => false,
+    }
+}
+
+#[inline]
+pub fn wl_pointer_axis_is_valid(value: u32, version: u32) -> bool {
+    match value {
+        WL_POINTER_AXIS_VERTICAL_SCROLL => version >= 1,
+        WL_POINTER_AXIS_HORIZONTAL_SCROLL => version >= 1,
+        _ => false,
+    }
+}
+
+#[inline]
+pub fn wl_pointer_axis_relative_direction_is_valid(value: u32, version: u32) -> bool {
+    match value {
+        WL_POINTER_AXIS_RELATIVE_DIRECTION_IDENTICAL => version >= 1,
+        WL_POINTER_AXIS_RELATIVE_DIRECTION_INVERTED => version >= 1,
+        _ => false,
+    }
+}
+
+#[inline]
+pub fn wl_pointer_axis_source_is_valid(value: u32, version: u32) -> bool {
+    match value {
+        WL_POINTER_AXIS_SOURCE_WHEEL => version >= 1,
+        WL_POINTER_AXIS_SOURCE_FINGER => version >= 1,
+        WL_POINTER_AXIS_SOURCE_CONTINUOUS => version >= 1,
+        WL_POINTER_AXIS_SOURCE_WHEEL_TILT => version >= 6,
+        _ => false,
+    }
+}
+
+#[inline]
+pub fn wl_pointer_button_state_is_valid(value: u32, version: u32) -> bool {
+    match value {
+        WL_POINTER_BUTTON_STATE_RELEASED => version >= 1,
+        WL_POINTER_BUTTON_STATE_PRESSED => version >= 1,
+        _ => false,
+    }
+}
+
+#[inline]
+pub fn wl_pointer_error_is_valid(value: u32, version: u32) -> bool {
+    match value {
+        WL_POINTER_ERROR_ROLE => version >= 1,
+        _ => false,
+    }
+}
+
+#[inline]
+pub fn wl_seat_capability_is_valid(value: u32, version: u32) -> bool {
+    let mut valid = 0;
+    if version >= 1 {
+        valid |= WL_SEAT_CAPABILITY_POINTER;
+    }
+    if version >= 1 {
+        valid |= WL_SEAT_CAPABILITY_KEYBOARD;
+    }
+    if version >= 1 {
+        valid |= WL_SEAT_CAPABILITY_TOUCH;
+    }
+    (value & !valid) == 0
+}
+
+#[inline]
+pub fn wl_seat_error_is_valid(value: u32, version: u32) -> bool {
+    match value {
+        WL_SEAT_ERROR_MISSING_CAPABILITY => version >= 1,
+        _ => false,
+    }
+}
+
+#[inline]
+pub fn wl_shell_error_is_valid(value: u32, version: u32) -> bool {
+    match value {
+        WL_SHELL_ERROR_ROLE => version >= 1,
+        _ => false,
+    }
+}
+
+#[inline]
+pub fn wl_shell_surface_fullscreen_method_is_valid(value: u32, version: u32) -> bool {
+    match value {
+        WL_SHELL_SURFACE_FULLSCREEN_METHOD_DEFAULT => version >= 1,
+        WL_SHELL_SURFACE_FULLSCREEN_METHOD_SCALE => version >= 1,
+        WL_SHELL_SURFACE_FULLSCREEN_METHOD_DRIVER => version >= 1,
+        WL_SHELL_SURFACE_FULLSCREEN_METHOD_FILL => version >= 1,
+        _ => false,
+    }
+}
+
+#[inline]
+pub fn wl_shell_surface_resize_is_valid(value: u32, version: u32) -> bool {
+    let mut valid = 0;
+    if version >= 1 {
+        valid |= WL_SHELL_SURFACE_RESIZE_NONE;
+    }
+    if version >= 1 {
+        valid |= WL_SHELL_SURFACE_RESIZE_TOP;
+    }
+    if version >= 1 {
+        valid |= WL_SHELL_SURFACE_RESIZE_BOTTOM;
+    }
+    if version >= 1 {
+        valid |= WL_SHELL_SURFACE_RESIZE_LEFT;
+    }
+    if version >= 1 {
+        valid |= WL_SHELL_SURFACE_RESIZE_TOP_LEFT;
+    }
+    if version >= 1 {
+        valid |= WL_SHELL_SURFACE_RESIZE_BOTTOM_LEFT;
+    }
+    if version >= 1 {
+        valid |= WL_SHELL_SURFACE_RESIZE_RIGHT;
+    }
+    if version >= 1 {
+        valid |= WL_SHELL_SURFACE_RESIZE_TOP_RIGHT;
+    }
+    if version >= 1 {
+        valid |= WL_SHELL_SURFACE_RESIZE_BOTTOM_RIGHT;
+    }
+    (value & !valid) == 0
+}
+
+#[inline]
+pub fn wl_shell_surface_transient_is_valid(value: u32, version: u32) -> bool {
+    let mut valid = 0;
+    if version >= 1 {
+        valid |= WL_SHELL_SURFACE_TRANSIENT_INACTIVE;
+    }
+    (value & !valid) == 0
+}
+
+#[inline]
+pub fn wl_shm_error_is_valid(value: u32, version: u32) -> bool {
+    match value {
+        WL_SHM_ERROR_INVALID_FORMAT => version >= 1,
+        WL_SHM_ERROR_INVALID_STRIDE => version >= 1,
+        WL_SHM_ERROR_INVALID_FD => version >= 1,
+        _ => false,
+    }
+}
+
+#[inline]
+pub fn wl_shm_format_is_valid(value: u32, version: u32) -> bool {
+    match value {
+        WL_SHM_FORMAT_ARGB8888 => version >= 1,
+        WL_SHM_FORMAT_XRGB8888 => version >= 1,
+        WL_SHM_FORMAT_C8 => version >= 1,
+        WL_SHM_FORMAT_RGB332 => version >= 1,
+        WL_SHM_FORMAT_BGR233 => version >= 1,
+        WL_SHM_FORMAT_XRGB4444 => version >= 1,
+        WL_SHM_FORMAT_XBGR4444 => version >= 1,
+        WL_SHM_FORMAT_RGBX4444 => version >= 1,
+        WL_SHM_FORMAT_BGRX4444 => version >= 1,
+        WL_SHM_FORMAT_ARGB4444 => version >= 1,
+        WL_SHM_FORMAT_ABGR4444 => version >= 1,
+        WL_SHM_FORMAT_RGBA4444 => version >= 1,
+        WL_SHM_FORMAT_BGRA4444 => version >= 1,
+        WL_SHM_FORMAT_XRGB1555 => version >= 1,
+        WL_SHM_FORMAT_XBGR1555 => version >= 1,
+        WL_SHM_FORMAT_RGBX5551 => version >= 1,
+        WL_SHM_FORMAT_BGRX5551 => version >= 1,
+        WL_SHM_FORMAT_ARGB1555 => version >= 1,
+        WL_SHM_FORMAT_ABGR1555 => version >= 1,
+        WL_SHM_FORMAT_RGBA5551 => version >= 1,
+        WL_SHM_FORMAT_BGRA5551 => version >= 1,
+        WL_SHM_FORMAT_RGB565 => version >= 1,
+        WL_SHM_FORMAT_BGR565 => version >= 1,
+        WL_SHM_FORMAT_RGB888 => version >= 1,
+        WL_SHM_FORMAT_BGR888 => version >= 1,
+        WL_SHM_FORMAT_XBGR8888 => version >= 1,
+        WL_SHM_FORMAT_RGBX8888 => version >= 1,
+        WL_SHM_FORMAT_BGRX8888 => version >= 1,
+        WL_SHM_FORMAT_ABGR8888 => version >= 1,
+        WL_SHM_FORMAT_RGBA8888 => version >= 1,
+        WL_SHM_FORMAT_BGRA8888 => version >= 1,
+        WL_SHM_FORMAT_XRGB2101010 => version >= 1,
+        WL_SHM_FORMAT_XBGR2101010 => version >= 1,
+        WL_SHM_FORMAT_RGBX1010102 => version >= 1,
+        WL_SHM_FORMAT_BGRX1010102 => version >= 1,
+        WL_SHM_FORMAT_ARGB2101010 => version >= 1,
+        WL_SHM_FORMAT_ABGR2101010 => version >= 1,
+        WL_SHM_FORMAT_RGBA1010102 => version >= 1,
+        WL_SHM_FORMAT_BGRA1010102 => version >= 1,
+        WL_SHM_FORMAT_YUYV => version >= 1,
+        WL_SHM_FORMAT_YVYU => version >= 1,
+        WL_SHM_FORMAT_UYVY => version >= 1,
+        WL_SHM_FORMAT_VYUY => version >= 1,
+        WL_SHM_FORMAT_AYUV => version >= 1,
+        WL_SHM_FORMAT_NV12 => version >= 1,
+        WL_SHM_FORMAT_NV21 => version >= 1,
+        WL_SHM_FORMAT_NV16 => version >= 1,
+        WL_SHM_FORMAT_NV61 => version >= 1,
+        WL_SHM_FORMAT_YUV410 => version >= 1,
+        WL_SHM_FORMAT_YVU410 => version >= 1,
+        WL_SHM_FORMAT_YUV411 => version >= 1,
+        WL_SHM_FORMAT_YVU411 => version >= 1,
+        WL_SHM_FORMAT_YUV420 => version >= 1,
+        WL_SHM_FORMAT_YVU420 => version >= 1,
+        WL_SHM_FORMAT_YUV422 => version >= 1,
+        WL_SHM_FORMAT_YVU422 => version >= 1,
+        WL_SHM_FORMAT_YUV444 => version >= 1,
+        WL_SHM_FORMAT_YVU444 => version >= 1,
+        WL_SHM_FORMAT_R8 => version >= 1,
+        WL_SHM_FORMAT_R16 => version >= 1,
+        WL_SHM_FORMAT_RG88 => version >= 1,
+        WL_SHM_FORMAT_GR88 => version >= 1,
+        WL_SHM_FORMAT_RG1616 => version >= 1,
+        WL_SHM_FORMAT_GR1616 => version >= 1,
+        WL_SHM_FORMAT_XRGB16161616F => version >= 1,
+        WL_SHM_FORMAT_XBGR16161616F => version >= 1,
+        WL_SHM_FORMAT_ARGB16161616F => version >= 1,
+        WL_SHM_FORMAT_ABGR16161616F => version >= 1,
+        WL_SHM_FORMAT_XYUV8888 => version >= 1,
+        WL_SHM_FORMAT_VUY888 => version >= 1,
+        WL_SHM_FORMAT_VUY101010 => version >= 1,
+        WL_SHM_FORMAT_Y210 => version >= 1,
+        WL_SHM_FORMAT_Y212 => version >= 1,
+        WL_SHM_FORMAT_Y216 => version >= 1,
+        WL_SHM_FORMAT_Y410 => version >= 1,
+        WL_SHM_FORMAT_Y412 => version >= 1,
+        WL_SHM_FORMAT_Y416 => version >= 1,
+        WL_SHM_FORMAT_XVYU2101010 => version >= 1,
+        WL_SHM_FORMAT_XVYU12_16161616 => version >= 1,
+        WL_SHM_FORMAT_XVYU16161616 => version >= 1,
+        WL_SHM_FORMAT_Y0L0 => version >= 1,
+        WL_SHM_FORMAT_X0L0 => version >= 1,
+        WL_SHM_FORMAT_Y0L2 => version >= 1,
+        WL_SHM_FORMAT_X0L2 => version >= 1,
+        WL_SHM_FORMAT_YUV420_8BIT => version >= 1,
+        WL_SHM_FORMAT_YUV420_10BIT => version >= 1,
+        WL_SHM_FORMAT_XRGB8888_A8 => version >= 1,
+        WL_SHM_FORMAT_XBGR8888_A8 => version >= 1,
+        WL_SHM_FORMAT_RGBX8888_A8 => version >= 1,
+        WL_SHM_FORMAT_BGRX8888_A8 => version >= 1,
+        WL_SHM_FORMAT_RGB888_A8 => version >= 1,
+        WL_SHM_FORMAT_BGR888_A8 => version >= 1,
+        WL_SHM_FORMAT_RGB565_A8 => version >= 1,
+        WL_SHM_FORMAT_BGR565_A8 => version >= 1,
+        WL_SHM_FORMAT_NV24 => version >= 1,
+        WL_SHM_FORMAT_NV42 => version >= 1,
+        WL_SHM_FORMAT_P210 => version >= 1,
+        WL_SHM_FORMAT_P010 => version >= 1,
+        WL_SHM_FORMAT_P012 => version >= 1,
+        WL_SHM_FORMAT_P016 => version >= 1,
+        WL_SHM_FORMAT_AXBXGXRX106106106106 => version >= 1,
+        WL_SHM_FORMAT_NV15 => version >= 1,
+        WL_SHM_FORMAT_Q410 => version >= 1,
+        WL_SHM_FORMAT_Q401 => version >= 1,
+        WL_SHM_FORMAT_XRGB16161616 => version >= 1,
+        WL_SHM_FORMAT_XBGR16161616 => version >= 1,
+        WL_SHM_FORMAT_ARGB16161616 => version >= 1,
+        WL_SHM_FORMAT_ABGR16161616 => version >= 1,
+        WL_SHM_FORMAT_C1 => version >= 1,
+        WL_SHM_FORMAT_C2 => version >= 1,
+        WL_SHM_FORMAT_C4 => version >= 1,
+        WL_SHM_FORMAT_D1 => version >= 1,
+        WL_SHM_FORMAT_D2 => version >= 1,
+        WL_SHM_FORMAT_D4 => version >= 1,
+        WL_SHM_FORMAT_D8 => version >= 1,
+        WL_SHM_FORMAT_R1 => version >= 1,
+        WL_SHM_FORMAT_R2 => version >= 1,
+        WL_SHM_FORMAT_R4 => version >= 1,
+        WL_SHM_FORMAT_R10 => version >= 1,
+        WL_SHM_FORMAT_R12 => version >= 1,
+        WL_SHM_FORMAT_AVUY8888 => version >= 1,
+        WL_SHM_FORMAT_XVUY8888 => version >= 1,
+        WL_SHM_FORMAT_P030 => version >= 1,
+        _ => false,
+    }
+}
+
+#[inline]
+pub fn wl_subcompositor_error_is_valid(value: u32, version: u32) -> bool {
+    match value {
+        WL_SUBCOMPOSITOR_ERROR_BAD_SURFACE => version >= 1,
+        WL_SUBCOMPOSITOR_ERROR_BAD_PARENT => version >= 1,
+        _ => false,
+    }
+}
+
+#[inline]
+pub fn wl_subsurface_error_is_valid(value: u32, version: u32) -> bool {
+    match value {
+        WL_SUBSURFACE_ERROR_BAD_SURFACE => version >= 1,
+        _ => false,
+    }
+}
+
+#[inline]
+pub fn wl_surface_error_is_valid(value: u32, version: u32) -> bool {
+    match value {
+        WL_SURFACE_ERROR_INVALID_SCALE => version >= 1,
+        WL_SURFACE_ERROR_INVALID_TRANSFORM => version >= 1,
+        WL_SURFACE_ERROR_INVALID_SIZE => version >= 1,
+        WL_SURFACE_ERROR_INVALID_OFFSET => version >= 1,
+        WL_SURFACE_ERROR_DEFUNCT_ROLE_OBJECT => version >= 1,
+        _ => false,
+    }
+}
 
 unsafe extern "C" {
     pub static wl_buffer_interface: wl_interface;

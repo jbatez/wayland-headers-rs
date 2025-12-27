@@ -21,14 +21,12 @@ impl Side {
 
 pub(crate) struct Generator {
     module: Module,
-    enum_types: HashMap<String, &'static str>,
 }
 
 impl Generator {
     fn new(name: String) -> Self {
         Self {
             module: Module::new(name),
-            enum_types: HashMap::new(),
         }
     }
 
@@ -42,7 +40,6 @@ impl Generator {
         let side_name = side.name();
         let mut generator = Generator::new(format!("wayland_{side_name}_protocol"));
         generator.add_import_side_core(side_name);
-        generator.determine_protocol_enum_types(protocol);
         generator.visit_protocol(protocol, side);
         generator.module.write_file();
     }
@@ -50,56 +47,6 @@ impl Generator {
     fn add_import_side_core(&mut self, side_name: &str) {
         let text = format!("use super::wayland_{side_name}_core::*;");
         self.module.imports.push(text);
-    }
-
-    fn determine_protocol_enum_types(&mut self, protocol: &Protocol) {
-        for content in &protocol.contents {
-            if let ProtocolContent::Interface(interface) = content {
-                self.determine_interface_enum_types(interface);
-            }
-        }
-    }
-
-    fn determine_interface_enum_types(&mut self, interface: &Interface) {
-        for content in &interface.contents {
-            if let InterfaceContent::Request(message) | InterfaceContent::Event(message) = content {
-                self.determine_message_enum_types(interface, message);
-            }
-        }
-    }
-
-    fn determine_message_enum_types(&mut self, interface: &Interface, message: &Message) {
-        for content in &message.contents {
-            if let MessageContent::Arg(arg) = content {
-                self.determine_arg_enum_type(interface, arg);
-            }
-        }
-    }
-
-    fn determine_arg_enum_type(&mut self, interface: &Interface, arg: &Arg) {
-        if let Some(enum_name) = arg.enu.as_ref() {
-            let full_enum_name = if enum_name.contains('.') {
-                enum_name.to_owned()
-            } else {
-                let interface_name = interface.name.as_ref().unwrap();
-                format!("{interface_name}.{enum_name}")
-            };
-
-            let typ = if full_enum_name == "wl_output.transform" {
-                "i32"
-            } else {
-                match arg.typ.as_ref().unwrap().as_str() {
-                    "int" => "i32",
-                    "uint" => "u32",
-                    _ => panic!("unexpected enum arg type"),
-                }
-            };
-
-            let old_type = self.enum_types.insert(full_enum_name, typ);
-            if let Some(old_type) = old_type {
-                assert_eq!(old_type, typ);
-            }
-        }
     }
 
     fn visit_protocol(&mut self, protocol: &Protocol, side: Side) {
@@ -119,7 +66,7 @@ impl Generator {
                 InterfaceContent::Description(_) => (),
                 InterfaceContent::Request(request) => self.visit_request(interface, request, side),
                 InterfaceContent::Event(event) => self.visit_event(interface, event, side),
-                InterfaceContent::Enum(enu) => self.visit_enum(interface, enu),
+                InterfaceContent::Enum(enu) => self.visit_enum(interface, enu, side),
             }
         }
     }
@@ -157,11 +104,15 @@ pub struct {name} {{
         // TODO
     }
 
-    fn visit_enum(&mut self, interface: &Interface, enu: &Enum) {
+    fn visit_enum(&mut self, interface: &Interface, enu: &Enum, side: Side) {
         for content in &enu.contents {
             if let EnumContent::Entry(entry) = content {
                 self.visit_enum_entry(interface, enu, entry);
             }
+        }
+
+        if side == Side::Server {
+            self.add_enum_is_valid_fn(interface, enu);
         }
     }
 
@@ -170,24 +121,17 @@ pub struct {name} {{
         self.add_enum_entry_since_version_const(interface, enu, entry);
     }
 
-    fn add_enum_entry_const(&mut self, interface: &Interface, enu: &Enum, entry: &Entry) {
+    fn build_enum_entry_name(interface: &Interface, enu: &Enum, entry: &Entry) -> String {
         let interface_name = interface.name.as_ref().unwrap();
         let enum_name = enu.name.as_ref().unwrap();
         let entry_name = entry.name.as_ref().unwrap();
-        let name = format!("{interface_name}_{enum_name}_{entry_name}").to_ascii_uppercase();
+        format!("{interface_name}_{enum_name}_{entry_name}").to_ascii_uppercase()
+    }
 
-        let typ = {
-            let full_enum_name = format!("{interface_name}.{enum_name}");
-            if let Some(&typ) = self.enum_types.get(&full_enum_name) {
-                typ
-            } else {
-                assert_eq!(enum_name, "error");
-                "u32"
-            }
-        };
-
+    fn add_enum_entry_const(&mut self, interface: &Interface, enu: &Enum, entry: &Entry) {
+        let name = Self::build_enum_entry_name(interface, enu, entry);
         let value = entry.value.as_ref().unwrap();
-        let text = format!("pub const {name}: {typ} = {value};");
+        let text = format!("pub const {name}: u32 = {value};");
         self.module.constants.push((name.clone(), text));
     }
 
@@ -200,14 +144,60 @@ pub struct {name} {{
         if let Some(since) = entry.since.as_ref()
             && since != "1"
         {
-            let interface_name = interface.name.as_ref().unwrap();
-            let enum_name = enu.name.as_ref().unwrap();
-            let entry_name = entry.name.as_ref().unwrap();
-            let name = format!("{interface_name}_{enum_name}_{entry_name}_since_version");
-            let name = name.to_ascii_uppercase();
-
+            let name = Self::build_enum_entry_name(interface, enu, entry);
+            let name = format!("{name}_SINCE_VERSION");
             let text = format!("pub const {name}: u32 = {since};");
             self.module.constants.push((name, text));
         }
+    }
+
+    fn add_enum_is_valid_fn(&mut self, interface: &Interface, enu: &Enum) {
+        let interface_name = interface.name.as_ref().unwrap();
+        let enum_name = enu.name.as_ref().unwrap();
+        let name = format!("{interface_name}_{enum_name}_is_valid");
+
+        let mut text = String::new();
+        text += &format!("#[inline]\n");
+        text += &format!("pub fn {name}(value: u32, version: u32) -> bool {{\n");
+
+        let is_bitfield = match enu.bitfield.as_ref().map(String::as_str) {
+            None => false,
+            Some("true") => true,
+            Some("false") => false,
+            Some(value) => panic!("unexpected bitfield attribute value: {value:?}"),
+        };
+
+        if is_bitfield {
+            text += "    let mut valid = 0;\n";
+        } else {
+            text += "    match value {\n";
+        }
+
+        for content in &enu.contents {
+            let EnumContent::Entry(entry) = content else {
+                continue;
+            };
+
+            let name = Self::build_enum_entry_name(interface, enu, entry);
+            let since = entry.since.as_ref().map(String::as_str).unwrap_or("1");
+
+            if is_bitfield {
+                text += &format!("    if version >= {since} {{\n");
+                text += &format!("        valid |= {name};\n");
+                text += &format!("    }}\n");
+            } else {
+                text += &format!("        {name} => version >= {since},\n")
+            }
+        }
+
+        if is_bitfield {
+            text += "    (value & !valid) == 0\n";
+        } else {
+            text += "        _ => false,\n";
+            text += "    }\n";
+        }
+
+        text += "}";
+        self.module.functions.push((name, text));
     }
 }
