@@ -1,5 +1,3 @@
-use std::collections::HashMap;
-
 use wayland_protocol::*;
 
 use crate::module::*;
@@ -61,7 +59,8 @@ impl Generator {
         self.add_interface_extern_type(interface, side);
         self.add_interface_extern_static(interface);
         self.add_interface_struct(interface, side);
-        self.add_interface_message_opcodes(interface, side);
+        self.add_message_opcode_consts(interface, side);
+        self.add_message_since_version_consts(interface);
         self.add_enums(interface, side);
     }
 
@@ -219,19 +218,19 @@ pub unsafe fn {name}(
         self.module.functions.push((name, text));
     }
 
-    fn add_interface_message_opcodes(&mut self, interface: &Interface, side: Side) {
+    fn add_message_opcode_consts(&mut self, interface: &Interface, side: Side) {
         let mut opcode = 0;
         for content in &interface.contents {
             match side {
                 Side::Client => {
                     if let InterfaceContent::Request(request) = content {
-                        self.add_interface_message_opcode(interface, request, opcode);
+                        self.add_message_opcode_const(interface, request, opcode);
                         opcode += 1;
                     }
                 }
                 Side::Server => {
                     if let InterfaceContent::Event(event) = content {
-                        self.add_interface_message_opcode(interface, event, opcode);
+                        self.add_message_opcode_const(interface, event, opcode);
                         opcode += 1;
                     }
                 }
@@ -239,16 +238,31 @@ pub unsafe fn {name}(
         }
     }
 
-    fn add_interface_message_opcode(
-        &mut self,
-        interface: &Interface,
-        message: &Message,
-        opcode: u32,
-    ) {
+    fn add_message_opcode_const(&mut self, interface: &Interface, message: &Message, opcode: u32) {
         let interface_name = interface.name.as_ref().unwrap();
         let message_name = message.name.as_ref().unwrap();
         let name = format!("{interface_name}_{message_name}").to_ascii_uppercase();
         let text = format!("pub const {name}: u32 = {opcode};");
+        self.module.constants.push((name, text));
+    }
+
+    fn add_message_since_version_consts(&mut self, interface: &Interface) {
+        for content in &interface.contents {
+            match content {
+                InterfaceContent::Request(message) | InterfaceContent::Event(message) => {
+                    self.add_message_since_version_const(interface, message);
+                }
+                _ => (),
+            }
+        }
+    }
+
+    fn add_message_since_version_const(&mut self, interface: &Interface, message: &Message) {
+        let interface_name = interface.name.as_ref().unwrap();
+        let message_name = message.name.as_ref().unwrap();
+        let name = format!("{interface_name}_{message_name}_since_version").to_ascii_uppercase();
+        let since = message.since.as_ref().map(String::as_str).unwrap_or("1");
+        let text = format!("pub const {name}: u32 = {since};");
         self.module.constants.push((name, text));
     }
 
