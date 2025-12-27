@@ -4,6 +4,8 @@
 #[doc(hidden)]
 pub mod _macro_helpers;
 
+mod prelude;
+
 pub mod wayland_client_core;
 pub mod wayland_client_protocol;
 pub mod wayland_server_core;

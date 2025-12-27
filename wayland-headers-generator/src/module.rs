@@ -36,6 +36,8 @@ impl Module {
     }
 
     fn sort_and_write_imports(&mut self, file: &mut File) {
+        writeln!(file, "use crate::prelude::*;").unwrap();
+
         self.imports.sort();
         for text in &self.imports {
             writeln!(file, "{text}").unwrap();

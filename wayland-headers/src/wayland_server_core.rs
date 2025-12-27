@@ -1,10 +1,6 @@
-use core::{
-    ffi::{c_char, c_int, c_void},
-    marker::{PhantomData, PhantomPinned},
-    ptr::null_mut,
-};
-
 use libc::{gid_t, pid_t, uid_t};
+
+use crate::prelude::*;
 
 #[doc(no_inline)]
 pub use crate::wayland_util::*;

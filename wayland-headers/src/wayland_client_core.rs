@@ -1,9 +1,6 @@
-use core::{
-    ffi::{c_char, c_int, c_void},
-    marker::{PhantomData, PhantomPinned},
-};
-
 use libc::timespec;
+
+use crate::prelude::*;
 
 #[doc(no_inline)]
 pub use crate::wayland_util::*;
