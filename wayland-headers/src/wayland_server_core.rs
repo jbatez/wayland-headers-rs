@@ -391,12 +391,12 @@ unsafe extern "C" {
 }
 
 #[inline]
-pub unsafe fn wl_signal_add(signal: *mut wl_signal, listener: *mut wl_listener) {
+pub unsafe extern "C" fn wl_signal_add(signal: *mut wl_signal, listener: *mut wl_listener) {
     unsafe { wl_list_insert((*signal).listener_list.prev, &mut (*listener).link) }
 }
 
 #[inline]
-pub unsafe fn wl_signal_emit(signal: *mut wl_signal, data: *mut c_void) {
+pub unsafe extern "C" fn wl_signal_emit(signal: *mut wl_signal, data: *mut c_void) {
     unsafe {
         wl_list_for_each_safe!(l: *mut wl_listener, &(*signal).listener_list, link, {
             (*l).notify.unwrap_unchecked()(l, data);
@@ -409,7 +409,10 @@ unsafe extern "C" {
 }
 
 #[inline]
-pub unsafe fn wl_signal_get(signal: *mut wl_signal, notify: wl_notify_func_t) -> *mut wl_listener {
+pub unsafe extern "C" fn wl_signal_get(
+    signal: *mut wl_signal,
+    notify: wl_notify_func_t,
+) -> *mut wl_listener {
     unsafe {
         wl_list_for_each!(l: *mut wl_listener, &(*signal).listener_list, link, {
             #[allow(unpredictable_function_pointer_comparisons)]
@@ -422,7 +425,7 @@ pub unsafe fn wl_signal_get(signal: *mut wl_signal, notify: wl_notify_func_t) ->
 }
 
 #[inline]
-pub unsafe fn wl_signal_init(signal: *mut wl_signal) {
+pub unsafe extern "C" fn wl_signal_init(signal: *mut wl_signal) {
     unsafe { wl_list_init(&mut (*signal).listener_list) }
 }
 

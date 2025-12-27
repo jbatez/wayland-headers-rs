@@ -207,7 +207,7 @@ pub struct {name} {{
         let text = format!(
             "\
 #[inline]
-pub unsafe fn {name}(
+pub unsafe extern \"C\" fn {name}(
     {interface_name}: *mut {interface_name},
     listener: *const {interface_name}_listener,
     data: *mut c_void,
@@ -288,7 +288,7 @@ pub unsafe fn {name}(
         let text = format!(
             "\
 #[inline]
-pub unsafe fn {name}(
+pub unsafe extern \"C\" fn {name}(
     {interface_name}: *mut {interface_name},
     user_data: *mut c_void,
 ) {{
@@ -311,7 +311,9 @@ pub unsafe fn {name}(
         let text = format!(
             "\
 #[inline]
-pub unsafe fn {name}({interface_name}: *mut {interface_name}) -> *mut c_void {{
+pub unsafe extern \"C\" fn {name}(
+    {interface_name}: *mut {interface_name},
+) -> *mut c_void {{
     unsafe {{ wl_proxy_get_user_data({interface_name}.cast()) }}
 }}"
         );
@@ -326,7 +328,9 @@ pub unsafe fn {name}({interface_name}: *mut {interface_name}) -> *mut c_void {{
         let text = format!(
             "\
 #[inline]
-pub unsafe fn {name}({interface_name}: *mut {interface_name}) -> u32 {{
+pub unsafe extern \"C\" fn {name}(
+    {interface_name}: *mut {interface_name},
+) -> u32 {{
     unsafe {{ wl_proxy_get_version({interface_name}.cast()) }}
 }}"
         );
@@ -400,7 +404,10 @@ pub unsafe fn {name}({interface_name}: *mut {interface_name}) -> u32 {{
 
         let mut text = String::new();
         text += &format!("#[inline]\n");
-        text += &format!("pub fn {name}(value: u32, version: u32) -> bool {{\n");
+        text += &format!("pub extern \"C\" fn {name}(\n");
+        text += &format!("    value: u32,\n");
+        text += &format!("    version: u32,\n");
+        text += &format!(") -> bool {{\n");
 
         let is_bitfield = match enu.bitfield.as_ref().map(String::as_str) {
             None => false,

@@ -1004,7 +1004,10 @@ pub const WL_TOUCH_UP: u32 = 1;
 pub const WL_TOUCH_UP_SINCE_VERSION: u32 = 1;
 
 #[inline]
-pub fn wl_data_device_error_is_valid(value: u32, version: u32) -> bool {
+pub extern "C" fn wl_data_device_error_is_valid(
+    value: u32,
+    version: u32,
+) -> bool {
     match value {
         WL_DATA_DEVICE_ERROR_ROLE => version >= 1,
         WL_DATA_DEVICE_ERROR_USED_SOURCE => version >= 1,
@@ -1013,7 +1016,10 @@ pub fn wl_data_device_error_is_valid(value: u32, version: u32) -> bool {
 }
 
 #[inline]
-pub fn wl_data_device_manager_dnd_action_is_valid(value: u32, version: u32) -> bool {
+pub extern "C" fn wl_data_device_manager_dnd_action_is_valid(
+    value: u32,
+    version: u32,
+) -> bool {
     let mut valid = 0;
     if version >= 1 {
         valid |= WL_DATA_DEVICE_MANAGER_DND_ACTION_NONE;
@@ -1031,7 +1037,10 @@ pub fn wl_data_device_manager_dnd_action_is_valid(value: u32, version: u32) -> b
 }
 
 #[inline]
-pub fn wl_data_offer_error_is_valid(value: u32, version: u32) -> bool {
+pub extern "C" fn wl_data_offer_error_is_valid(
+    value: u32,
+    version: u32,
+) -> bool {
     match value {
         WL_DATA_OFFER_ERROR_INVALID_FINISH => version >= 1,
         WL_DATA_OFFER_ERROR_INVALID_ACTION_MASK => version >= 1,
@@ -1042,7 +1051,10 @@ pub fn wl_data_offer_error_is_valid(value: u32, version: u32) -> bool {
 }
 
 #[inline]
-pub fn wl_data_source_error_is_valid(value: u32, version: u32) -> bool {
+pub extern "C" fn wl_data_source_error_is_valid(
+    value: u32,
+    version: u32,
+) -> bool {
     match value {
         WL_DATA_SOURCE_ERROR_INVALID_ACTION_MASK => version >= 1,
         WL_DATA_SOURCE_ERROR_INVALID_SOURCE => version >= 1,
@@ -1051,7 +1063,10 @@ pub fn wl_data_source_error_is_valid(value: u32, version: u32) -> bool {
 }
 
 #[inline]
-pub fn wl_display_error_is_valid(value: u32, version: u32) -> bool {
+pub extern "C" fn wl_display_error_is_valid(
+    value: u32,
+    version: u32,
+) -> bool {
     match value {
         WL_DISPLAY_ERROR_INVALID_OBJECT => version >= 1,
         WL_DISPLAY_ERROR_INVALID_METHOD => version >= 1,
@@ -1062,7 +1077,10 @@ pub fn wl_display_error_is_valid(value: u32, version: u32) -> bool {
 }
 
 #[inline]
-pub fn wl_keyboard_key_state_is_valid(value: u32, version: u32) -> bool {
+pub extern "C" fn wl_keyboard_key_state_is_valid(
+    value: u32,
+    version: u32,
+) -> bool {
     match value {
         WL_KEYBOARD_KEY_STATE_RELEASED => version >= 1,
         WL_KEYBOARD_KEY_STATE_PRESSED => version >= 1,
@@ -1072,7 +1090,10 @@ pub fn wl_keyboard_key_state_is_valid(value: u32, version: u32) -> bool {
 }
 
 #[inline]
-pub fn wl_keyboard_keymap_format_is_valid(value: u32, version: u32) -> bool {
+pub extern "C" fn wl_keyboard_keymap_format_is_valid(
+    value: u32,
+    version: u32,
+) -> bool {
     match value {
         WL_KEYBOARD_KEYMAP_FORMAT_NO_KEYMAP => version >= 1,
         WL_KEYBOARD_KEYMAP_FORMAT_XKB_V1 => version >= 1,
@@ -1081,7 +1102,10 @@ pub fn wl_keyboard_keymap_format_is_valid(value: u32, version: u32) -> bool {
 }
 
 #[inline]
-pub fn wl_output_mode_is_valid(value: u32, version: u32) -> bool {
+pub extern "C" fn wl_output_mode_is_valid(
+    value: u32,
+    version: u32,
+) -> bool {
     let mut valid = 0;
     if version >= 1 {
         valid |= WL_OUTPUT_MODE_CURRENT;
@@ -1093,7 +1117,10 @@ pub fn wl_output_mode_is_valid(value: u32, version: u32) -> bool {
 }
 
 #[inline]
-pub fn wl_output_subpixel_is_valid(value: u32, version: u32) -> bool {
+pub extern "C" fn wl_output_subpixel_is_valid(
+    value: u32,
+    version: u32,
+) -> bool {
     match value {
         WL_OUTPUT_SUBPIXEL_UNKNOWN => version >= 1,
         WL_OUTPUT_SUBPIXEL_NONE => version >= 1,
@@ -1106,7 +1133,10 @@ pub fn wl_output_subpixel_is_valid(value: u32, version: u32) -> bool {
 }
 
 #[inline]
-pub fn wl_output_transform_is_valid(value: u32, version: u32) -> bool {
+pub extern "C" fn wl_output_transform_is_valid(
+    value: u32,
+    version: u32,
+) -> bool {
     match value {
         WL_OUTPUT_TRANSFORM_NORMAL => version >= 1,
         WL_OUTPUT_TRANSFORM_90 => version >= 1,
@@ -1121,7 +1151,10 @@ pub fn wl_output_transform_is_valid(value: u32, version: u32) -> bool {
 }
 
 #[inline]
-pub fn wl_pointer_axis_is_valid(value: u32, version: u32) -> bool {
+pub extern "C" fn wl_pointer_axis_is_valid(
+    value: u32,
+    version: u32,
+) -> bool {
     match value {
         WL_POINTER_AXIS_VERTICAL_SCROLL => version >= 1,
         WL_POINTER_AXIS_HORIZONTAL_SCROLL => version >= 1,
@@ -1130,7 +1163,10 @@ pub fn wl_pointer_axis_is_valid(value: u32, version: u32) -> bool {
 }
 
 #[inline]
-pub fn wl_pointer_axis_relative_direction_is_valid(value: u32, version: u32) -> bool {
+pub extern "C" fn wl_pointer_axis_relative_direction_is_valid(
+    value: u32,
+    version: u32,
+) -> bool {
     match value {
         WL_POINTER_AXIS_RELATIVE_DIRECTION_IDENTICAL => version >= 1,
         WL_POINTER_AXIS_RELATIVE_DIRECTION_INVERTED => version >= 1,
@@ -1139,7 +1175,10 @@ pub fn wl_pointer_axis_relative_direction_is_valid(value: u32, version: u32) -> 
 }
 
 #[inline]
-pub fn wl_pointer_axis_source_is_valid(value: u32, version: u32) -> bool {
+pub extern "C" fn wl_pointer_axis_source_is_valid(
+    value: u32,
+    version: u32,
+) -> bool {
     match value {
         WL_POINTER_AXIS_SOURCE_WHEEL => version >= 1,
         WL_POINTER_AXIS_SOURCE_FINGER => version >= 1,
@@ -1150,7 +1189,10 @@ pub fn wl_pointer_axis_source_is_valid(value: u32, version: u32) -> bool {
 }
 
 #[inline]
-pub fn wl_pointer_button_state_is_valid(value: u32, version: u32) -> bool {
+pub extern "C" fn wl_pointer_button_state_is_valid(
+    value: u32,
+    version: u32,
+) -> bool {
     match value {
         WL_POINTER_BUTTON_STATE_RELEASED => version >= 1,
         WL_POINTER_BUTTON_STATE_PRESSED => version >= 1,
@@ -1159,7 +1201,10 @@ pub fn wl_pointer_button_state_is_valid(value: u32, version: u32) -> bool {
 }
 
 #[inline]
-pub fn wl_pointer_error_is_valid(value: u32, version: u32) -> bool {
+pub extern "C" fn wl_pointer_error_is_valid(
+    value: u32,
+    version: u32,
+) -> bool {
     match value {
         WL_POINTER_ERROR_ROLE => version >= 1,
         _ => false,
@@ -1167,7 +1212,10 @@ pub fn wl_pointer_error_is_valid(value: u32, version: u32) -> bool {
 }
 
 #[inline]
-pub fn wl_seat_capability_is_valid(value: u32, version: u32) -> bool {
+pub extern "C" fn wl_seat_capability_is_valid(
+    value: u32,
+    version: u32,
+) -> bool {
     let mut valid = 0;
     if version >= 1 {
         valid |= WL_SEAT_CAPABILITY_POINTER;
@@ -1182,7 +1230,10 @@ pub fn wl_seat_capability_is_valid(value: u32, version: u32) -> bool {
 }
 
 #[inline]
-pub fn wl_seat_error_is_valid(value: u32, version: u32) -> bool {
+pub extern "C" fn wl_seat_error_is_valid(
+    value: u32,
+    version: u32,
+) -> bool {
     match value {
         WL_SEAT_ERROR_MISSING_CAPABILITY => version >= 1,
         _ => false,
@@ -1190,7 +1241,10 @@ pub fn wl_seat_error_is_valid(value: u32, version: u32) -> bool {
 }
 
 #[inline]
-pub fn wl_shell_error_is_valid(value: u32, version: u32) -> bool {
+pub extern "C" fn wl_shell_error_is_valid(
+    value: u32,
+    version: u32,
+) -> bool {
     match value {
         WL_SHELL_ERROR_ROLE => version >= 1,
         _ => false,
@@ -1198,7 +1252,10 @@ pub fn wl_shell_error_is_valid(value: u32, version: u32) -> bool {
 }
 
 #[inline]
-pub fn wl_shell_surface_fullscreen_method_is_valid(value: u32, version: u32) -> bool {
+pub extern "C" fn wl_shell_surface_fullscreen_method_is_valid(
+    value: u32,
+    version: u32,
+) -> bool {
     match value {
         WL_SHELL_SURFACE_FULLSCREEN_METHOD_DEFAULT => version >= 1,
         WL_SHELL_SURFACE_FULLSCREEN_METHOD_SCALE => version >= 1,
@@ -1209,7 +1266,10 @@ pub fn wl_shell_surface_fullscreen_method_is_valid(value: u32, version: u32) -> 
 }
 
 #[inline]
-pub fn wl_shell_surface_resize_is_valid(value: u32, version: u32) -> bool {
+pub extern "C" fn wl_shell_surface_resize_is_valid(
+    value: u32,
+    version: u32,
+) -> bool {
     let mut valid = 0;
     if version >= 1 {
         valid |= WL_SHELL_SURFACE_RESIZE_NONE;
@@ -1242,7 +1302,10 @@ pub fn wl_shell_surface_resize_is_valid(value: u32, version: u32) -> bool {
 }
 
 #[inline]
-pub fn wl_shell_surface_transient_is_valid(value: u32, version: u32) -> bool {
+pub extern "C" fn wl_shell_surface_transient_is_valid(
+    value: u32,
+    version: u32,
+) -> bool {
     let mut valid = 0;
     if version >= 1 {
         valid |= WL_SHELL_SURFACE_TRANSIENT_INACTIVE;
@@ -1251,7 +1314,10 @@ pub fn wl_shell_surface_transient_is_valid(value: u32, version: u32) -> bool {
 }
 
 #[inline]
-pub fn wl_shm_error_is_valid(value: u32, version: u32) -> bool {
+pub extern "C" fn wl_shm_error_is_valid(
+    value: u32,
+    version: u32,
+) -> bool {
     match value {
         WL_SHM_ERROR_INVALID_FORMAT => version >= 1,
         WL_SHM_ERROR_INVALID_STRIDE => version >= 1,
@@ -1261,7 +1327,10 @@ pub fn wl_shm_error_is_valid(value: u32, version: u32) -> bool {
 }
 
 #[inline]
-pub fn wl_shm_format_is_valid(value: u32, version: u32) -> bool {
+pub extern "C" fn wl_shm_format_is_valid(
+    value: u32,
+    version: u32,
+) -> bool {
     match value {
         WL_SHM_FORMAT_ARGB8888 => version >= 1,
         WL_SHM_FORMAT_XRGB8888 => version >= 1,
@@ -1391,7 +1460,10 @@ pub fn wl_shm_format_is_valid(value: u32, version: u32) -> bool {
 }
 
 #[inline]
-pub fn wl_subcompositor_error_is_valid(value: u32, version: u32) -> bool {
+pub extern "C" fn wl_subcompositor_error_is_valid(
+    value: u32,
+    version: u32,
+) -> bool {
     match value {
         WL_SUBCOMPOSITOR_ERROR_BAD_SURFACE => version >= 1,
         WL_SUBCOMPOSITOR_ERROR_BAD_PARENT => version >= 1,
@@ -1400,7 +1472,10 @@ pub fn wl_subcompositor_error_is_valid(value: u32, version: u32) -> bool {
 }
 
 #[inline]
-pub fn wl_subsurface_error_is_valid(value: u32, version: u32) -> bool {
+pub extern "C" fn wl_subsurface_error_is_valid(
+    value: u32,
+    version: u32,
+) -> bool {
     match value {
         WL_SUBSURFACE_ERROR_BAD_SURFACE => version >= 1,
         _ => false,
@@ -1408,7 +1483,10 @@ pub fn wl_subsurface_error_is_valid(value: u32, version: u32) -> bool {
 }
 
 #[inline]
-pub fn wl_surface_error_is_valid(value: u32, version: u32) -> bool {
+pub extern "C" fn wl_surface_error_is_valid(
+    value: u32,
+    version: u32,
+) -> bool {
     match value {
         WL_SURFACE_ERROR_INVALID_SCALE => version >= 1,
         WL_SURFACE_ERROR_INVALID_TRANSFORM => version >= 1,

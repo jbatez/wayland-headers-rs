@@ -162,22 +162,22 @@ unsafe extern "C" {
 /// Available if built with `std`.
 #[cfg(any(doc, feature = "std"))]
 #[inline]
-pub fn wl_fixed_from_double(d: c_double) -> wl_fixed_t {
+pub extern "C" fn wl_fixed_from_double(d: c_double) -> wl_fixed_t {
     (d * 256.0).round() as wl_fixed_t
 }
 
 #[inline]
-pub fn wl_fixed_from_int(i: c_int) -> wl_fixed_t {
+pub extern "C" fn wl_fixed_from_int(i: c_int) -> wl_fixed_t {
     i * 256
 }
 
 #[inline]
-pub fn wl_fixed_to_double(f: wl_fixed_t) -> c_double {
+pub extern "C" fn wl_fixed_to_double(f: wl_fixed_t) -> c_double {
     (f as c_double) / 256.0
 }
 
 #[inline]
-pub fn wl_fixed_to_int(f: wl_fixed_t) -> c_int {
+pub extern "C" fn wl_fixed_to_int(f: wl_fixed_t) -> c_int {
     f / 256
 }
 
