@@ -44,8 +44,7 @@ impl Generator {
         let side_str = side.to_str();
         let mut generator = Generator::new(format!("wayland_{side_str}_protocol"));
         generator.add_import_side_core(side_str);
-        generator.pre_exclude_core_extern_types(side);
-        generator.pre_visit_protocol(protocol);
+        generator.get_protocol_enum_types(protocol);
         generator.visit_protocol(protocol, side);
         generator.module.write_file();
     }
@@ -55,38 +54,84 @@ impl Generator {
         self.module.imports.push(text);
     }
 
-    fn pre_exclude_core_extern_types(&mut self, side: Side) {
-        let names = match side {
-            Side::Client => ["wl_display"].as_slice(),
-            Side::Server => ["wl_display", "wl_shm_pool"].as_slice(),
-        };
-        for &name in names {
-            self.extern_types.insert(name.to_owned());
-        }
-    }
-
-    fn pre_visit_protocol(&mut self, protocol: &Protocol) {
+    fn get_protocol_enum_types(&mut self, protocol: &Protocol) {
         for content in &protocol.contents {
             if let ProtocolContent::Interface(interface) = content {
-                self.pre_visit_interface(interface);
+                self.get_interface_enum_types(interface);
             }
         }
     }
 
-    fn pre_visit_interface(&mut self, interface: &Interface) {
-        self.add_extern_type(interface.name.as_ref().unwrap());
+    fn get_interface_enum_types(&mut self, interface: &Interface) {
+        for content in &interface.contents {
+            if let InterfaceContent::Request(message) | InterfaceContent::Event(message) = content {
+                self.get_message_enum_types(interface, message);
+            }
+        }
+    }
+
+    fn get_message_enum_types(&mut self, interface: &Interface, message: &Message) {
+        for content in &message.contents {
+            if let MessageContent::Arg(arg) = content {
+                self.get_arg_enum_type(interface, arg);
+            }
+        }
+    }
+
+    fn get_arg_enum_type(&mut self, interface: &Interface, arg: &Arg) {
+        if let Some(enum_name) = arg.enu.as_ref() {
+            let full_enum_name = if enum_name.contains('.') {
+                enum_name.to_owned()
+            } else {
+                let interface_name = interface.name.as_ref().unwrap();
+                format!("{interface_name}.{enum_name}")
+            };
+
+            let typ = if full_enum_name == "wl_output.transform" {
+                "i32"
+            } else {
+                match arg.typ.as_ref().unwrap().as_str() {
+                    "int" => "i32",
+                    "uint" => "u32",
+                    _ => panic!("unexpected enum arg type"),
+                }
+            };
+
+            let old_type = self.enum_types.insert(full_enum_name, typ);
+            if let Some(old_type) = old_type {
+                assert_eq!(old_type, typ);
+            }
+        }
+    }
+
+    fn visit_protocol(&mut self, protocol: &Protocol, side: Side) {
+        for content in &protocol.contents {
+            if let ProtocolContent::Interface(interface) = content {
+                self.visit_interface(interface, side);
+            }
+        }
+    }
+
+    fn visit_interface(&mut self, interface: &Interface, side: Side) {
+        self.add_extern_type(interface, side);
+        self.add_extern_static(interface);
 
         for content in &interface.contents {
             match content {
                 InterfaceContent::Description(_) => (),
-                InterfaceContent::Request(request) => self.pre_visit_message(interface, request),
-                InterfaceContent::Event(event) => self.pre_visit_message(interface, event),
-                InterfaceContent::Enum(_) => (),
+                InterfaceContent::Request(request) => self.visit_request(interface, request, side),
+                InterfaceContent::Event(event) => self.visit_event(interface, event, side),
+                InterfaceContent::Enum(enu) => self.visit_enum(interface, enu),
             }
         }
     }
 
-    fn add_extern_type(&mut self, name: &str) {
+    fn add_extern_type(&mut self, interface: &Interface, side: Side) {
+        let name = interface.name.as_ref().unwrap();
+        if name == "wl_display" || (side == Side::Server && name == "wl_shm_pool") {
+            return;
+        }
+
         if self.extern_types.insert(name.to_owned()) {
             let text = format!(
                 "\
@@ -100,66 +145,7 @@ pub struct {name} {{
         }
     }
 
-    fn pre_visit_message(&mut self, interface: &Interface, message: &Message) {
-        for content in &message.contents {
-            if let MessageContent::Arg(arg) = content {
-                self.pre_visit_arg(interface, arg);
-            }
-        }
-    }
-
-    fn pre_visit_arg(&mut self, interface: &Interface, arg: &Arg) {
-        if let Some(enum_name) = arg.enu.as_ref() {
-            self.save_enum_type(interface, arg, enum_name);
-        }
-    }
-
-    fn save_enum_type(&mut self, interface: &Interface, arg: &Arg, enum_name: &str) {
-        let full_enum_name = if enum_name.contains('.') {
-            enum_name.to_owned()
-        } else {
-            let interface_name = interface.name.as_ref().unwrap();
-            format!("{interface_name}.{enum_name}")
-        };
-
-        let typ = if full_enum_name == "wl_output.transform" {
-            "i32"
-        } else {
-            match arg.typ.as_ref().unwrap().as_str() {
-                "int" => "i32",
-                "uint" => "u32",
-                _ => panic!("unexpected enum arg type"),
-            }
-        };
-
-        let old_type = self.enum_types.insert(full_enum_name, typ);
-        if let Some(old_type) = old_type {
-            assert_eq!(old_type, typ);
-        }
-    }
-
-    fn visit_protocol(&mut self, protocol: &Protocol, side: Side) {
-        for content in &protocol.contents {
-            if let ProtocolContent::Interface(interface) = content {
-                self.visit_interface(interface, side);
-            }
-        }
-    }
-
-    fn visit_interface(&mut self, interface: &Interface, side: Side) {
-        self.add_extern_static_interface(interface);
-
-        for content in &interface.contents {
-            match content {
-                InterfaceContent::Description(_) => (),
-                InterfaceContent::Request(request) => self.visit_request(interface, request, side),
-                InterfaceContent::Event(event) => self.visit_event(interface, event, side),
-                InterfaceContent::Enum(enu) => self.visit_enum(interface, enu),
-            }
-        }
-    }
-
-    fn add_extern_static_interface(&mut self, interface: &Interface) {
+    fn add_extern_static(&mut self, interface: &Interface) {
         let interface_name = interface.name.as_ref().unwrap();
         let name = format!("{interface_name}_interface");
         let text = format!("    pub static {name}: wl_interface;");

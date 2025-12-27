@@ -95,7 +95,7 @@ impl Module {
         writeln!(file, "unsafe extern \"C\" {{").unwrap();
 
         self.extern_statics.sort();
-        for (i, (_, text)) in self.extern_statics.iter().enumerate() {
+        for (_, text) in &self.extern_statics {
             writeln!(file, "{text}").unwrap();
         }
 
