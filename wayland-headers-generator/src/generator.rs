@@ -40,7 +40,7 @@ impl Generator {
         let side_name = side.name();
         let mut generator = Generator::new(format!("wayland_{side_name}_protocol"));
         generator.add_import_side_core(side_name);
-        generator.visit_protocol(protocol, side);
+        generator.add_protocol(protocol, side);
         generator.module.write_file();
     }
 
@@ -49,29 +49,21 @@ impl Generator {
         self.module.imports.push(text);
     }
 
-    fn visit_protocol(&mut self, protocol: &Protocol, side: Side) {
+    fn add_protocol(&mut self, protocol: &Protocol, side: Side) {
         for content in &protocol.contents {
             if let ProtocolContent::Interface(interface) = content {
-                self.visit_interface(interface, side);
+                self.add_interface(interface, side);
             }
         }
     }
 
-    fn visit_interface(&mut self, interface: &Interface, side: Side) {
-        self.add_extern_type(interface, side);
-        self.add_extern_static_interface(interface);
-
-        for content in &interface.contents {
-            match content {
-                InterfaceContent::Description(_) => (),
-                InterfaceContent::Request(request) => self.visit_request(interface, request, side),
-                InterfaceContent::Event(event) => self.visit_event(interface, event, side),
-                InterfaceContent::Enum(enu) => self.visit_enum(interface, enu, side),
-            }
-        }
+    fn add_interface(&mut self, interface: &Interface, side: Side) {
+        self.add_interface_extern_type(interface, side);
+        self.add_interface_extern_static(interface);
+        self.add_enums(interface, side);
     }
 
-    fn add_extern_type(&mut self, interface: &Interface, side: Side) {
+    fn add_interface_extern_type(&mut self, interface: &Interface, side: Side) {
         let name = interface.name.as_ref().unwrap();
         if name == "wl_display" || (side == Side::Server && name == "wl_shm_pool") {
             return;
@@ -89,25 +81,25 @@ pub struct {name} {{
         self.module.structs.push((name.to_owned(), text));
     }
 
-    fn add_extern_static_interface(&mut self, interface: &Interface) {
+    fn add_interface_extern_static(&mut self, interface: &Interface) {
         let interface_name = interface.name.as_ref().unwrap();
         let name = format!("{interface_name}_interface");
         let text = format!("    pub static {name}: wl_interface;");
         self.module.extern_statics.push((name, text));
     }
 
-    fn visit_request(&mut self, interface: &Interface, request: &Message, side: Side) {
-        // TODO
+    fn add_enums(&mut self, interface: &Interface, side: Side) {
+        for content in &interface.contents {
+            if let InterfaceContent::Enum(enu) = content {
+                self.add_enum(interface, enu, side)
+            }
+        }
     }
 
-    fn visit_event(&mut self, interface: &Interface, event: &Message, side: Side) {
-        // TODO
-    }
-
-    fn visit_enum(&mut self, interface: &Interface, enu: &Enum, side: Side) {
+    fn add_enum(&mut self, interface: &Interface, enu: &Enum, side: Side) {
         for content in &enu.contents {
             if let EnumContent::Entry(entry) = content {
-                self.visit_enum_entry(interface, enu, entry);
+                self.add_enum_entry(interface, enu, entry);
             }
         }
 
@@ -116,7 +108,7 @@ pub struct {name} {{
         }
     }
 
-    fn visit_enum_entry(&mut self, interface: &Interface, enu: &Enum, entry: &Entry) {
+    fn add_enum_entry(&mut self, interface: &Interface, enu: &Enum, entry: &Entry) {
         self.add_enum_entry_const(interface, enu, entry);
         self.add_enum_entry_since_version_const(interface, enu, entry);
     }
