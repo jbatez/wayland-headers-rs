@@ -770,6 +770,231 @@ pub const WL_SURFACE_ERROR_INVALID_SCALE: u32 = 0;
 pub const WL_SURFACE_ERROR_INVALID_SIZE: u32 = 2;
 pub const WL_SURFACE_ERROR_INVALID_TRANSFORM: u32 = 1;
 
+#[inline]
+pub unsafe fn wl_buffer_add_listener(
+    wl_buffer: *mut wl_buffer,
+    listener: *const wl_buffer_listener,
+    data: *mut c_void,
+) -> c_int {
+    unsafe {
+        wl_proxy_add_listener(
+            wl_buffer.cast(),
+            listener.cast_mut().cast(),
+            data,
+        )
+    }
+}
+
+#[inline]
+pub unsafe fn wl_callback_add_listener(
+    wl_callback: *mut wl_callback,
+    listener: *const wl_callback_listener,
+    data: *mut c_void,
+) -> c_int {
+    unsafe {
+        wl_proxy_add_listener(
+            wl_callback.cast(),
+            listener.cast_mut().cast(),
+            data,
+        )
+    }
+}
+
+#[inline]
+pub unsafe fn wl_data_device_add_listener(
+    wl_data_device: *mut wl_data_device,
+    listener: *const wl_data_device_listener,
+    data: *mut c_void,
+) -> c_int {
+    unsafe {
+        wl_proxy_add_listener(
+            wl_data_device.cast(),
+            listener.cast_mut().cast(),
+            data,
+        )
+    }
+}
+
+#[inline]
+pub unsafe fn wl_data_offer_add_listener(
+    wl_data_offer: *mut wl_data_offer,
+    listener: *const wl_data_offer_listener,
+    data: *mut c_void,
+) -> c_int {
+    unsafe {
+        wl_proxy_add_listener(
+            wl_data_offer.cast(),
+            listener.cast_mut().cast(),
+            data,
+        )
+    }
+}
+
+#[inline]
+pub unsafe fn wl_data_source_add_listener(
+    wl_data_source: *mut wl_data_source,
+    listener: *const wl_data_source_listener,
+    data: *mut c_void,
+) -> c_int {
+    unsafe {
+        wl_proxy_add_listener(
+            wl_data_source.cast(),
+            listener.cast_mut().cast(),
+            data,
+        )
+    }
+}
+
+#[inline]
+pub unsafe fn wl_display_add_listener(
+    wl_display: *mut wl_display,
+    listener: *const wl_display_listener,
+    data: *mut c_void,
+) -> c_int {
+    unsafe {
+        wl_proxy_add_listener(
+            wl_display.cast(),
+            listener.cast_mut().cast(),
+            data,
+        )
+    }
+}
+
+#[inline]
+pub unsafe fn wl_keyboard_add_listener(
+    wl_keyboard: *mut wl_keyboard,
+    listener: *const wl_keyboard_listener,
+    data: *mut c_void,
+) -> c_int {
+    unsafe {
+        wl_proxy_add_listener(
+            wl_keyboard.cast(),
+            listener.cast_mut().cast(),
+            data,
+        )
+    }
+}
+
+#[inline]
+pub unsafe fn wl_output_add_listener(
+    wl_output: *mut wl_output,
+    listener: *const wl_output_listener,
+    data: *mut c_void,
+) -> c_int {
+    unsafe {
+        wl_proxy_add_listener(
+            wl_output.cast(),
+            listener.cast_mut().cast(),
+            data,
+        )
+    }
+}
+
+#[inline]
+pub unsafe fn wl_pointer_add_listener(
+    wl_pointer: *mut wl_pointer,
+    listener: *const wl_pointer_listener,
+    data: *mut c_void,
+) -> c_int {
+    unsafe {
+        wl_proxy_add_listener(
+            wl_pointer.cast(),
+            listener.cast_mut().cast(),
+            data,
+        )
+    }
+}
+
+#[inline]
+pub unsafe fn wl_registry_add_listener(
+    wl_registry: *mut wl_registry,
+    listener: *const wl_registry_listener,
+    data: *mut c_void,
+) -> c_int {
+    unsafe {
+        wl_proxy_add_listener(
+            wl_registry.cast(),
+            listener.cast_mut().cast(),
+            data,
+        )
+    }
+}
+
+#[inline]
+pub unsafe fn wl_seat_add_listener(
+    wl_seat: *mut wl_seat,
+    listener: *const wl_seat_listener,
+    data: *mut c_void,
+) -> c_int {
+    unsafe {
+        wl_proxy_add_listener(
+            wl_seat.cast(),
+            listener.cast_mut().cast(),
+            data,
+        )
+    }
+}
+
+#[inline]
+pub unsafe fn wl_shell_surface_add_listener(
+    wl_shell_surface: *mut wl_shell_surface,
+    listener: *const wl_shell_surface_listener,
+    data: *mut c_void,
+) -> c_int {
+    unsafe {
+        wl_proxy_add_listener(
+            wl_shell_surface.cast(),
+            listener.cast_mut().cast(),
+            data,
+        )
+    }
+}
+
+#[inline]
+pub unsafe fn wl_shm_add_listener(
+    wl_shm: *mut wl_shm,
+    listener: *const wl_shm_listener,
+    data: *mut c_void,
+) -> c_int {
+    unsafe {
+        wl_proxy_add_listener(
+            wl_shm.cast(),
+            listener.cast_mut().cast(),
+            data,
+        )
+    }
+}
+
+#[inline]
+pub unsafe fn wl_surface_add_listener(
+    wl_surface: *mut wl_surface,
+    listener: *const wl_surface_listener,
+    data: *mut c_void,
+) -> c_int {
+    unsafe {
+        wl_proxy_add_listener(
+            wl_surface.cast(),
+            listener.cast_mut().cast(),
+            data,
+        )
+    }
+}
+
+#[inline]
+pub unsafe fn wl_touch_add_listener(
+    wl_touch: *mut wl_touch,
+    listener: *const wl_touch_listener,
+    data: *mut c_void,
+) -> c_int {
+    unsafe {
+        wl_proxy_add_listener(
+            wl_touch.cast(),
+            listener.cast_mut().cast(),
+            data,
+        )
+    }
+}
+
 unsafe extern "C" {
     pub static wl_buffer_interface: wl_interface;
     pub static wl_callback_interface: wl_interface;

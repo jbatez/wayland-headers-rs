@@ -123,6 +123,10 @@ pub struct {name} {{
         if !empty {
             text += "}";
             self.module.structs.push((name, text));
+
+            if side == Side::Client {
+                self.add_interface_add_listener_fn(interface);
+            }
         }
     }
 
@@ -187,6 +191,31 @@ pub struct {name} {{
         };
 
         *text += &format!("        {name}: {typ},\n");
+    }
+
+    fn add_interface_add_listener_fn(&mut self, interface: &Interface) {
+        let interface_name = interface.name.as_ref().unwrap();
+        let name = format!("{interface_name}_add_listener");
+
+        let text = format!(
+            "\
+#[inline]
+pub unsafe fn {name}(
+    {interface_name}: *mut {interface_name},
+    listener: *const {interface_name}_listener,
+    data: *mut c_void,
+) -> c_int {{
+    unsafe {{
+        wl_proxy_add_listener(
+            {interface_name}.cast(),
+            listener.cast_mut().cast(),
+            data,
+        )
+    }}
+}}"
+        );
+
+        self.module.functions.push((name, text));
     }
 
     fn add_enums(&mut self, interface: &Interface, side: Side) {

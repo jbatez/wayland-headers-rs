@@ -392,9 +392,7 @@ unsafe extern "C" {
 
 #[inline]
 pub unsafe fn wl_signal_add(signal: *mut wl_signal, listener: *mut wl_listener) {
-    unsafe {
-        wl_list_insert((*signal).listener_list.prev, &mut (*listener).link);
-    }
+    unsafe { wl_list_insert((*signal).listener_list.prev, &mut (*listener).link) }
 }
 
 #[inline]
@@ -402,7 +400,7 @@ pub unsafe fn wl_signal_emit(signal: *mut wl_signal, data: *mut c_void) {
     unsafe {
         wl_list_for_each_safe!(l: *mut wl_listener, &(*signal).listener_list, link, {
             (*l).notify.unwrap_unchecked()(l, data);
-        });
+        })
     }
 }
 
@@ -419,7 +417,7 @@ pub unsafe fn wl_signal_get(signal: *mut wl_signal, notify: wl_notify_func_t) ->
                 return l;
             }
         });
-        return null_mut();
+        null_mut()
     }
 }
 
