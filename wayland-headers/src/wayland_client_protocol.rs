@@ -7,10 +7,29 @@ pub struct wl_buffer {
     _marker: PhantomData<(*mut u8, PhantomPinned)>,
 }
 
+#[derive(Clone, Copy)]
+#[repr(C)]
+pub struct wl_buffer_listener {
+    pub release: Option<unsafe extern "C" fn(
+        data: *mut c_void,
+        wl_buffer: *mut wl_buffer,
+    )>,
+}
+
 #[repr(C)]
 pub struct wl_callback {
     _data: (),
     _marker: PhantomData<(*mut u8, PhantomPinned)>,
+}
+
+#[derive(Clone, Copy)]
+#[repr(C)]
+pub struct wl_callback_listener {
+    pub done: Option<unsafe extern "C" fn(
+        data: *mut c_void,
+        wl_callback: *mut wl_callback,
+        callback_data: u32,
+    )>,
 }
 
 #[repr(C)]
@@ -25,6 +44,45 @@ pub struct wl_data_device {
     _marker: PhantomData<(*mut u8, PhantomPinned)>,
 }
 
+#[derive(Clone, Copy)]
+#[repr(C)]
+pub struct wl_data_device_listener {
+    pub data_offer: Option<unsafe extern "C" fn(
+        data: *mut c_void,
+        wl_data_device: *mut wl_data_device,
+        id: *mut wl_data_offer,
+    )>,
+    pub enter: Option<unsafe extern "C" fn(
+        data: *mut c_void,
+        wl_data_device: *mut wl_data_device,
+        serial: u32,
+        surface: *mut wl_surface,
+        x: wl_fixed_t,
+        y: wl_fixed_t,
+        id: *mut wl_data_offer,
+    )>,
+    pub leave: Option<unsafe extern "C" fn(
+        data: *mut c_void,
+        wl_data_device: *mut wl_data_device,
+    )>,
+    pub motion: Option<unsafe extern "C" fn(
+        data: *mut c_void,
+        wl_data_device: *mut wl_data_device,
+        time: u32,
+        x: wl_fixed_t,
+        y: wl_fixed_t,
+    )>,
+    pub drop: Option<unsafe extern "C" fn(
+        data: *mut c_void,
+        wl_data_device: *mut wl_data_device,
+    )>,
+    pub selection: Option<unsafe extern "C" fn(
+        data: *mut c_void,
+        wl_data_device: *mut wl_data_device,
+        id: *mut wl_data_offer,
+    )>,
+}
+
 #[repr(C)]
 pub struct wl_data_device_manager {
     _data: (),
@@ -37,10 +95,80 @@ pub struct wl_data_offer {
     _marker: PhantomData<(*mut u8, PhantomPinned)>,
 }
 
+#[derive(Clone, Copy)]
+#[repr(C)]
+pub struct wl_data_offer_listener {
+    pub offer: Option<unsafe extern "C" fn(
+        data: *mut c_void,
+        wl_data_offer: *mut wl_data_offer,
+        mime_type: *const c_char,
+    )>,
+    pub source_actions: Option<unsafe extern "C" fn(
+        data: *mut c_void,
+        wl_data_offer: *mut wl_data_offer,
+        source_actions: u32,
+    )>,
+    pub action: Option<unsafe extern "C" fn(
+        data: *mut c_void,
+        wl_data_offer: *mut wl_data_offer,
+        dnd_action: u32,
+    )>,
+}
+
 #[repr(C)]
 pub struct wl_data_source {
     _data: (),
     _marker: PhantomData<(*mut u8, PhantomPinned)>,
+}
+
+#[derive(Clone, Copy)]
+#[repr(C)]
+pub struct wl_data_source_listener {
+    pub target: Option<unsafe extern "C" fn(
+        data: *mut c_void,
+        wl_data_source: *mut wl_data_source,
+        mime_type: *const c_char,
+    )>,
+    pub send: Option<unsafe extern "C" fn(
+        data: *mut c_void,
+        wl_data_source: *mut wl_data_source,
+        mime_type: *const c_char,
+        fd: i32,
+    )>,
+    pub cancelled: Option<unsafe extern "C" fn(
+        data: *mut c_void,
+        wl_data_source: *mut wl_data_source,
+    )>,
+    pub dnd_drop_performed: Option<unsafe extern "C" fn(
+        data: *mut c_void,
+        wl_data_source: *mut wl_data_source,
+    )>,
+    pub dnd_finished: Option<unsafe extern "C" fn(
+        data: *mut c_void,
+        wl_data_source: *mut wl_data_source,
+    )>,
+    pub action: Option<unsafe extern "C" fn(
+        data: *mut c_void,
+        wl_data_source: *mut wl_data_source,
+        dnd_action: u32,
+    )>,
+}
+
+#[derive(Clone, Copy)]
+#[repr(C)]
+pub struct wl_display_listener {
+    pub error: Option<unsafe extern "C" fn(
+        data: *mut c_void,
+        wl_display: *mut wl_display,
+        object_id: *mut c_void,
+        code: u32,
+        message: *const c_char,
+    )>,
+    pub delete_id: Option<unsafe extern "C" fn(
+        data: *mut c_void,
+        wl_display: *mut wl_display,
+        id: u32,
+    )>,
 }
 
 #[repr(C)]
@@ -55,16 +183,182 @@ pub struct wl_keyboard {
     _marker: PhantomData<(*mut u8, PhantomPinned)>,
 }
 
+#[derive(Clone, Copy)]
+#[repr(C)]
+pub struct wl_keyboard_listener {
+    pub keymap: Option<unsafe extern "C" fn(
+        data: *mut c_void,
+        wl_keyboard: *mut wl_keyboard,
+        format: u32,
+        fd: i32,
+        size: u32,
+    )>,
+    pub enter: Option<unsafe extern "C" fn(
+        data: *mut c_void,
+        wl_keyboard: *mut wl_keyboard,
+        serial: u32,
+        surface: *mut wl_surface,
+        keys: *mut wl_array,
+    )>,
+    pub leave: Option<unsafe extern "C" fn(
+        data: *mut c_void,
+        wl_keyboard: *mut wl_keyboard,
+        serial: u32,
+        surface: *mut wl_surface,
+    )>,
+    pub key: Option<unsafe extern "C" fn(
+        data: *mut c_void,
+        wl_keyboard: *mut wl_keyboard,
+        serial: u32,
+        time: u32,
+        key: u32,
+        state: u32,
+    )>,
+    pub modifiers: Option<unsafe extern "C" fn(
+        data: *mut c_void,
+        wl_keyboard: *mut wl_keyboard,
+        serial: u32,
+        mods_depressed: u32,
+        mods_latched: u32,
+        mods_locked: u32,
+        group: u32,
+    )>,
+    pub repeat_info: Option<unsafe extern "C" fn(
+        data: *mut c_void,
+        wl_keyboard: *mut wl_keyboard,
+        rate: i32,
+        delay: i32,
+    )>,
+}
+
 #[repr(C)]
 pub struct wl_output {
     _data: (),
     _marker: PhantomData<(*mut u8, PhantomPinned)>,
 }
 
+#[derive(Clone, Copy)]
+#[repr(C)]
+pub struct wl_output_listener {
+    pub geometry: Option<unsafe extern "C" fn(
+        data: *mut c_void,
+        wl_output: *mut wl_output,
+        x: i32,
+        y: i32,
+        physical_width: i32,
+        physical_height: i32,
+        subpixel: i32,
+        make: *const c_char,
+        model: *const c_char,
+        transform: i32,
+    )>,
+    pub mode: Option<unsafe extern "C" fn(
+        data: *mut c_void,
+        wl_output: *mut wl_output,
+        flags: u32,
+        width: i32,
+        height: i32,
+        refresh: i32,
+    )>,
+    pub done: Option<unsafe extern "C" fn(
+        data: *mut c_void,
+        wl_output: *mut wl_output,
+    )>,
+    pub scale: Option<unsafe extern "C" fn(
+        data: *mut c_void,
+        wl_output: *mut wl_output,
+        factor: i32,
+    )>,
+    pub name: Option<unsafe extern "C" fn(
+        data: *mut c_void,
+        wl_output: *mut wl_output,
+        name: *const c_char,
+    )>,
+    pub description: Option<unsafe extern "C" fn(
+        data: *mut c_void,
+        wl_output: *mut wl_output,
+        description: *const c_char,
+    )>,
+}
+
 #[repr(C)]
 pub struct wl_pointer {
     _data: (),
     _marker: PhantomData<(*mut u8, PhantomPinned)>,
+}
+
+#[derive(Clone, Copy)]
+#[repr(C)]
+pub struct wl_pointer_listener {
+    pub enter: Option<unsafe extern "C" fn(
+        data: *mut c_void,
+        wl_pointer: *mut wl_pointer,
+        serial: u32,
+        surface: *mut wl_surface,
+        surface_x: wl_fixed_t,
+        surface_y: wl_fixed_t,
+    )>,
+    pub leave: Option<unsafe extern "C" fn(
+        data: *mut c_void,
+        wl_pointer: *mut wl_pointer,
+        serial: u32,
+        surface: *mut wl_surface,
+    )>,
+    pub motion: Option<unsafe extern "C" fn(
+        data: *mut c_void,
+        wl_pointer: *mut wl_pointer,
+        time: u32,
+        surface_x: wl_fixed_t,
+        surface_y: wl_fixed_t,
+    )>,
+    pub button: Option<unsafe extern "C" fn(
+        data: *mut c_void,
+        wl_pointer: *mut wl_pointer,
+        serial: u32,
+        time: u32,
+        button: u32,
+        state: u32,
+    )>,
+    pub axis: Option<unsafe extern "C" fn(
+        data: *mut c_void,
+        wl_pointer: *mut wl_pointer,
+        time: u32,
+        axis: u32,
+        value: wl_fixed_t,
+    )>,
+    pub frame: Option<unsafe extern "C" fn(
+        data: *mut c_void,
+        wl_pointer: *mut wl_pointer,
+    )>,
+    pub axis_source: Option<unsafe extern "C" fn(
+        data: *mut c_void,
+        wl_pointer: *mut wl_pointer,
+        axis_source: u32,
+    )>,
+    pub axis_stop: Option<unsafe extern "C" fn(
+        data: *mut c_void,
+        wl_pointer: *mut wl_pointer,
+        time: u32,
+        axis: u32,
+    )>,
+    pub axis_discrete: Option<unsafe extern "C" fn(
+        data: *mut c_void,
+        wl_pointer: *mut wl_pointer,
+        axis: u32,
+        discrete: i32,
+    )>,
+    pub axis_value120: Option<unsafe extern "C" fn(
+        data: *mut c_void,
+        wl_pointer: *mut wl_pointer,
+        axis: u32,
+        value120: i32,
+    )>,
+    pub axis_relative_direction: Option<unsafe extern "C" fn(
+        data: *mut c_void,
+        wl_pointer: *mut wl_pointer,
+        axis: u32,
+        direction: u32,
+    )>,
 }
 
 #[repr(C)]
@@ -79,10 +373,42 @@ pub struct wl_registry {
     _marker: PhantomData<(*mut u8, PhantomPinned)>,
 }
 
+#[derive(Clone, Copy)]
+#[repr(C)]
+pub struct wl_registry_listener {
+    pub global: Option<unsafe extern "C" fn(
+        data: *mut c_void,
+        wl_registry: *mut wl_registry,
+        name: u32,
+        interface: *const c_char,
+        version: u32,
+    )>,
+    pub global_remove: Option<unsafe extern "C" fn(
+        data: *mut c_void,
+        wl_registry: *mut wl_registry,
+        name: u32,
+    )>,
+}
+
 #[repr(C)]
 pub struct wl_seat {
     _data: (),
     _marker: PhantomData<(*mut u8, PhantomPinned)>,
+}
+
+#[derive(Clone, Copy)]
+#[repr(C)]
+pub struct wl_seat_listener {
+    pub capabilities: Option<unsafe extern "C" fn(
+        data: *mut c_void,
+        wl_seat: *mut wl_seat,
+        capabilities: u32,
+    )>,
+    pub name: Option<unsafe extern "C" fn(
+        data: *mut c_void,
+        wl_seat: *mut wl_seat,
+        name: *const c_char,
+    )>,
 }
 
 #[repr(C)]
@@ -97,10 +423,41 @@ pub struct wl_shell_surface {
     _marker: PhantomData<(*mut u8, PhantomPinned)>,
 }
 
+#[derive(Clone, Copy)]
+#[repr(C)]
+pub struct wl_shell_surface_listener {
+    pub ping: Option<unsafe extern "C" fn(
+        data: *mut c_void,
+        wl_shell_surface: *mut wl_shell_surface,
+        serial: u32,
+    )>,
+    pub configure: Option<unsafe extern "C" fn(
+        data: *mut c_void,
+        wl_shell_surface: *mut wl_shell_surface,
+        edges: u32,
+        width: i32,
+        height: i32,
+    )>,
+    pub popup_done: Option<unsafe extern "C" fn(
+        data: *mut c_void,
+        wl_shell_surface: *mut wl_shell_surface,
+    )>,
+}
+
 #[repr(C)]
 pub struct wl_shm {
     _data: (),
     _marker: PhantomData<(*mut u8, PhantomPinned)>,
+}
+
+#[derive(Clone, Copy)]
+#[repr(C)]
+pub struct wl_shm_listener {
+    pub format: Option<unsafe extern "C" fn(
+        data: *mut c_void,
+        wl_shm: *mut wl_shm,
+        format: u32,
+    )>,
 }
 
 #[repr(C)]
@@ -127,10 +484,86 @@ pub struct wl_surface {
     _marker: PhantomData<(*mut u8, PhantomPinned)>,
 }
 
+#[derive(Clone, Copy)]
+#[repr(C)]
+pub struct wl_surface_listener {
+    pub enter: Option<unsafe extern "C" fn(
+        data: *mut c_void,
+        wl_surface: *mut wl_surface,
+        output: *mut wl_output,
+    )>,
+    pub leave: Option<unsafe extern "C" fn(
+        data: *mut c_void,
+        wl_surface: *mut wl_surface,
+        output: *mut wl_output,
+    )>,
+    pub preferred_buffer_scale: Option<unsafe extern "C" fn(
+        data: *mut c_void,
+        wl_surface: *mut wl_surface,
+        factor: i32,
+    )>,
+    pub preferred_buffer_transform: Option<unsafe extern "C" fn(
+        data: *mut c_void,
+        wl_surface: *mut wl_surface,
+        transform: u32,
+    )>,
+}
+
 #[repr(C)]
 pub struct wl_touch {
     _data: (),
     _marker: PhantomData<(*mut u8, PhantomPinned)>,
+}
+
+#[derive(Clone, Copy)]
+#[repr(C)]
+pub struct wl_touch_listener {
+    pub down: Option<unsafe extern "C" fn(
+        data: *mut c_void,
+        wl_touch: *mut wl_touch,
+        serial: u32,
+        time: u32,
+        surface: *mut wl_surface,
+        id: i32,
+        x: wl_fixed_t,
+        y: wl_fixed_t,
+    )>,
+    pub up: Option<unsafe extern "C" fn(
+        data: *mut c_void,
+        wl_touch: *mut wl_touch,
+        serial: u32,
+        time: u32,
+        id: i32,
+    )>,
+    pub motion: Option<unsafe extern "C" fn(
+        data: *mut c_void,
+        wl_touch: *mut wl_touch,
+        time: u32,
+        id: i32,
+        x: wl_fixed_t,
+        y: wl_fixed_t,
+    )>,
+    pub frame: Option<unsafe extern "C" fn(
+        data: *mut c_void,
+        wl_touch: *mut wl_touch,
+    )>,
+    pub cancel: Option<unsafe extern "C" fn(
+        data: *mut c_void,
+        wl_touch: *mut wl_touch,
+    )>,
+    pub shape: Option<unsafe extern "C" fn(
+        data: *mut c_void,
+        wl_touch: *mut wl_touch,
+        id: i32,
+        major: wl_fixed_t,
+        minor: wl_fixed_t,
+    )>,
+    pub orientation: Option<unsafe extern "C" fn(
+        data: *mut c_void,
+        wl_touch: *mut wl_touch,
+        id: i32,
+        orientation: wl_fixed_t,
+    )>,
 }
 
 pub const WL_DATA_DEVICE_ERROR_ROLE: u32 = 0;

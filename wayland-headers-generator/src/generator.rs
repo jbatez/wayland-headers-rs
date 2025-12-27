@@ -60,6 +60,7 @@ impl Generator {
     fn add_interface(&mut self, interface: &Interface, side: Side) {
         self.add_interface_extern_type(interface, side);
         self.add_interface_extern_static(interface);
+        self.add_interface_struct(interface, side);
         self.add_enums(interface, side);
     }
 
@@ -86,6 +87,106 @@ pub struct {name} {{
         let name = format!("{interface_name}_interface");
         let text = format!("    pub static {name}: wl_interface;");
         self.module.extern_statics.push((name, text));
+    }
+
+    fn add_interface_struct(&mut self, interface: &Interface, side: Side) {
+        let interface_name = interface.name.as_ref().unwrap();
+        let suffix = match side {
+            Side::Client => "listener",
+            Side::Server => "interface",
+        };
+        let name = format!("{interface_name}_{suffix}");
+
+        let mut text = String::new();
+        text += &format!("#[derive(Clone, Copy)]\n");
+        text += &format!("#[repr(C)]\n");
+        text += &format!("pub struct {name} {{\n");
+
+        let mut empty = true;
+        for content in &interface.contents {
+            match side {
+                Side::Client => {
+                    if let InterfaceContent::Event(event) = content {
+                        Self::add_interface_struct_member(interface, event, side, &mut text);
+                        empty = false;
+                    }
+                }
+                Side::Server => {
+                    if let InterfaceContent::Request(request) = content {
+                        Self::add_interface_struct_member(interface, request, side, &mut text);
+                        empty = false;
+                    }
+                }
+            }
+        }
+
+        if !empty {
+            text += "}";
+            self.module.structs.push((name, text));
+        }
+    }
+
+    fn add_interface_struct_member(
+        interface: &Interface,
+        message: &Message,
+        side: Side,
+        text: &mut String,
+    ) {
+        let interface_name = interface.name.as_ref().unwrap();
+        let message_name = match message.name.as_ref().unwrap().as_str() {
+            "move" => "mov",
+            name => name,
+        };
+
+        *text += &format!("    pub {message_name}: Option<unsafe extern \"C\" fn(\n");
+
+        match side {
+            Side::Client => {
+                *text += &format!("        data: *mut c_void,\n");
+                *text += &format!("        {interface_name}: *mut {interface_name},\n");
+            }
+            Side::Server => {
+                *text += "        client: *mut wl_client,\n";
+                *text += "        resource: *mut wl_resource,\n";
+            }
+        }
+
+        for content in &message.contents {
+            if let MessageContent::Arg(arg) = content {
+                Self::add_interface_struct_member_arg(arg, side, text);
+            }
+        }
+
+        *text += "    )>,\n";
+    }
+
+    fn add_interface_struct_member_arg(arg: &Arg, side: Side, text: &mut String) {
+        let name = arg.name.as_ref().unwrap();
+
+        let typ = arg.typ.as_ref().unwrap().as_str();
+        let typ = if side == Side::Server && typ == "object" {
+            "*mut wl_resource".to_owned()
+        } else if side == Side::Server && typ == "new_id" && arg.interface.is_none() {
+            *text += "        interface: *const c_char,\n";
+            *text += "        version: u32,\n";
+            "u32".to_owned()
+        } else if side == Side::Client && typ == "object" && arg.interface.is_none() {
+            "*mut c_void".to_owned()
+        } else if side == Side::Client && typ == "new_id" {
+            format!("*mut {}", arg.interface.as_ref().unwrap())
+        } else {
+            match typ {
+                "int" | "fd" => "i32".to_owned(),
+                "new_id" | "uint" => "u32".to_owned(),
+                "fixed" => "wl_fixed_t".to_owned(),
+                "string" => "*const c_char".to_owned(),
+                "object" => format!("*mut {}", arg.interface.as_ref().unwrap()),
+                "array" => "*mut wl_array".to_owned(),
+                _ => "i32".to_owned(),
+            }
+        };
+
+        *text += &format!("        {name}: {typ},\n");
     }
 
     fn add_enums(&mut self, interface: &Interface, side: Side) {
