@@ -43,15 +43,26 @@ impl Generator {
     fn generate_protocol_module(protocol: &Protocol, side: Side) {
         let side_str = side.to_str();
         let mut generator = Generator::new(format!("wayland_{side_str}_protocol"));
-        generator.add_import_core(side_str);
+        generator.add_import_side_core(side_str);
+        generator.pre_exclude_core_extern_types(side);
         generator.pre_visit_protocol(protocol);
         generator.visit_protocol(protocol, side);
         generator.module.write_file();
     }
 
-    fn add_import_core(&mut self, side_str: &str) {
+    fn add_import_side_core(&mut self, side_str: &str) {
         let text = format!("use super::wayland_{side_str}_core::*;");
         self.module.imports.push(text);
+    }
+
+    fn pre_exclude_core_extern_types(&mut self, side: Side) {
+        let names = match side {
+            Side::Client => ["wl_display"].as_slice(),
+            Side::Server => ["wl_display", "wl_shm_pool"].as_slice(),
+        };
+        for &name in names {
+            self.extern_types.insert(name.to_owned());
+        }
     }
 
     fn pre_visit_protocol(&mut self, protocol: &Protocol) {
@@ -63,6 +74,8 @@ impl Generator {
     }
 
     fn pre_visit_interface(&mut self, interface: &Interface) {
+        self.add_extern_type(interface.name.as_ref().unwrap());
+
         for content in &interface.contents {
             match content {
                 InterfaceContent::Description(_) => (),
@@ -84,12 +97,10 @@ impl Generator {
     fn pre_visit_arg(&mut self, interface: &Interface, arg: &Arg) {
         if let Some(enum_name) = arg.enu.as_ref() {
             self.save_enum_type(interface, arg, enum_name);
-        } else {
+        } else if let Some(interface_name) = arg.interface.as_ref() {
             let typ = arg.typ.as_ref().unwrap();
             if typ == "new_id" || typ == "object" {
-                if let Some(struct_type_name) = arg.interface.as_ref() {
-                    self.add_extern_type(struct_type_name);
-                }
+                self.add_extern_type(interface_name);
             }
         }
     }

@@ -14,7 +14,19 @@ pub struct wl_callback {
 }
 
 #[repr(C)]
+pub struct wl_compositor {
+    _data: (),
+    _marker: PhantomData<(*mut u8, PhantomPinned)>,
+}
+
+#[repr(C)]
 pub struct wl_data_device {
+    _data: (),
+    _marker: PhantomData<(*mut u8, PhantomPinned)>,
+}
+
+#[repr(C)]
+pub struct wl_data_device_manager {
     _data: (),
     _marker: PhantomData<(*mut u8, PhantomPinned)>,
 }
@@ -27,6 +39,12 @@ pub struct wl_data_offer {
 
 #[repr(C)]
 pub struct wl_data_source {
+    _data: (),
+    _marker: PhantomData<(*mut u8, PhantomPinned)>,
+}
+
+#[repr(C)]
+pub struct wl_fixes {
     _data: (),
     _marker: PhantomData<(*mut u8, PhantomPinned)>,
 }
@@ -68,13 +86,25 @@ pub struct wl_seat {
 }
 
 #[repr(C)]
+pub struct wl_shell {
+    _data: (),
+    _marker: PhantomData<(*mut u8, PhantomPinned)>,
+}
+
+#[repr(C)]
 pub struct wl_shell_surface {
     _data: (),
     _marker: PhantomData<(*mut u8, PhantomPinned)>,
 }
 
 #[repr(C)]
-pub struct wl_shm_pool {
+pub struct wl_shm {
+    _data: (),
+    _marker: PhantomData<(*mut u8, PhantomPinned)>,
+}
+
+#[repr(C)]
+pub struct wl_subcompositor {
     _data: (),
     _marker: PhantomData<(*mut u8, PhantomPinned)>,
 }
