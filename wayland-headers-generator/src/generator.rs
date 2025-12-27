@@ -16,7 +16,7 @@ pub(crate) struct Generator {
 }
 
 impl Generator {
-    fn new(name: &str) -> Self {
+    fn new(name: String) -> Self {
         Self {
             module: Module::new(name),
             extern_struct_names: HashSet::new(),
@@ -30,12 +30,16 @@ impl Generator {
     }
 
     fn generate_protocol_module(protocol: &Protocol, side: Side) {
-        let name = match side {
-            Side::Client => "wayland_client_protocol",
-            Side::Server => "wayland_server_protocol",
+        let side_str = match side {
+            Side::Client => "client",
+            Side::Server => "server",
         };
 
-        let mut generator = Generator::new(name);
+        let mut generator = Generator::new(format!("wayland_{side_str}_protocol"));
+
+        let import = format!("use crate::wayland_{side_str}_core::*;");
+        generator.module.imports.push(import);
+
         generator.visit_protocol(protocol, side);
         generator.module.write_file();
     }
@@ -49,6 +53,8 @@ impl Generator {
     }
 
     fn visit_interface(&mut self, interface: &Interface, side: Side) {
+        self.add_extern_static_interface(interface.name.as_ref().unwrap());
+
         for content in &interface.contents {
             match content {
                 InterfaceContent::Description(_) => (),
@@ -57,6 +63,12 @@ impl Generator {
                 InterfaceContent::Enum(enu) => self.visit_enum(interface, enu, side),
             }
         }
+    }
+
+    fn add_extern_static_interface(&mut self, name: &str) {
+        let name = format!("{name}_interface");
+        let text = format!("    pub static {name}: wl_interface;");
+        self.module.extern_statics.push((name, text));
     }
 
     fn visit_request(&mut self, interface: &Interface, request: &Message, side: Side) {

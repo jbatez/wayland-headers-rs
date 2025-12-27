@@ -5,6 +5,8 @@
 pub mod _macro_helpers;
 
 pub mod wayland_client_core;
+pub mod wayland_client_protocol;
 pub mod wayland_server_core;
+pub mod wayland_server_protocol;
 pub mod wayland_util;
 pub mod wayland_version;

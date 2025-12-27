@@ -7,17 +7,19 @@ pub(crate) struct Module {
     pub(crate) constants: Vec<(String, String)>,
     pub(crate) functions: Vec<(String, String)>,
     pub(crate) type_aliases: Vec<(String, String)>,
+    pub(crate) extern_statics: Vec<(String, String)>,
 }
 
 impl Module {
-    pub(crate) fn new(name: &str) -> Self {
+    pub(crate) fn new(name: String) -> Self {
         Self {
-            name: name.to_owned(),
+            name,
             imports: Vec::new(),
             structs: Vec::new(),
             constants: Vec::new(),
             functions: Vec::new(),
             type_aliases: Vec::new(),
+            extern_statics: Vec::new(),
         }
     }
 
@@ -30,6 +32,7 @@ impl Module {
         self.sort_and_write_constants(&mut file);
         self.sort_and_write_functions(&mut file);
         self.sort_and_write_type_aliases(&mut file);
+        self.sort_and_write_extern_statics(&mut file);
     }
 
     fn sort_and_write_imports(&mut self, file: &mut File) {
@@ -79,5 +82,21 @@ impl Module {
         for (_, text) in &self.type_aliases {
             writeln!(file, "{text}").unwrap();
         }
+    }
+
+    fn sort_and_write_extern_statics(&mut self, file: &mut File) {
+        if self.extern_statics.is_empty() {
+            return;
+        }
+
+        writeln!(file).unwrap();
+        writeln!(file, "unsafe extern \"C\" {{").unwrap();
+
+        self.extern_statics.sort();
+        for (i, (_, text)) in self.extern_statics.iter().enumerate() {
+            writeln!(file, "{text}").unwrap();
+        }
+
+        writeln!(file, "}}").unwrap();
     }
 }
