@@ -86,6 +86,20 @@ impl Generator {
         }
     }
 
+    fn add_extern_type(&mut self, name: &str) {
+        if self.extern_types.insert(name.to_owned()) {
+            let text = format!(
+                "\
+#[repr(C)]
+pub struct {name} {{
+    _data: (),
+    _marker: PhantomData<(*mut u8, PhantomPinned)>,
+}}"
+            );
+            self.module.structs.push((name.to_owned(), text));
+        }
+    }
+
     fn pre_visit_message(&mut self, interface: &Interface, message: &Message) {
         for content in &message.contents {
             if let MessageContent::Arg(arg) = content {
@@ -97,11 +111,6 @@ impl Generator {
     fn pre_visit_arg(&mut self, interface: &Interface, arg: &Arg) {
         if let Some(enum_name) = arg.enu.as_ref() {
             self.save_enum_type(interface, arg, enum_name);
-        } else if let Some(interface_name) = arg.interface.as_ref() {
-            let typ = arg.typ.as_ref().unwrap();
-            if typ == "new_id" || typ == "object" {
-                self.add_extern_type(interface_name);
-            }
         }
     }
 
@@ -126,20 +135,6 @@ impl Generator {
         let old_type = self.enum_types.insert(full_enum_name, typ);
         if let Some(old_type) = old_type {
             assert_eq!(old_type, typ);
-        }
-    }
-
-    fn add_extern_type(&mut self, name: &str) {
-        if self.extern_types.insert(name.to_owned()) {
-            let text = format!(
-                "\
-#[repr(C)]
-pub struct {name} {{
-    _data: (),
-    _marker: PhantomData<(*mut u8, PhantomPinned)>,
-}}"
-            );
-            self.module.structs.push((name.to_owned(), text));
         }
     }
 
