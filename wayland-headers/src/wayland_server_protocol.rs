@@ -1004,6 +1004,32 @@ pub const WL_TOUCH_UP: u32 = 1;
 pub const WL_TOUCH_UP_SINCE_VERSION: u32 = 1;
 
 #[inline]
+pub unsafe extern "C" fn wl_buffer_send_release(
+    resource_: *mut wl_resource,
+) {
+    unsafe {
+        wl_resource_post_event(
+            resource_,
+            WL_BUFFER_RELEASE,
+        )
+    }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_callback_send_done(
+    resource_: *mut wl_resource,
+    callback_data: u32,
+) {
+    unsafe {
+        wl_resource_post_event(
+            resource_,
+            WL_CALLBACK_DONE,
+            callback_data,
+        )
+    }
+}
+
+#[inline]
 pub extern "C" fn wl_data_device_error_is_valid(
     value: u32,
     version: u32,
@@ -1037,6 +1063,98 @@ pub extern "C" fn wl_data_device_manager_dnd_action_is_valid(
 }
 
 #[inline]
+pub unsafe extern "C" fn wl_data_device_send_data_offer(
+    resource_: *mut wl_resource,
+    id: *mut wl_resource,
+) {
+    unsafe {
+        wl_resource_post_event(
+            resource_,
+            WL_DATA_DEVICE_DATA_OFFER,
+            id,
+        )
+    }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_data_device_send_drop(
+    resource_: *mut wl_resource,
+) {
+    unsafe {
+        wl_resource_post_event(
+            resource_,
+            WL_DATA_DEVICE_DROP,
+        )
+    }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_data_device_send_enter(
+    resource_: *mut wl_resource,
+    serial: u32,
+    surface: *mut wl_resource,
+    x: wl_fixed_t,
+    y: wl_fixed_t,
+    id: *mut wl_resource,
+) {
+    unsafe {
+        wl_resource_post_event(
+            resource_,
+            WL_DATA_DEVICE_ENTER,
+            serial,
+            surface,
+            x,
+            y,
+            id,
+        )
+    }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_data_device_send_leave(
+    resource_: *mut wl_resource,
+) {
+    unsafe {
+        wl_resource_post_event(
+            resource_,
+            WL_DATA_DEVICE_LEAVE,
+        )
+    }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_data_device_send_motion(
+    resource_: *mut wl_resource,
+    time: u32,
+    x: wl_fixed_t,
+    y: wl_fixed_t,
+) {
+    unsafe {
+        wl_resource_post_event(
+            resource_,
+            WL_DATA_DEVICE_MOTION,
+            time,
+            x,
+            y,
+        )
+    }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_data_device_send_selection(
+    resource_: *mut wl_resource,
+    id: *mut wl_resource,
+) {
+    unsafe {
+        wl_resource_post_event(
+            resource_,
+            WL_DATA_DEVICE_SELECTION,
+            id,
+        )
+    }
+}
+
+#[inline]
 pub extern "C" fn wl_data_offer_error_is_valid(
     value: u32,
     version: u32,
@@ -1051,6 +1169,48 @@ pub extern "C" fn wl_data_offer_error_is_valid(
 }
 
 #[inline]
+pub unsafe extern "C" fn wl_data_offer_send_action(
+    resource_: *mut wl_resource,
+    dnd_action: u32,
+) {
+    unsafe {
+        wl_resource_post_event(
+            resource_,
+            WL_DATA_OFFER_ACTION,
+            dnd_action,
+        )
+    }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_data_offer_send_offer(
+    resource_: *mut wl_resource,
+    mime_type: *const c_char,
+) {
+    unsafe {
+        wl_resource_post_event(
+            resource_,
+            WL_DATA_OFFER_OFFER,
+            mime_type,
+        )
+    }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_data_offer_send_source_actions(
+    resource_: *mut wl_resource,
+    source_actions: u32,
+) {
+    unsafe {
+        wl_resource_post_event(
+            resource_,
+            WL_DATA_OFFER_SOURCE_ACTIONS,
+            source_actions,
+        )
+    }
+}
+
+#[inline]
 pub extern "C" fn wl_data_source_error_is_valid(
     value: u32,
     version: u32,
@@ -1059,6 +1219,86 @@ pub extern "C" fn wl_data_source_error_is_valid(
         WL_DATA_SOURCE_ERROR_INVALID_ACTION_MASK => version >= 1,
         WL_DATA_SOURCE_ERROR_INVALID_SOURCE => version >= 1,
         _ => false,
+    }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_data_source_send_action(
+    resource_: *mut wl_resource,
+    dnd_action: u32,
+) {
+    unsafe {
+        wl_resource_post_event(
+            resource_,
+            WL_DATA_SOURCE_ACTION,
+            dnd_action,
+        )
+    }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_data_source_send_cancelled(
+    resource_: *mut wl_resource,
+) {
+    unsafe {
+        wl_resource_post_event(
+            resource_,
+            WL_DATA_SOURCE_CANCELLED,
+        )
+    }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_data_source_send_dnd_drop_performed(
+    resource_: *mut wl_resource,
+) {
+    unsafe {
+        wl_resource_post_event(
+            resource_,
+            WL_DATA_SOURCE_DND_DROP_PERFORMED,
+        )
+    }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_data_source_send_dnd_finished(
+    resource_: *mut wl_resource,
+) {
+    unsafe {
+        wl_resource_post_event(
+            resource_,
+            WL_DATA_SOURCE_DND_FINISHED,
+        )
+    }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_data_source_send_send(
+    resource_: *mut wl_resource,
+    mime_type: *const c_char,
+    fd: i32,
+) {
+    unsafe {
+        wl_resource_post_event(
+            resource_,
+            WL_DATA_SOURCE_SEND,
+            mime_type,
+            fd,
+        )
+    }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_data_source_send_target(
+    resource_: *mut wl_resource,
+    mime_type: *const c_char,
+) {
+    unsafe {
+        wl_resource_post_event(
+            resource_,
+            WL_DATA_SOURCE_TARGET,
+            mime_type,
+        )
     }
 }
 
@@ -1102,6 +1342,116 @@ pub extern "C" fn wl_keyboard_keymap_format_is_valid(
 }
 
 #[inline]
+pub unsafe extern "C" fn wl_keyboard_send_enter(
+    resource_: *mut wl_resource,
+    serial: u32,
+    surface: *mut wl_resource,
+    keys: *mut wl_array,
+) {
+    unsafe {
+        wl_resource_post_event(
+            resource_,
+            WL_KEYBOARD_ENTER,
+            serial,
+            surface,
+            keys,
+        )
+    }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_keyboard_send_key(
+    resource_: *mut wl_resource,
+    serial: u32,
+    time: u32,
+    key: u32,
+    state: u32,
+) {
+    unsafe {
+        wl_resource_post_event(
+            resource_,
+            WL_KEYBOARD_KEY,
+            serial,
+            time,
+            key,
+            state,
+        )
+    }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_keyboard_send_keymap(
+    resource_: *mut wl_resource,
+    format: u32,
+    fd: i32,
+    size: u32,
+) {
+    unsafe {
+        wl_resource_post_event(
+            resource_,
+            WL_KEYBOARD_KEYMAP,
+            format,
+            fd,
+            size,
+        )
+    }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_keyboard_send_leave(
+    resource_: *mut wl_resource,
+    serial: u32,
+    surface: *mut wl_resource,
+) {
+    unsafe {
+        wl_resource_post_event(
+            resource_,
+            WL_KEYBOARD_LEAVE,
+            serial,
+            surface,
+        )
+    }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_keyboard_send_modifiers(
+    resource_: *mut wl_resource,
+    serial: u32,
+    mods_depressed: u32,
+    mods_latched: u32,
+    mods_locked: u32,
+    group: u32,
+) {
+    unsafe {
+        wl_resource_post_event(
+            resource_,
+            WL_KEYBOARD_MODIFIERS,
+            serial,
+            mods_depressed,
+            mods_latched,
+            mods_locked,
+            group,
+        )
+    }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_keyboard_send_repeat_info(
+    resource_: *mut wl_resource,
+    rate: i32,
+    delay: i32,
+) {
+    unsafe {
+        wl_resource_post_event(
+            resource_,
+            WL_KEYBOARD_REPEAT_INFO,
+            rate,
+            delay,
+        )
+    }
+}
+
+#[inline]
 pub extern "C" fn wl_output_mode_is_valid(
     value: u32,
     version: u32,
@@ -1114,6 +1464,108 @@ pub extern "C" fn wl_output_mode_is_valid(
         valid |= WL_OUTPUT_MODE_PREFERRED;
     }
     (value & !valid) == 0
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_output_send_description(
+    resource_: *mut wl_resource,
+    description: *const c_char,
+) {
+    unsafe {
+        wl_resource_post_event(
+            resource_,
+            WL_OUTPUT_DESCRIPTION,
+            description,
+        )
+    }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_output_send_done(
+    resource_: *mut wl_resource,
+) {
+    unsafe {
+        wl_resource_post_event(
+            resource_,
+            WL_OUTPUT_DONE,
+        )
+    }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_output_send_geometry(
+    resource_: *mut wl_resource,
+    x: i32,
+    y: i32,
+    physical_width: i32,
+    physical_height: i32,
+    subpixel: i32,
+    make: *const c_char,
+    model: *const c_char,
+    transform: i32,
+) {
+    unsafe {
+        wl_resource_post_event(
+            resource_,
+            WL_OUTPUT_GEOMETRY,
+            x,
+            y,
+            physical_width,
+            physical_height,
+            subpixel,
+            make,
+            model,
+            transform,
+        )
+    }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_output_send_mode(
+    resource_: *mut wl_resource,
+    flags: u32,
+    width: i32,
+    height: i32,
+    refresh: i32,
+) {
+    unsafe {
+        wl_resource_post_event(
+            resource_,
+            WL_OUTPUT_MODE,
+            flags,
+            width,
+            height,
+            refresh,
+        )
+    }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_output_send_name(
+    resource_: *mut wl_resource,
+    name: *const c_char,
+) {
+    unsafe {
+        wl_resource_post_event(
+            resource_,
+            WL_OUTPUT_NAME,
+            name,
+        )
+    }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_output_send_scale(
+    resource_: *mut wl_resource,
+    factor: i32,
+) {
+    unsafe {
+        wl_resource_post_event(
+            resource_,
+            WL_OUTPUT_SCALE,
+            factor,
+        )
+    }
 }
 
 #[inline]
@@ -1212,6 +1664,220 @@ pub extern "C" fn wl_pointer_error_is_valid(
 }
 
 #[inline]
+pub unsafe extern "C" fn wl_pointer_send_axis(
+    resource_: *mut wl_resource,
+    time: u32,
+    axis: u32,
+    value: wl_fixed_t,
+) {
+    unsafe {
+        wl_resource_post_event(
+            resource_,
+            WL_POINTER_AXIS,
+            time,
+            axis,
+            value,
+        )
+    }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_pointer_send_axis_discrete(
+    resource_: *mut wl_resource,
+    axis: u32,
+    discrete: i32,
+) {
+    unsafe {
+        wl_resource_post_event(
+            resource_,
+            WL_POINTER_AXIS_DISCRETE,
+            axis,
+            discrete,
+        )
+    }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_pointer_send_axis_relative_direction(
+    resource_: *mut wl_resource,
+    axis: u32,
+    direction: u32,
+) {
+    unsafe {
+        wl_resource_post_event(
+            resource_,
+            WL_POINTER_AXIS_RELATIVE_DIRECTION,
+            axis,
+            direction,
+        )
+    }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_pointer_send_axis_source(
+    resource_: *mut wl_resource,
+    axis_source: u32,
+) {
+    unsafe {
+        wl_resource_post_event(
+            resource_,
+            WL_POINTER_AXIS_SOURCE,
+            axis_source,
+        )
+    }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_pointer_send_axis_stop(
+    resource_: *mut wl_resource,
+    time: u32,
+    axis: u32,
+) {
+    unsafe {
+        wl_resource_post_event(
+            resource_,
+            WL_POINTER_AXIS_STOP,
+            time,
+            axis,
+        )
+    }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_pointer_send_axis_value120(
+    resource_: *mut wl_resource,
+    axis: u32,
+    value120: i32,
+) {
+    unsafe {
+        wl_resource_post_event(
+            resource_,
+            WL_POINTER_AXIS_VALUE120,
+            axis,
+            value120,
+        )
+    }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_pointer_send_button(
+    resource_: *mut wl_resource,
+    serial: u32,
+    time: u32,
+    button: u32,
+    state: u32,
+) {
+    unsafe {
+        wl_resource_post_event(
+            resource_,
+            WL_POINTER_BUTTON,
+            serial,
+            time,
+            button,
+            state,
+        )
+    }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_pointer_send_enter(
+    resource_: *mut wl_resource,
+    serial: u32,
+    surface: *mut wl_resource,
+    surface_x: wl_fixed_t,
+    surface_y: wl_fixed_t,
+) {
+    unsafe {
+        wl_resource_post_event(
+            resource_,
+            WL_POINTER_ENTER,
+            serial,
+            surface,
+            surface_x,
+            surface_y,
+        )
+    }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_pointer_send_frame(
+    resource_: *mut wl_resource,
+) {
+    unsafe {
+        wl_resource_post_event(
+            resource_,
+            WL_POINTER_FRAME,
+        )
+    }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_pointer_send_leave(
+    resource_: *mut wl_resource,
+    serial: u32,
+    surface: *mut wl_resource,
+) {
+    unsafe {
+        wl_resource_post_event(
+            resource_,
+            WL_POINTER_LEAVE,
+            serial,
+            surface,
+        )
+    }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_pointer_send_motion(
+    resource_: *mut wl_resource,
+    time: u32,
+    surface_x: wl_fixed_t,
+    surface_y: wl_fixed_t,
+) {
+    unsafe {
+        wl_resource_post_event(
+            resource_,
+            WL_POINTER_MOTION,
+            time,
+            surface_x,
+            surface_y,
+        )
+    }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_registry_send_global(
+    resource_: *mut wl_resource,
+    name: u32,
+    interface: *const c_char,
+    version: u32,
+) {
+    unsafe {
+        wl_resource_post_event(
+            resource_,
+            WL_REGISTRY_GLOBAL,
+            name,
+            interface,
+            version,
+        )
+    }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_registry_send_global_remove(
+    resource_: *mut wl_resource,
+    name: u32,
+) {
+    unsafe {
+        wl_resource_post_event(
+            resource_,
+            WL_REGISTRY_GLOBAL_REMOVE,
+            name,
+        )
+    }
+}
+
+#[inline]
 pub extern "C" fn wl_seat_capability_is_valid(
     value: u32,
     version: u32,
@@ -1237,6 +1903,34 @@ pub extern "C" fn wl_seat_error_is_valid(
     match value {
         WL_SEAT_ERROR_MISSING_CAPABILITY => version >= 1,
         _ => false,
+    }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_seat_send_capabilities(
+    resource_: *mut wl_resource,
+    capabilities: u32,
+) {
+    unsafe {
+        wl_resource_post_event(
+            resource_,
+            WL_SEAT_CAPABILITIES,
+            capabilities,
+        )
+    }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_seat_send_name(
+    resource_: *mut wl_resource,
+    name: *const c_char,
+) {
+    unsafe {
+        wl_resource_post_event(
+            resource_,
+            WL_SEAT_NAME,
+            name,
+        )
     }
 }
 
@@ -1299,6 +1993,50 @@ pub extern "C" fn wl_shell_surface_resize_is_valid(
         valid |= WL_SHELL_SURFACE_RESIZE_BOTTOM_RIGHT;
     }
     (value & !valid) == 0
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_shell_surface_send_configure(
+    resource_: *mut wl_resource,
+    edges: u32,
+    width: i32,
+    height: i32,
+) {
+    unsafe {
+        wl_resource_post_event(
+            resource_,
+            WL_SHELL_SURFACE_CONFIGURE,
+            edges,
+            width,
+            height,
+        )
+    }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_shell_surface_send_ping(
+    resource_: *mut wl_resource,
+    serial: u32,
+) {
+    unsafe {
+        wl_resource_post_event(
+            resource_,
+            WL_SHELL_SURFACE_PING,
+            serial,
+        )
+    }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_shell_surface_send_popup_done(
+    resource_: *mut wl_resource,
+) {
+    unsafe {
+        wl_resource_post_event(
+            resource_,
+            WL_SHELL_SURFACE_POPUP_DONE,
+        )
+    }
 }
 
 #[inline]
@@ -1460,6 +2198,20 @@ pub extern "C" fn wl_shm_format_is_valid(
 }
 
 #[inline]
+pub unsafe extern "C" fn wl_shm_send_format(
+    resource_: *mut wl_resource,
+    format: u32,
+) {
+    unsafe {
+        wl_resource_post_event(
+            resource_,
+            WL_SHM_FORMAT,
+            format,
+        )
+    }
+}
+
+#[inline]
 pub extern "C" fn wl_subcompositor_error_is_valid(
     value: u32,
     version: u32,
@@ -1494,6 +2246,182 @@ pub extern "C" fn wl_surface_error_is_valid(
         WL_SURFACE_ERROR_INVALID_OFFSET => version >= 1,
         WL_SURFACE_ERROR_DEFUNCT_ROLE_OBJECT => version >= 1,
         _ => false,
+    }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_surface_send_enter(
+    resource_: *mut wl_resource,
+    output: *mut wl_resource,
+) {
+    unsafe {
+        wl_resource_post_event(
+            resource_,
+            WL_SURFACE_ENTER,
+            output,
+        )
+    }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_surface_send_leave(
+    resource_: *mut wl_resource,
+    output: *mut wl_resource,
+) {
+    unsafe {
+        wl_resource_post_event(
+            resource_,
+            WL_SURFACE_LEAVE,
+            output,
+        )
+    }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_surface_send_preferred_buffer_scale(
+    resource_: *mut wl_resource,
+    factor: i32,
+) {
+    unsafe {
+        wl_resource_post_event(
+            resource_,
+            WL_SURFACE_PREFERRED_BUFFER_SCALE,
+            factor,
+        )
+    }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_surface_send_preferred_buffer_transform(
+    resource_: *mut wl_resource,
+    transform: u32,
+) {
+    unsafe {
+        wl_resource_post_event(
+            resource_,
+            WL_SURFACE_PREFERRED_BUFFER_TRANSFORM,
+            transform,
+        )
+    }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_touch_send_cancel(
+    resource_: *mut wl_resource,
+) {
+    unsafe {
+        wl_resource_post_event(
+            resource_,
+            WL_TOUCH_CANCEL,
+        )
+    }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_touch_send_down(
+    resource_: *mut wl_resource,
+    serial: u32,
+    time: u32,
+    surface: *mut wl_resource,
+    id: i32,
+    x: wl_fixed_t,
+    y: wl_fixed_t,
+) {
+    unsafe {
+        wl_resource_post_event(
+            resource_,
+            WL_TOUCH_DOWN,
+            serial,
+            time,
+            surface,
+            id,
+            x,
+            y,
+        )
+    }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_touch_send_frame(
+    resource_: *mut wl_resource,
+) {
+    unsafe {
+        wl_resource_post_event(
+            resource_,
+            WL_TOUCH_FRAME,
+        )
+    }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_touch_send_motion(
+    resource_: *mut wl_resource,
+    time: u32,
+    id: i32,
+    x: wl_fixed_t,
+    y: wl_fixed_t,
+) {
+    unsafe {
+        wl_resource_post_event(
+            resource_,
+            WL_TOUCH_MOTION,
+            time,
+            id,
+            x,
+            y,
+        )
+    }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_touch_send_orientation(
+    resource_: *mut wl_resource,
+    id: i32,
+    orientation: wl_fixed_t,
+) {
+    unsafe {
+        wl_resource_post_event(
+            resource_,
+            WL_TOUCH_ORIENTATION,
+            id,
+            orientation,
+        )
+    }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_touch_send_shape(
+    resource_: *mut wl_resource,
+    id: i32,
+    major: wl_fixed_t,
+    minor: wl_fixed_t,
+) {
+    unsafe {
+        wl_resource_post_event(
+            resource_,
+            WL_TOUCH_SHAPE,
+            id,
+            major,
+            minor,
+        )
+    }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_touch_send_up(
+    resource_: *mut wl_resource,
+    serial: u32,
+    time: u32,
+    id: i32,
+) {
+    unsafe {
+        wl_resource_post_event(
+            resource_,
+            WL_TOUCH_UP,
+            serial,
+            time,
+            id,
+        )
     }
 }
 

@@ -65,7 +65,7 @@ impl Generator {
 
         match side {
             Side::Client => self.add_client_wrapper_fns(interface),
-            Side::Server => self.add_server_wrapper_fns(interface),
+            Side::Server => self.add_send_event_fns(interface),
         }
 
         self.add_enums(interface, side);
@@ -487,8 +487,59 @@ pub unsafe extern \"C\" fn {name}(
         self.module.functions.push((name, text));
     }
 
-    fn add_server_wrapper_fns(&mut self, interface: &Interface) {
-        // TODO
+    fn add_send_event_fns(&mut self, interface: &Interface) {
+        if interface.name.as_ref().unwrap() == "wl_display" {
+            return;
+        }
+
+        for content in &interface.contents {
+            if let InterfaceContent::Event(event) = content {
+                self.add_send_event_fn(interface, event);
+            }
+        }
+    }
+
+    fn add_send_event_fn(&mut self, interface: &Interface, event: &Message) {
+        let interface_name = interface.name.as_ref().unwrap();
+        let event_name = event.name.as_ref().unwrap();
+        let name = format!("{interface_name}_send_{event_name}");
+
+        let mut text = String::new();
+        text += &format!("#[inline]\n");
+        text += &format!("pub unsafe extern \"C\" fn {name}(\n");
+        text += &format!("    resource_: *mut wl_resource,\n");
+
+        for content in &event.contents {
+            if let MessageContent::Arg(arg) = content {
+                let name = arg.name.as_ref().unwrap();
+                let typ = match arg.typ.as_ref().unwrap().as_str() {
+                    "new_id" | "object" => "*mut wl_resource".to_owned(),
+                    _ => Self::rust_type_from_arg(arg),
+                };
+                text += &format!("    {name}: {typ},\n");
+            }
+        }
+
+        text += ") {\n";
+        text += "    unsafe {\n";
+        text += "        wl_resource_post_event(\n";
+        text += "            resource_,\n";
+
+        let opcode = format!("{interface_name}_{event_name}").to_ascii_uppercase();
+        text += &format!("            {opcode},\n");
+
+        for content in &event.contents {
+            if let MessageContent::Arg(arg) = content {
+                text += "            ";
+                text += arg.name.as_ref().unwrap();
+                text += ",\n";
+            }
+        }
+
+        text += "        )\n";
+        text += "    }\n";
+        text += "}";
+        self.module.functions.push((name, text));
     }
 
     fn add_enums(&mut self, interface: &Interface, side: Side) {
