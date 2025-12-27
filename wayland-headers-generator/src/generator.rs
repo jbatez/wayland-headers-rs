@@ -22,7 +22,7 @@ impl Side {
 pub(crate) struct Generator {
     module: Module,
     extern_types: HashSet<String>,
-    enum_arg_types: HashMap<String, &'static str>,
+    enum_types: HashMap<String, &'static str>,
 }
 
 impl Generator {
@@ -30,7 +30,7 @@ impl Generator {
         Self {
             module: Module::new(name),
             extern_types: HashSet::new(),
-            enum_arg_types: HashMap::new(),
+            enum_types: HashMap::new(),
         }
     }
 
@@ -82,8 +82,8 @@ impl Generator {
     }
 
     fn pre_visit_arg(&mut self, interface: &Interface, arg: &Arg) {
-        if let Some(enu) = arg.enu.as_ref() {
-            self.save_enum_arg_type(interface, arg, enu);
+        if let Some(enum_name) = arg.enu.as_ref() {
+            self.save_enum_type(interface, arg, enum_name);
         } else {
             let typ = arg.typ.as_ref().unwrap();
             if typ == "new_id" || typ == "object" {
@@ -94,13 +94,15 @@ impl Generator {
         }
     }
 
-    fn save_enum_arg_type(&mut self, interface: &Interface, arg: &Arg, enu: &str) {
-        let enu = match enu.contains('.') {
-            true => enu.to_owned(),
-            false => format!("{}.{}", interface.name.as_ref().unwrap(), enu),
+    fn save_enum_type(&mut self, interface: &Interface, arg: &Arg, enum_name: &str) {
+        let full_enum_name = if enum_name.contains('.') {
+            enum_name.to_owned()
+        } else {
+            let interface_name = interface.name.as_ref().unwrap();
+            format!("{interface_name}.{enum_name}")
         };
 
-        let typ = if enu == "wl_output.transform" {
+        let typ = if full_enum_name == "wl_output.transform" {
             "i32"
         } else {
             match arg.typ.as_ref().unwrap().as_str() {
@@ -110,7 +112,7 @@ impl Generator {
             }
         };
 
-        let old_type = self.enum_arg_types.insert(enu, typ);
+        let old_type = self.enum_types.insert(full_enum_name, typ);
         if let Some(old_type) = old_type {
             assert_eq!(old_type, typ);
         }
@@ -167,6 +169,31 @@ pub struct {name} {{
     }
 
     fn visit_enum(&mut self, interface: &Interface, enu: &Enum) {
-        // TODO
+        for content in &enu.contents {
+            if let EnumContent::Entry(entry) = content {
+                self.visit_entry(interface, enu, entry);
+            }
+        }
+    }
+
+    fn visit_entry(&mut self, interface: &Interface, enu: &Enum, entry: &Entry) {
+        let interface_name = interface.name.as_ref().unwrap();
+        let enum_name = enu.name.as_ref().unwrap();
+        let entry_name = entry.name.as_ref().unwrap();
+        let name = format!("{interface_name}_{enum_name}_{entry_name}").to_ascii_uppercase();
+
+        let typ = {
+            let full_enum_name = format!("{interface_name}.{enum_name}");
+            if let Some(&typ) = self.enum_types.get(&full_enum_name) {
+                typ
+            } else {
+                assert_eq!(enum_name, "error");
+                "u32"
+            }
+        };
+
+        let value = entry.value.as_ref().unwrap();
+        let text = format!("pub const {name}: {typ} = {value};");
+        self.module.constants.push((name, text));
     }
 }
