@@ -456,6 +456,23 @@ pub unsafe extern \"C\" fn {name}(
             text += "0,\n";
         }
 
+        // args
+        for content in &request.contents {
+            if let MessageContent::Arg(arg) = content {
+                if arg.typ.as_ref().unwrap() == "new_id" {
+                    if arg.interface.is_none() {
+                        text += "            (*interface).name,\n";
+                        text += "            version,\n";
+                    }
+                    text += "            null_mut::<c_void>(),\n";
+                } else {
+                    text += "            ";
+                    text += arg.name.as_ref().unwrap();
+                    text += ",\n";
+                }
+            }
+        }
+
         // return
         text += "        )";
         if ret_arg.is_some() {

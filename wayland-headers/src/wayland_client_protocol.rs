@@ -1084,6 +1084,7 @@ pub unsafe extern "C" fn wl_compositor_create_region(
             &wl_region_interface,
             wl_proxy_get_version(wl_compositor.cast()),
             0,
+            null_mut::<c_void>(),
         ).cast()
     }
 }
@@ -1099,6 +1100,7 @@ pub unsafe extern "C" fn wl_compositor_create_surface(
             &wl_surface_interface,
             wl_proxy_get_version(wl_compositor.cast()),
             0,
+            null_mut::<c_void>(),
         ).cast()
     }
 }
@@ -1184,6 +1186,7 @@ pub unsafe extern "C" fn wl_data_device_manager_create_data_source(
             &wl_data_source_interface,
             wl_proxy_get_version(wl_data_device_manager.cast()),
             0,
+            null_mut::<c_void>(),
         ).cast()
     }
 }
@@ -1207,6 +1210,8 @@ pub unsafe extern "C" fn wl_data_device_manager_get_data_device(
             &wl_data_device_interface,
             wl_proxy_get_version(wl_data_device_manager.cast()),
             0,
+            null_mut::<c_void>(),
+            seat,
         ).cast()
     }
 }
@@ -1266,6 +1271,8 @@ pub unsafe extern "C" fn wl_data_device_set_selection(
             null(),
             wl_proxy_get_version(wl_data_device.cast()),
             0,
+            source,
+            serial,
         );
     }
 }
@@ -1298,6 +1305,10 @@ pub unsafe extern "C" fn wl_data_device_start_drag(
             null(),
             wl_proxy_get_version(wl_data_device.cast()),
             0,
+            source,
+            origin,
+            icon,
+            serial,
         );
     }
 }
@@ -1315,6 +1326,8 @@ pub unsafe extern "C" fn wl_data_offer_accept(
             null(),
             wl_proxy_get_version(wl_data_offer.cast()),
             0,
+            serial,
+            mime_type,
         );
     }
 }
@@ -1391,6 +1404,8 @@ pub unsafe extern "C" fn wl_data_offer_receive(
             null(),
             wl_proxy_get_version(wl_data_offer.cast()),
             0,
+            mime_type,
+            fd,
         );
     }
 }
@@ -1408,6 +1423,8 @@ pub unsafe extern "C" fn wl_data_offer_set_actions(
             null(),
             wl_proxy_get_version(wl_data_offer.cast()),
             0,
+            dnd_actions,
+            preferred_action,
         );
     }
 }
@@ -1481,6 +1498,7 @@ pub unsafe extern "C" fn wl_data_source_offer(
             null(),
             wl_proxy_get_version(wl_data_source.cast()),
             0,
+            mime_type,
         );
     }
 }
@@ -1497,6 +1515,7 @@ pub unsafe extern "C" fn wl_data_source_set_actions(
             null(),
             wl_proxy_get_version(wl_data_source.cast()),
             0,
+            dnd_actions,
         );
     }
 }
@@ -1540,6 +1559,7 @@ pub unsafe extern "C" fn wl_display_get_registry(
             &wl_registry_interface,
             wl_proxy_get_version(wl_display.cast()),
             0,
+            null_mut::<c_void>(),
         ).cast()
     }
 }
@@ -1582,6 +1602,7 @@ pub unsafe extern "C" fn wl_display_sync(
             &wl_callback_interface,
             wl_proxy_get_version(wl_display.cast()),
             0,
+            null_mut::<c_void>(),
         ).cast()
     }
 }
@@ -1613,6 +1634,7 @@ pub unsafe extern "C" fn wl_fixes_destroy_registry(
             null(),
             wl_proxy_get_version(wl_fixes.cast()),
             0,
+            registry,
         );
     }
 }
@@ -1838,6 +1860,10 @@ pub unsafe extern "C" fn wl_pointer_set_cursor(
             null(),
             wl_proxy_get_version(wl_pointer.cast()),
             0,
+            serial,
+            surface,
+            hotspot_x,
+            hotspot_y,
         );
     }
 }
@@ -1870,6 +1896,10 @@ pub unsafe extern "C" fn wl_region_add(
             null(),
             wl_proxy_get_version(wl_region.cast()),
             0,
+            x,
+            y,
+            width,
+            height,
         );
     }
 }
@@ -1931,6 +1961,10 @@ pub unsafe extern "C" fn wl_region_subtract(
             null(),
             wl_proxy_get_version(wl_region.cast()),
             0,
+            x,
+            y,
+            width,
+            height,
         );
     }
 }
@@ -1964,6 +1998,10 @@ pub unsafe extern "C" fn wl_registry_bind(
             interface,
             version,
             0,
+            name,
+            (*interface).name,
+            version,
+            null_mut::<c_void>(),
         ).cast()
     }
 }
@@ -2035,6 +2073,7 @@ pub unsafe extern "C" fn wl_seat_get_keyboard(
             &wl_keyboard_interface,
             wl_proxy_get_version(wl_seat.cast()),
             0,
+            null_mut::<c_void>(),
         ).cast()
     }
 }
@@ -2050,6 +2089,7 @@ pub unsafe extern "C" fn wl_seat_get_pointer(
             &wl_pointer_interface,
             wl_proxy_get_version(wl_seat.cast()),
             0,
+            null_mut::<c_void>(),
         ).cast()
     }
 }
@@ -2065,6 +2105,7 @@ pub unsafe extern "C" fn wl_seat_get_touch(
             &wl_touch_interface,
             wl_proxy_get_version(wl_seat.cast()),
             0,
+            null_mut::<c_void>(),
         ).cast()
     }
 }
@@ -2130,6 +2171,8 @@ pub unsafe extern "C" fn wl_shell_get_shell_surface(
             &wl_shell_surface_interface,
             wl_proxy_get_version(wl_shell.cast()),
             0,
+            null_mut::<c_void>(),
+            surface,
         ).cast()
     }
 }
@@ -2210,6 +2253,8 @@ pub unsafe extern "C" fn wl_shell_surface_move(
             null(),
             wl_proxy_get_version(wl_shell_surface.cast()),
             0,
+            seat,
+            serial,
         );
     }
 }
@@ -2226,6 +2271,7 @@ pub unsafe extern "C" fn wl_shell_surface_pong(
             null(),
             wl_proxy_get_version(wl_shell_surface.cast()),
             0,
+            serial,
         );
     }
 }
@@ -2244,6 +2290,9 @@ pub unsafe extern "C" fn wl_shell_surface_resize(
             null(),
             wl_proxy_get_version(wl_shell_surface.cast()),
             0,
+            seat,
+            serial,
+            edges,
         );
     }
 }
@@ -2260,6 +2309,7 @@ pub unsafe extern "C" fn wl_shell_surface_set_class(
             null(),
             wl_proxy_get_version(wl_shell_surface.cast()),
             0,
+            class_,
         );
     }
 }
@@ -2278,6 +2328,9 @@ pub unsafe extern "C" fn wl_shell_surface_set_fullscreen(
             null(),
             wl_proxy_get_version(wl_shell_surface.cast()),
             0,
+            method,
+            framerate,
+            output,
         );
     }
 }
@@ -2294,6 +2347,7 @@ pub unsafe extern "C" fn wl_shell_surface_set_maximized(
             null(),
             wl_proxy_get_version(wl_shell_surface.cast()),
             0,
+            output,
         );
     }
 }
@@ -2315,6 +2369,12 @@ pub unsafe extern "C" fn wl_shell_surface_set_popup(
             null(),
             wl_proxy_get_version(wl_shell_surface.cast()),
             0,
+            seat,
+            serial,
+            parent,
+            x,
+            y,
+            flags,
         );
     }
 }
@@ -2331,6 +2391,7 @@ pub unsafe extern "C" fn wl_shell_surface_set_title(
             null(),
             wl_proxy_get_version(wl_shell_surface.cast()),
             0,
+            title,
         );
     }
 }
@@ -2365,6 +2426,10 @@ pub unsafe extern "C" fn wl_shell_surface_set_transient(
             null(),
             wl_proxy_get_version(wl_shell_surface.cast()),
             0,
+            parent,
+            x,
+            y,
+            flags,
         );
     }
 }
@@ -2410,6 +2475,9 @@ pub unsafe extern "C" fn wl_shm_create_pool(
             &wl_shm_pool_interface,
             wl_proxy_get_version(wl_shm.cast()),
             0,
+            null_mut::<c_void>(),
+            fd,
+            size,
         ).cast()
     }
 }
@@ -2451,6 +2519,12 @@ pub unsafe extern "C" fn wl_shm_pool_create_buffer(
             &wl_buffer_interface,
             wl_proxy_get_version(wl_shm_pool.cast()),
             0,
+            null_mut::<c_void>(),
+            offset,
+            width,
+            height,
+            stride,
+            format,
         ).cast()
     }
 }
@@ -2496,6 +2570,7 @@ pub unsafe extern "C" fn wl_shm_pool_resize(
             null(),
             wl_proxy_get_version(wl_shm_pool.cast()),
             0,
+            size,
         );
     }
 }
@@ -2569,6 +2644,9 @@ pub unsafe extern "C" fn wl_subcompositor_get_subsurface(
             &wl_subsurface_interface,
             wl_proxy_get_version(wl_subcompositor.cast()),
             0,
+            null_mut::<c_void>(),
+            surface,
+            parent,
         ).cast()
     }
 }
@@ -2641,6 +2719,7 @@ pub unsafe extern "C" fn wl_subsurface_place_above(
             null(),
             wl_proxy_get_version(wl_subsurface.cast()),
             0,
+            sibling,
         );
     }
 }
@@ -2657,6 +2736,7 @@ pub unsafe extern "C" fn wl_subsurface_place_below(
             null(),
             wl_proxy_get_version(wl_subsurface.cast()),
             0,
+            sibling,
         );
     }
 }
@@ -2689,6 +2769,8 @@ pub unsafe extern "C" fn wl_subsurface_set_position(
             null(),
             wl_proxy_get_version(wl_subsurface.cast()),
             0,
+            x,
+            y,
         );
     }
 }
@@ -2750,6 +2832,9 @@ pub unsafe extern "C" fn wl_surface_attach(
             null(),
             wl_proxy_get_version(wl_surface.cast()),
             0,
+            buffer,
+            x,
+            y,
         );
     }
 }
@@ -2784,6 +2869,10 @@ pub unsafe extern "C" fn wl_surface_damage(
             null(),
             wl_proxy_get_version(wl_surface.cast()),
             0,
+            x,
+            y,
+            width,
+            height,
         );
     }
 }
@@ -2803,6 +2892,10 @@ pub unsafe extern "C" fn wl_surface_damage_buffer(
             null(),
             wl_proxy_get_version(wl_surface.cast()),
             0,
+            x,
+            y,
+            width,
+            height,
         );
     }
 }
@@ -2833,6 +2926,7 @@ pub unsafe extern "C" fn wl_surface_frame(
             &wl_callback_interface,
             wl_proxy_get_version(wl_surface.cast()),
             0,
+            null_mut::<c_void>(),
         ).cast()
     }
 }
@@ -2864,6 +2958,8 @@ pub unsafe extern "C" fn wl_surface_offset(
             null(),
             wl_proxy_get_version(wl_surface.cast()),
             0,
+            x,
+            y,
         );
     }
 }
@@ -2880,6 +2976,7 @@ pub unsafe extern "C" fn wl_surface_set_buffer_scale(
             null(),
             wl_proxy_get_version(wl_surface.cast()),
             0,
+            scale,
         );
     }
 }
@@ -2896,6 +2993,7 @@ pub unsafe extern "C" fn wl_surface_set_buffer_transform(
             null(),
             wl_proxy_get_version(wl_surface.cast()),
             0,
+            transform,
         );
     }
 }
@@ -2912,6 +3010,7 @@ pub unsafe extern "C" fn wl_surface_set_input_region(
             null(),
             wl_proxy_get_version(wl_surface.cast()),
             0,
+            region,
         );
     }
 }
@@ -2928,6 +3027,7 @@ pub unsafe extern "C" fn wl_surface_set_opaque_region(
             null(),
             wl_proxy_get_version(wl_surface.cast()),
             0,
+            region,
         );
     }
 }
