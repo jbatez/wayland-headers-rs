@@ -11,7 +11,7 @@ enum Side {
 }
 
 impl Side {
-    fn to_str(self) -> &'static str {
+    fn name(self) -> &'static str {
         match self {
             Side::Client => "client",
             Side::Server => "server",
@@ -21,7 +21,6 @@ impl Side {
 
 pub(crate) struct Generator {
     module: Module,
-    extern_types: HashSet<String>,
     enum_types: HashMap<String, &'static str>,
 }
 
@@ -29,7 +28,6 @@ impl Generator {
     fn new(name: String) -> Self {
         Self {
             module: Module::new(name),
-            extern_types: HashSet::new(),
             enum_types: HashMap::new(),
         }
     }
@@ -41,16 +39,16 @@ impl Generator {
     }
 
     fn generate_protocol_module(protocol: &Protocol, side: Side) {
-        let side_str = side.to_str();
-        let mut generator = Generator::new(format!("wayland_{side_str}_protocol"));
-        generator.add_import_side_core(side_str);
+        let side_name = side.name();
+        let mut generator = Generator::new(format!("wayland_{side_name}_protocol"));
+        generator.add_import_side_core(side_name);
         generator.get_protocol_enum_types(protocol);
         generator.visit_protocol(protocol, side);
         generator.module.write_file();
     }
 
-    fn add_import_side_core(&mut self, side_str: &str) {
-        let text = format!("use super::wayland_{side_str}_core::*;");
+    fn add_import_side_core(&mut self, side_name: &str) {
+        let text = format!("use super::wayland_{side_name}_core::*;");
         self.module.imports.push(text);
     }
 
@@ -132,17 +130,16 @@ impl Generator {
             return;
         }
 
-        if self.extern_types.insert(name.to_owned()) {
-            let text = format!(
-                "\
+        let text = format!(
+            "\
 #[repr(C)]
 pub struct {name} {{
     _data: (),
     _marker: PhantomData<(*mut u8, PhantomPinned)>,
 }}"
-            );
-            self.module.structs.push((name.to_owned(), text));
-        }
+        );
+
+        self.module.structs.push((name.to_owned(), text));
     }
 
     fn add_extern_static(&mut self, interface: &Interface) {
