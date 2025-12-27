@@ -1,5 +1,5 @@
 pub(crate) use core::{
-    ffi::{c_char, c_int, c_void},
+    ffi::{CStr, c_char, c_double, c_int, c_void},
     marker::{PhantomData, PhantomPinned},
     ptr::null_mut,
 };

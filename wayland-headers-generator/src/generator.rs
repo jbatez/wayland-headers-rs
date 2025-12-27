@@ -183,6 +183,14 @@ pub struct {name} {{
 
         let value = entry.value.as_ref().unwrap();
         let text = format!("pub const {name}: {typ} = {value};");
-        self.module.constants.push((name, text));
+        self.module.constants.push((name.clone(), text));
+
+        if let Some(since) = entry.since.as_ref()
+            && since != "1"
+        {
+            let name = format!("{name}_SINCE_VERSION");
+            let text = format!("pub const {name}: u32 = {since};");
+            self.module.constants.push((name, text));
+        }
     }
 }
