@@ -186,18 +186,22 @@ pub struct {name} {{
         } else if side == Side::Client && typ == "new_id" {
             format!("*mut {}", arg.interface.as_ref().unwrap())
         } else {
-            match typ {
-                "int" | "fd" => "i32".to_owned(),
-                "new_id" | "uint" => "u32".to_owned(),
-                "fixed" => "wl_fixed_t".to_owned(),
-                "string" => "*const c_char".to_owned(),
-                "object" => format!("*mut {}", arg.interface.as_ref().unwrap()),
-                "array" => "*mut wl_array".to_owned(),
-                _ => "i32".to_owned(),
-            }
+            Self::rust_type_from_arg(arg)
         };
 
         *text += &format!("        {name}: {typ},\n");
+    }
+
+    fn rust_type_from_arg(arg: &Arg) -> String {
+        match arg.typ.as_ref().unwrap().as_str() {
+            "int" | "fd" => "i32".to_owned(),
+            "new_id" | "uint" => "u32".to_owned(),
+            "fixed" => "wl_fixed_t".to_owned(),
+            "string" => "*const c_char".to_owned(),
+            "object" => format!("*mut {}", arg.interface.as_ref().unwrap()),
+            "array" => "*mut wl_array".to_owned(),
+            _ => "i32".to_owned(),
+        }
     }
 
     fn add_interface_add_listener_fn(&mut self, interface: &Interface) {
@@ -277,7 +281,8 @@ pub unsafe extern \"C\" fn {name}(
         self.add_set_user_data_fn(interface);
         self.add_get_user_data_fn(interface);
         self.add_get_version_fn(interface);
-        self.add_destroy_fn(interface);
+        self.maybe_add_destroy_fn(interface);
+        self.add_request_fns(interface);
     }
 
     fn add_set_user_data_fn(&mut self, interface: &Interface) {
@@ -337,42 +342,89 @@ pub unsafe extern \"C\" fn {name}(
         self.module.functions.push((name, text));
     }
 
-    fn add_destroy_fn(&mut self, interface: &Interface) {
-        let interface_name = interface.name.as_ref().unwrap();
-        if interface_name == "wl_display" {
+    fn maybe_add_destroy_fn(&mut self, interface: &Interface) {
+        if interface.name.as_ref().unwrap() == "wl_display" {
             return;
         }
 
-        let mut has_destructor = false;
-        let mut has_destroy = false;
         for content in &interface.contents {
             if let InterfaceContent::Request(request) = content {
-                if request.typ.as_ref().map(String::as_str) == Some("destructor") {
-                    has_destructor = true;
-                }
                 if request.name.as_ref().unwrap() == "destroy" {
-                    has_destroy = true;
+                    return;
                 }
             }
         }
 
-        assert!(has_destructor || !has_destroy);
+        self.add_destroy_fn(interface);
+    }
 
-        if !has_destroy {
-            let name = format!("{interface_name}_destroy");
+    fn add_destroy_fn(&mut self, interface: &Interface) {
+        let interface_name = interface.name.as_ref().unwrap();
+        let name = format!("{interface_name}_destroy");
 
-            let text = format!(
-                "\
+        let text = format!(
+            "\
 #[inline]
 pub unsafe extern \"C\" fn {name}(
     {interface_name}: *mut {interface_name},
 ) {{
     unsafe {{ wl_proxy_destroy({interface_name}.cast()) }}
 }}"
-            );
+        );
 
-            self.module.functions.push((name, text));
+        self.module.functions.push((name, text));
+    }
+
+    fn add_request_fns(&mut self, interface: &Interface) {
+        for content in &interface.contents {
+            if let InterfaceContent::Request(request) = content {
+                self.add_request_fn(interface, request);
+            }
         }
+    }
+
+    fn add_request_fn(&mut self, interface: &Interface, request: &Message) {
+        let interface_name = interface.name.as_ref().unwrap();
+        let request_name = request.name.as_ref().unwrap();
+        let name = format!("{interface_name}_{request_name}");
+
+        let mut text = String::new();
+        text += &format!("#[inline]\n");
+        text += &format!("pub unsafe extern \"C\" fn {name}(\n");
+        text += &format!("    {interface_name}: *mut {interface_name},\n");
+
+        let mut ret_arg = None;
+        for content in &request.contents {
+            if let MessageContent::Arg(arg) = content {
+                if arg.typ.as_ref().unwrap() == "new_id" {
+                    assert!(ret_arg.is_none());
+                    ret_arg = Some(arg);
+                    if arg.interface.is_none() {
+                        text += "    interface: *const wl_interface,\n";
+                        text += "    version: u32,\n";
+                    }
+                } else {
+                    let name = arg.name.as_ref().unwrap();
+                    let typ = Self::rust_type_from_arg(arg);
+                    text += &format!("    {name}: {typ},\n");
+                }
+            }
+        }
+
+        text += ")";
+        if let Some(ret_arg) = ret_arg {
+            if let Some(ret_interface) = ret_arg.interface.as_ref() {
+                text += &format!(" -> *mut {ret_interface}");
+            } else {
+                text += " -> *mut c_void";
+            }
+        }
+        text += " {\n";
+
+        text += "    todo!();\n";
+
+        text += "}";
+        self.module.functions.push((name, text));
     }
 
     fn add_server_wrapper_fns(&mut self, interface: &Interface) {

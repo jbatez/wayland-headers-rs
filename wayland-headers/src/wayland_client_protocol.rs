@@ -983,6 +983,13 @@ pub unsafe extern "C" fn wl_buffer_add_listener(
 }
 
 #[inline]
+pub unsafe extern "C" fn wl_buffer_destroy(
+    wl_buffer: *mut wl_buffer,
+) {
+    todo!();
+}
+
+#[inline]
 pub unsafe extern "C" fn wl_buffer_get_user_data(
     wl_buffer: *mut wl_buffer,
 ) -> *mut c_void {
@@ -1059,6 +1066,20 @@ pub unsafe extern "C" fn wl_callback_set_user_data(
 }
 
 #[inline]
+pub unsafe extern "C" fn wl_compositor_create_region(
+    wl_compositor: *mut wl_compositor,
+) -> *mut wl_region {
+    todo!();
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_compositor_create_surface(
+    wl_compositor: *mut wl_compositor,
+) -> *mut wl_surface {
+    todo!();
+}
+
+#[inline]
 pub unsafe extern "C" fn wl_compositor_destroy(
     wl_compositor: *mut wl_compositor,
 ) {
@@ -1129,10 +1150,25 @@ pub unsafe extern "C" fn wl_data_device_get_version(
 }
 
 #[inline]
+pub unsafe extern "C" fn wl_data_device_manager_create_data_source(
+    wl_data_device_manager: *mut wl_data_device_manager,
+) -> *mut wl_data_source {
+    todo!();
+}
+
+#[inline]
 pub unsafe extern "C" fn wl_data_device_manager_destroy(
     wl_data_device_manager: *mut wl_data_device_manager,
 ) {
     unsafe { wl_proxy_destroy(wl_data_device_manager.cast()) }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_data_device_manager_get_data_device(
+    wl_data_device_manager: *mut wl_data_device_manager,
+    seat: *mut wl_seat,
+) -> *mut wl_data_device {
+    todo!();
 }
 
 #[inline]
@@ -1163,6 +1199,22 @@ pub unsafe extern "C" fn wl_data_device_manager_set_user_data(
 }
 
 #[inline]
+pub unsafe extern "C" fn wl_data_device_release(
+    wl_data_device: *mut wl_data_device,
+) {
+    todo!();
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_data_device_set_selection(
+    wl_data_device: *mut wl_data_device,
+    source: *mut wl_data_source,
+    serial: u32,
+) {
+    todo!();
+}
+
+#[inline]
 pub unsafe extern "C" fn wl_data_device_set_user_data(
     wl_data_device: *mut wl_data_device,
     user_data: *mut c_void,
@@ -1173,6 +1225,26 @@ pub unsafe extern "C" fn wl_data_device_set_user_data(
             user_data,
         )
     }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_data_device_start_drag(
+    wl_data_device: *mut wl_data_device,
+    source: *mut wl_data_source,
+    origin: *mut wl_surface,
+    icon: *mut wl_surface,
+    serial: u32,
+) {
+    todo!();
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_data_offer_accept(
+    wl_data_offer: *mut wl_data_offer,
+    serial: u32,
+    mime_type: *const c_char,
+) {
+    todo!();
 }
 
 #[inline]
@@ -1191,6 +1263,20 @@ pub unsafe extern "C" fn wl_data_offer_add_listener(
 }
 
 #[inline]
+pub unsafe extern "C" fn wl_data_offer_destroy(
+    wl_data_offer: *mut wl_data_offer,
+) {
+    todo!();
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_data_offer_finish(
+    wl_data_offer: *mut wl_data_offer,
+) {
+    todo!();
+}
+
+#[inline]
 pub unsafe extern "C" fn wl_data_offer_get_user_data(
     wl_data_offer: *mut wl_data_offer,
 ) -> *mut c_void {
@@ -1202,6 +1288,24 @@ pub unsafe extern "C" fn wl_data_offer_get_version(
     wl_data_offer: *mut wl_data_offer,
 ) -> u32 {
     unsafe { wl_proxy_get_version(wl_data_offer.cast()) }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_data_offer_receive(
+    wl_data_offer: *mut wl_data_offer,
+    mime_type: *const c_char,
+    fd: i32,
+) {
+    todo!();
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_data_offer_set_actions(
+    wl_data_offer: *mut wl_data_offer,
+    dnd_actions: u32,
+    preferred_action: u32,
+) {
+    todo!();
 }
 
 #[inline]
@@ -1233,6 +1337,13 @@ pub unsafe extern "C" fn wl_data_source_add_listener(
 }
 
 #[inline]
+pub unsafe extern "C" fn wl_data_source_destroy(
+    wl_data_source: *mut wl_data_source,
+) {
+    todo!();
+}
+
+#[inline]
 pub unsafe extern "C" fn wl_data_source_get_user_data(
     wl_data_source: *mut wl_data_source,
 ) -> *mut c_void {
@@ -1244,6 +1355,22 @@ pub unsafe extern "C" fn wl_data_source_get_version(
     wl_data_source: *mut wl_data_source,
 ) -> u32 {
     unsafe { wl_proxy_get_version(wl_data_source.cast()) }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_data_source_offer(
+    wl_data_source: *mut wl_data_source,
+    mime_type: *const c_char,
+) {
+    todo!();
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_data_source_set_actions(
+    wl_data_source: *mut wl_data_source,
+    dnd_actions: u32,
+) {
+    todo!();
 }
 
 #[inline]
@@ -1275,6 +1402,13 @@ pub unsafe extern "C" fn wl_display_add_listener(
 }
 
 #[inline]
+pub unsafe extern "C" fn wl_display_get_registry(
+    wl_display: *mut wl_display,
+) -> *mut wl_registry {
+    todo!();
+}
+
+#[inline]
 pub unsafe extern "C" fn wl_display_get_user_data(
     wl_display: *mut wl_display,
 ) -> *mut c_void {
@@ -1299,6 +1433,28 @@ pub unsafe extern "C" fn wl_display_set_user_data(
             user_data,
         )
     }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_display_sync(
+    wl_display: *mut wl_display,
+) -> *mut wl_callback {
+    todo!();
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_fixes_destroy(
+    wl_fixes: *mut wl_fixes,
+) {
+    todo!();
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_fixes_destroy_registry(
+    wl_fixes: *mut wl_fixes,
+    registry: *mut wl_registry,
+) {
+    todo!();
 }
 
 #[inline]
@@ -1365,6 +1521,13 @@ pub unsafe extern "C" fn wl_keyboard_get_version(
 }
 
 #[inline]
+pub unsafe extern "C" fn wl_keyboard_release(
+    wl_keyboard: *mut wl_keyboard,
+) {
+    todo!();
+}
+
+#[inline]
 pub unsafe extern "C" fn wl_keyboard_set_user_data(
     wl_keyboard: *mut wl_keyboard,
     user_data: *mut c_void,
@@ -1411,6 +1574,13 @@ pub unsafe extern "C" fn wl_output_get_version(
     wl_output: *mut wl_output,
 ) -> u32 {
     unsafe { wl_proxy_get_version(wl_output.cast()) }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_output_release(
+    wl_output: *mut wl_output,
+) {
+    todo!();
 }
 
 #[inline]
@@ -1463,6 +1633,24 @@ pub unsafe extern "C" fn wl_pointer_get_version(
 }
 
 #[inline]
+pub unsafe extern "C" fn wl_pointer_release(
+    wl_pointer: *mut wl_pointer,
+) {
+    todo!();
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_pointer_set_cursor(
+    wl_pointer: *mut wl_pointer,
+    serial: u32,
+    surface: *mut wl_surface,
+    hotspot_x: i32,
+    hotspot_y: i32,
+) {
+    todo!();
+}
+
+#[inline]
 pub unsafe extern "C" fn wl_pointer_set_user_data(
     wl_pointer: *mut wl_pointer,
     user_data: *mut c_void,
@@ -1473,6 +1661,24 @@ pub unsafe extern "C" fn wl_pointer_set_user_data(
             user_data,
         )
     }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_region_add(
+    wl_region: *mut wl_region,
+    x: i32,
+    y: i32,
+    width: i32,
+    height: i32,
+) {
+    todo!();
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_region_destroy(
+    wl_region: *mut wl_region,
+) {
+    todo!();
 }
 
 #[inline]
@@ -1503,6 +1709,17 @@ pub unsafe extern "C" fn wl_region_set_user_data(
 }
 
 #[inline]
+pub unsafe extern "C" fn wl_region_subtract(
+    wl_region: *mut wl_region,
+    x: i32,
+    y: i32,
+    width: i32,
+    height: i32,
+) {
+    todo!();
+}
+
+#[inline]
 pub unsafe extern "C" fn wl_registry_add_listener(
     wl_registry: *mut wl_registry,
     listener: *const wl_registry_listener,
@@ -1515,6 +1732,16 @@ pub unsafe extern "C" fn wl_registry_add_listener(
             data,
         )
     }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_registry_bind(
+    wl_registry: *mut wl_registry,
+    name: u32,
+    interface: *const wl_interface,
+    version: u32,
+) -> *mut c_void {
+    todo!();
 }
 
 #[inline]
@@ -1574,6 +1801,27 @@ pub unsafe extern "C" fn wl_seat_destroy(
 }
 
 #[inline]
+pub unsafe extern "C" fn wl_seat_get_keyboard(
+    wl_seat: *mut wl_seat,
+) -> *mut wl_keyboard {
+    todo!();
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_seat_get_pointer(
+    wl_seat: *mut wl_seat,
+) -> *mut wl_pointer {
+    todo!();
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_seat_get_touch(
+    wl_seat: *mut wl_seat,
+) -> *mut wl_touch {
+    todo!();
+}
+
+#[inline]
 pub unsafe extern "C" fn wl_seat_get_user_data(
     wl_seat: *mut wl_seat,
 ) -> *mut c_void {
@@ -1585,6 +1833,13 @@ pub unsafe extern "C" fn wl_seat_get_version(
     wl_seat: *mut wl_seat,
 ) -> u32 {
     unsafe { wl_proxy_get_version(wl_seat.cast()) }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_seat_release(
+    wl_seat: *mut wl_seat,
+) {
+    todo!();
 }
 
 #[inline]
@@ -1605,6 +1860,14 @@ pub unsafe extern "C" fn wl_shell_destroy(
     wl_shell: *mut wl_shell,
 ) {
     unsafe { wl_proxy_destroy(wl_shell.cast()) }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_shell_get_shell_surface(
+    wl_shell: *mut wl_shell,
+    surface: *mut wl_surface,
+) -> *mut wl_shell_surface {
+    todo!();
 }
 
 #[inline]
@@ -1671,6 +1934,98 @@ pub unsafe extern "C" fn wl_shell_surface_get_version(
 }
 
 #[inline]
+pub unsafe extern "C" fn wl_shell_surface_move(
+    wl_shell_surface: *mut wl_shell_surface,
+    seat: *mut wl_seat,
+    serial: u32,
+) {
+    todo!();
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_shell_surface_pong(
+    wl_shell_surface: *mut wl_shell_surface,
+    serial: u32,
+) {
+    todo!();
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_shell_surface_resize(
+    wl_shell_surface: *mut wl_shell_surface,
+    seat: *mut wl_seat,
+    serial: u32,
+    edges: u32,
+) {
+    todo!();
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_shell_surface_set_class(
+    wl_shell_surface: *mut wl_shell_surface,
+    class_: *const c_char,
+) {
+    todo!();
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_shell_surface_set_fullscreen(
+    wl_shell_surface: *mut wl_shell_surface,
+    method: u32,
+    framerate: u32,
+    output: *mut wl_output,
+) {
+    todo!();
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_shell_surface_set_maximized(
+    wl_shell_surface: *mut wl_shell_surface,
+    output: *mut wl_output,
+) {
+    todo!();
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_shell_surface_set_popup(
+    wl_shell_surface: *mut wl_shell_surface,
+    seat: *mut wl_seat,
+    serial: u32,
+    parent: *mut wl_surface,
+    x: i32,
+    y: i32,
+    flags: u32,
+) {
+    todo!();
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_shell_surface_set_title(
+    wl_shell_surface: *mut wl_shell_surface,
+    title: *const c_char,
+) {
+    todo!();
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_shell_surface_set_toplevel(
+    wl_shell_surface: *mut wl_shell_surface,
+) {
+    todo!();
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_shell_surface_set_transient(
+    wl_shell_surface: *mut wl_shell_surface,
+    parent: *mut wl_surface,
+    x: i32,
+    y: i32,
+    flags: u32,
+) {
+    todo!();
+}
+
+#[inline]
 pub unsafe extern "C" fn wl_shell_surface_set_user_data(
     wl_shell_surface: *mut wl_shell_surface,
     user_data: *mut c_void,
@@ -1699,6 +2054,15 @@ pub unsafe extern "C" fn wl_shm_add_listener(
 }
 
 #[inline]
+pub unsafe extern "C" fn wl_shm_create_pool(
+    wl_shm: *mut wl_shm,
+    fd: i32,
+    size: i32,
+) -> *mut wl_shm_pool {
+    todo!();
+}
+
+#[inline]
 pub unsafe extern "C" fn wl_shm_destroy(
     wl_shm: *mut wl_shm,
 ) {
@@ -1720,6 +2084,25 @@ pub unsafe extern "C" fn wl_shm_get_version(
 }
 
 #[inline]
+pub unsafe extern "C" fn wl_shm_pool_create_buffer(
+    wl_shm_pool: *mut wl_shm_pool,
+    offset: i32,
+    width: i32,
+    height: i32,
+    stride: i32,
+    format: u32,
+) -> *mut wl_buffer {
+    todo!();
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_shm_pool_destroy(
+    wl_shm_pool: *mut wl_shm_pool,
+) {
+    todo!();
+}
+
+#[inline]
 pub unsafe extern "C" fn wl_shm_pool_get_user_data(
     wl_shm_pool: *mut wl_shm_pool,
 ) -> *mut c_void {
@@ -1731,6 +2114,14 @@ pub unsafe extern "C" fn wl_shm_pool_get_version(
     wl_shm_pool: *mut wl_shm_pool,
 ) -> u32 {
     unsafe { wl_proxy_get_version(wl_shm_pool.cast()) }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_shm_pool_resize(
+    wl_shm_pool: *mut wl_shm_pool,
+    size: i32,
+) {
+    todo!();
 }
 
 #[inline]
@@ -1747,6 +2138,13 @@ pub unsafe extern "C" fn wl_shm_pool_set_user_data(
 }
 
 #[inline]
+pub unsafe extern "C" fn wl_shm_release(
+    wl_shm: *mut wl_shm,
+) {
+    todo!();
+}
+
+#[inline]
 pub unsafe extern "C" fn wl_shm_set_user_data(
     wl_shm: *mut wl_shm,
     user_data: *mut c_void,
@@ -1757,6 +2155,22 @@ pub unsafe extern "C" fn wl_shm_set_user_data(
             user_data,
         )
     }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_subcompositor_destroy(
+    wl_subcompositor: *mut wl_subcompositor,
+) {
+    todo!();
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_subcompositor_get_subsurface(
+    wl_subcompositor: *mut wl_subcompositor,
+    surface: *mut wl_surface,
+    parent: *mut wl_surface,
+) -> *mut wl_subsurface {
+    todo!();
 }
 
 #[inline]
@@ -1787,6 +2201,13 @@ pub unsafe extern "C" fn wl_subcompositor_set_user_data(
 }
 
 #[inline]
+pub unsafe extern "C" fn wl_subsurface_destroy(
+    wl_subsurface: *mut wl_subsurface,
+) {
+    todo!();
+}
+
+#[inline]
 pub unsafe extern "C" fn wl_subsurface_get_user_data(
     wl_subsurface: *mut wl_subsurface,
 ) -> *mut c_void {
@@ -1798,6 +2219,45 @@ pub unsafe extern "C" fn wl_subsurface_get_version(
     wl_subsurface: *mut wl_subsurface,
 ) -> u32 {
     unsafe { wl_proxy_get_version(wl_subsurface.cast()) }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_subsurface_place_above(
+    wl_subsurface: *mut wl_subsurface,
+    sibling: *mut wl_surface,
+) {
+    todo!();
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_subsurface_place_below(
+    wl_subsurface: *mut wl_subsurface,
+    sibling: *mut wl_surface,
+) {
+    todo!();
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_subsurface_set_desync(
+    wl_subsurface: *mut wl_subsurface,
+) {
+    todo!();
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_subsurface_set_position(
+    wl_subsurface: *mut wl_subsurface,
+    x: i32,
+    y: i32,
+) {
+    todo!();
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_subsurface_set_sync(
+    wl_subsurface: *mut wl_subsurface,
+) {
+    todo!();
 }
 
 #[inline]
@@ -1829,6 +2289,59 @@ pub unsafe extern "C" fn wl_surface_add_listener(
 }
 
 #[inline]
+pub unsafe extern "C" fn wl_surface_attach(
+    wl_surface: *mut wl_surface,
+    buffer: *mut wl_buffer,
+    x: i32,
+    y: i32,
+) {
+    todo!();
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_surface_commit(
+    wl_surface: *mut wl_surface,
+) {
+    todo!();
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_surface_damage(
+    wl_surface: *mut wl_surface,
+    x: i32,
+    y: i32,
+    width: i32,
+    height: i32,
+) {
+    todo!();
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_surface_damage_buffer(
+    wl_surface: *mut wl_surface,
+    x: i32,
+    y: i32,
+    width: i32,
+    height: i32,
+) {
+    todo!();
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_surface_destroy(
+    wl_surface: *mut wl_surface,
+) {
+    todo!();
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_surface_frame(
+    wl_surface: *mut wl_surface,
+) -> *mut wl_callback {
+    todo!();
+}
+
+#[inline]
 pub unsafe extern "C" fn wl_surface_get_user_data(
     wl_surface: *mut wl_surface,
 ) -> *mut c_void {
@@ -1840,6 +2353,47 @@ pub unsafe extern "C" fn wl_surface_get_version(
     wl_surface: *mut wl_surface,
 ) -> u32 {
     unsafe { wl_proxy_get_version(wl_surface.cast()) }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_surface_offset(
+    wl_surface: *mut wl_surface,
+    x: i32,
+    y: i32,
+) {
+    todo!();
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_surface_set_buffer_scale(
+    wl_surface: *mut wl_surface,
+    scale: i32,
+) {
+    todo!();
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_surface_set_buffer_transform(
+    wl_surface: *mut wl_surface,
+    transform: i32,
+) {
+    todo!();
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_surface_set_input_region(
+    wl_surface: *mut wl_surface,
+    region: *mut wl_region,
+) {
+    todo!();
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_surface_set_opaque_region(
+    wl_surface: *mut wl_surface,
+    region: *mut wl_region,
+) {
+    todo!();
 }
 
 #[inline]
@@ -1889,6 +2443,13 @@ pub unsafe extern "C" fn wl_touch_get_version(
     wl_touch: *mut wl_touch,
 ) -> u32 {
     unsafe { wl_proxy_get_version(wl_touch.cast()) }
+}
+
+#[inline]
+pub unsafe extern "C" fn wl_touch_release(
+    wl_touch: *mut wl_touch,
+) {
+    todo!();
 }
 
 #[inline]
