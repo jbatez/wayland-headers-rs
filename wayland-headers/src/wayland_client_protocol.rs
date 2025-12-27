@@ -1,32 +1,101 @@
 use crate::prelude::*;
 use super::wayland_client_core::*;
 
-pub type wl_data_device_error = c_int;
-pub type wl_data_device_manager_dnd_action = c_int;
-pub type wl_data_offer_error = c_int;
-pub type wl_data_source_error = c_int;
-pub type wl_display_error = c_int;
-pub type wl_keyboard_key_state = c_int;
-pub type wl_keyboard_keymap_format = c_int;
-pub type wl_output_mode = c_int;
-pub type wl_output_subpixel = c_int;
-pub type wl_output_transform = c_int;
-pub type wl_pointer_axis = c_int;
-pub type wl_pointer_axis_relative_direction = c_int;
-pub type wl_pointer_axis_source = c_int;
-pub type wl_pointer_button_state = c_int;
-pub type wl_pointer_error = c_int;
-pub type wl_seat_capability = c_int;
-pub type wl_seat_error = c_int;
-pub type wl_shell_error = c_int;
-pub type wl_shell_surface_fullscreen_method = c_int;
-pub type wl_shell_surface_resize = c_int;
-pub type wl_shell_surface_transient = c_int;
-pub type wl_shm_error = c_int;
-pub type wl_shm_format = c_int;
-pub type wl_subcompositor_error = c_int;
-pub type wl_subsurface_error = c_int;
-pub type wl_surface_error = c_int;
+#[repr(C)]
+pub struct wl_buffer {
+    _data: (),
+    _marker: PhantomData<(*mut u8, PhantomPinned)>,
+}
+
+#[repr(C)]
+pub struct wl_callback {
+    _data: (),
+    _marker: PhantomData<(*mut u8, PhantomPinned)>,
+}
+
+#[repr(C)]
+pub struct wl_data_device {
+    _data: (),
+    _marker: PhantomData<(*mut u8, PhantomPinned)>,
+}
+
+#[repr(C)]
+pub struct wl_data_offer {
+    _data: (),
+    _marker: PhantomData<(*mut u8, PhantomPinned)>,
+}
+
+#[repr(C)]
+pub struct wl_data_source {
+    _data: (),
+    _marker: PhantomData<(*mut u8, PhantomPinned)>,
+}
+
+#[repr(C)]
+pub struct wl_keyboard {
+    _data: (),
+    _marker: PhantomData<(*mut u8, PhantomPinned)>,
+}
+
+#[repr(C)]
+pub struct wl_output {
+    _data: (),
+    _marker: PhantomData<(*mut u8, PhantomPinned)>,
+}
+
+#[repr(C)]
+pub struct wl_pointer {
+    _data: (),
+    _marker: PhantomData<(*mut u8, PhantomPinned)>,
+}
+
+#[repr(C)]
+pub struct wl_region {
+    _data: (),
+    _marker: PhantomData<(*mut u8, PhantomPinned)>,
+}
+
+#[repr(C)]
+pub struct wl_registry {
+    _data: (),
+    _marker: PhantomData<(*mut u8, PhantomPinned)>,
+}
+
+#[repr(C)]
+pub struct wl_seat {
+    _data: (),
+    _marker: PhantomData<(*mut u8, PhantomPinned)>,
+}
+
+#[repr(C)]
+pub struct wl_shell_surface {
+    _data: (),
+    _marker: PhantomData<(*mut u8, PhantomPinned)>,
+}
+
+#[repr(C)]
+pub struct wl_shm_pool {
+    _data: (),
+    _marker: PhantomData<(*mut u8, PhantomPinned)>,
+}
+
+#[repr(C)]
+pub struct wl_subsurface {
+    _data: (),
+    _marker: PhantomData<(*mut u8, PhantomPinned)>,
+}
+
+#[repr(C)]
+pub struct wl_surface {
+    _data: (),
+    _marker: PhantomData<(*mut u8, PhantomPinned)>,
+}
+
+#[repr(C)]
+pub struct wl_touch {
+    _data: (),
+    _marker: PhantomData<(*mut u8, PhantomPinned)>,
+}
 
 unsafe extern "C" {
     pub static wl_buffer_interface: wl_interface;

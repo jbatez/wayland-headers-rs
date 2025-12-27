@@ -1,3 +1,5 @@
+use std::collections::{HashMap, HashSet};
+
 use wayland_protocol::*;
 
 use crate::module::*;
@@ -19,12 +21,16 @@ impl Side {
 
 pub(crate) struct Generator {
     module: Module,
+    extern_types: HashSet<String>,
+    enum_arg_types: HashMap<String, &'static str>,
 }
 
 impl Generator {
     fn new(name: String) -> Self {
         Self {
             module: Module::new(name),
+            extern_types: HashSet::new(),
+            enum_arg_types: HashMap::new(),
         }
     }
 
@@ -38,6 +44,7 @@ impl Generator {
         let side_str = side.to_str();
         let mut generator = Generator::new(format!("wayland_{side_str}_protocol"));
         generator.add_import_core(side_str);
+        generator.pre_visit_protocol(protocol);
         generator.visit_protocol(protocol, side);
         generator.module.write_file();
     }
@@ -45,6 +52,82 @@ impl Generator {
     fn add_import_core(&mut self, side_str: &str) {
         let text = format!("use super::wayland_{side_str}_core::*;");
         self.module.imports.push(text);
+    }
+
+    fn pre_visit_protocol(&mut self, protocol: &Protocol) {
+        for content in &protocol.contents {
+            if let ProtocolContent::Interface(interface) = content {
+                self.pre_visit_interface(interface);
+            }
+        }
+    }
+
+    fn pre_visit_interface(&mut self, interface: &Interface) {
+        for content in &interface.contents {
+            match content {
+                InterfaceContent::Description(_) => (),
+                InterfaceContent::Request(request) => self.pre_visit_message(interface, request),
+                InterfaceContent::Event(event) => self.pre_visit_message(interface, event),
+                InterfaceContent::Enum(_) => (),
+            }
+        }
+    }
+
+    fn pre_visit_message(&mut self, interface: &Interface, message: &Message) {
+        for content in &message.contents {
+            if let MessageContent::Arg(arg) = content {
+                self.pre_visit_arg(interface, arg);
+            }
+        }
+    }
+
+    fn pre_visit_arg(&mut self, interface: &Interface, arg: &Arg) {
+        if let Some(enu) = arg.enu.as_ref() {
+            self.save_enum_arg_type(interface, arg, enu);
+        } else {
+            let typ = arg.typ.as_ref().unwrap();
+            if typ == "new_id" || typ == "object" {
+                if let Some(struct_type_name) = arg.interface.as_ref() {
+                    self.add_extern_type(struct_type_name);
+                }
+            }
+        }
+    }
+
+    fn save_enum_arg_type(&mut self, interface: &Interface, arg: &Arg, enu: &str) {
+        let enu = match enu.contains('.') {
+            true => enu.to_owned(),
+            false => format!("{}.{}", interface.name.as_ref().unwrap(), enu),
+        };
+
+        let typ = if enu == "wl_output.transform" {
+            "i32"
+        } else {
+            match arg.typ.as_ref().unwrap().as_str() {
+                "int" => "i32",
+                "uint" => "u32",
+                _ => panic!("unexpected enum arg type"),
+            }
+        };
+
+        let old_type = self.enum_arg_types.insert(enu, typ);
+        if let Some(old_type) = old_type {
+            assert_eq!(old_type, typ);
+        }
+    }
+
+    fn add_extern_type(&mut self, name: &str) {
+        if self.extern_types.insert(name.to_owned()) {
+            let text = format!(
+                "\
+#[repr(C)]
+pub struct {name} {{
+    _data: (),
+    _marker: PhantomData<(*mut u8, PhantomPinned)>,
+}}"
+            );
+            self.module.structs.push((name.to_owned(), text));
+        }
     }
 
     fn visit_protocol(&mut self, protocol: &Protocol, side: Side) {
@@ -84,16 +167,6 @@ impl Generator {
     }
 
     fn visit_enum(&mut self, interface: &Interface, enu: &Enum) {
-        self.add_enum_type_alias(interface, enu);
-
         // TODO
-    }
-
-    fn add_enum_type_alias(&mut self, interface: &Interface, enu: &Enum) {
-        let interface_name = interface.name.as_ref().unwrap();
-        let enum_name = enu.name.as_ref().unwrap();
-        let name = format!("{interface_name}_{enum_name}");
-        let text = format!("pub type {name} = c_int;");
-        self.module.type_aliases.push((name.to_owned(), text));
     }
 }
