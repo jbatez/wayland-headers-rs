@@ -59,8 +59,15 @@ impl Generator {
         self.add_interface_extern_type(interface, side);
         self.add_interface_extern_static(interface);
         self.add_interface_struct(interface, side);
+
         self.add_message_opcode_consts(interface, side);
         self.add_message_since_version_consts(interface);
+
+        match side {
+            Side::Client => self.add_client_wrapper_fns(interface),
+            Side::Server => self.add_server_wrapper_fns(interface),
+        }
+
         self.add_enums(interface, side);
     }
 
@@ -264,6 +271,71 @@ pub unsafe fn {name}(
         let since = message.since.as_ref().map(String::as_str).unwrap_or("1");
         let text = format!("pub const {name}: u32 = {since};");
         self.module.constants.push((name, text));
+    }
+
+    fn add_client_wrapper_fns(&mut self, interface: &Interface) {
+        self.add_set_user_data_fn(interface);
+        self.add_get_user_data_fn(interface);
+        self.add_get_version_fn(interface);
+
+        // TODO
+    }
+
+    fn add_set_user_data_fn(&mut self, interface: &Interface) {
+        let interface_name = interface.name.as_ref().unwrap();
+        let name = format!("{interface_name}_set_user_data");
+
+        let text = format!(
+            "\
+#[inline]
+pub unsafe fn {name}(
+    {interface_name}: *mut {interface_name},
+    user_data: *mut c_void,
+) {{
+    unsafe {{
+        wl_proxy_set_user_data(
+            {interface_name}.cast(),
+            user_data,
+        )
+    }}
+}}"
+        );
+
+        self.module.functions.push((name, text));
+    }
+
+    fn add_get_user_data_fn(&mut self, interface: &Interface) {
+        let interface_name = interface.name.as_ref().unwrap();
+        let name = format!("{interface_name}_get_user_data");
+
+        let text = format!(
+            "\
+#[inline]
+pub unsafe fn {name}({interface_name}: *mut {interface_name}) -> *mut c_void {{
+    unsafe {{ wl_proxy_get_user_data({interface_name}.cast()) }}
+}}"
+        );
+
+        self.module.functions.push((name, text));
+    }
+
+    fn add_get_version_fn(&mut self, interface: &Interface) {
+        let interface_name = interface.name.as_ref().unwrap();
+        let name = format!("{interface_name}_get_version");
+
+        let text = format!(
+            "\
+#[inline]
+pub unsafe fn {name}({interface_name}: *mut {interface_name}) -> u32 {{
+    unsafe {{ wl_proxy_get_version({interface_name}.cast()) }}
+}}"
+        );
+
+        self.module.functions.push((name, text));
+    }
+
+    fn add_server_wrapper_fns(&mut self, interface: &Interface) {
+        // TODO
     }
 
     fn add_enums(&mut self, interface: &Interface, side: Side) {

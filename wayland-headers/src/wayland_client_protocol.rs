@@ -983,6 +983,29 @@ pub unsafe fn wl_buffer_add_listener(
 }
 
 #[inline]
+pub unsafe fn wl_buffer_get_user_data(wl_buffer: *mut wl_buffer) -> *mut c_void {
+    unsafe { wl_proxy_get_user_data(wl_buffer.cast()) }
+}
+
+#[inline]
+pub unsafe fn wl_buffer_get_version(wl_buffer: *mut wl_buffer) -> u32 {
+    unsafe { wl_proxy_get_version(wl_buffer.cast()) }
+}
+
+#[inline]
+pub unsafe fn wl_buffer_set_user_data(
+    wl_buffer: *mut wl_buffer,
+    user_data: *mut c_void,
+) {
+    unsafe {
+        wl_proxy_set_user_data(
+            wl_buffer.cast(),
+            user_data,
+        )
+    }
+}
+
+#[inline]
 pub unsafe fn wl_callback_add_listener(
     wl_callback: *mut wl_callback,
     listener: *const wl_callback_listener,
@@ -993,6 +1016,52 @@ pub unsafe fn wl_callback_add_listener(
             wl_callback.cast(),
             listener.cast_mut().cast(),
             data,
+        )
+    }
+}
+
+#[inline]
+pub unsafe fn wl_callback_get_user_data(wl_callback: *mut wl_callback) -> *mut c_void {
+    unsafe { wl_proxy_get_user_data(wl_callback.cast()) }
+}
+
+#[inline]
+pub unsafe fn wl_callback_get_version(wl_callback: *mut wl_callback) -> u32 {
+    unsafe { wl_proxy_get_version(wl_callback.cast()) }
+}
+
+#[inline]
+pub unsafe fn wl_callback_set_user_data(
+    wl_callback: *mut wl_callback,
+    user_data: *mut c_void,
+) {
+    unsafe {
+        wl_proxy_set_user_data(
+            wl_callback.cast(),
+            user_data,
+        )
+    }
+}
+
+#[inline]
+pub unsafe fn wl_compositor_get_user_data(wl_compositor: *mut wl_compositor) -> *mut c_void {
+    unsafe { wl_proxy_get_user_data(wl_compositor.cast()) }
+}
+
+#[inline]
+pub unsafe fn wl_compositor_get_version(wl_compositor: *mut wl_compositor) -> u32 {
+    unsafe { wl_proxy_get_version(wl_compositor.cast()) }
+}
+
+#[inline]
+pub unsafe fn wl_compositor_set_user_data(
+    wl_compositor: *mut wl_compositor,
+    user_data: *mut c_void,
+) {
+    unsafe {
+        wl_proxy_set_user_data(
+            wl_compositor.cast(),
+            user_data,
         )
     }
 }
@@ -1013,6 +1082,52 @@ pub unsafe fn wl_data_device_add_listener(
 }
 
 #[inline]
+pub unsafe fn wl_data_device_get_user_data(wl_data_device: *mut wl_data_device) -> *mut c_void {
+    unsafe { wl_proxy_get_user_data(wl_data_device.cast()) }
+}
+
+#[inline]
+pub unsafe fn wl_data_device_get_version(wl_data_device: *mut wl_data_device) -> u32 {
+    unsafe { wl_proxy_get_version(wl_data_device.cast()) }
+}
+
+#[inline]
+pub unsafe fn wl_data_device_manager_get_user_data(wl_data_device_manager: *mut wl_data_device_manager) -> *mut c_void {
+    unsafe { wl_proxy_get_user_data(wl_data_device_manager.cast()) }
+}
+
+#[inline]
+pub unsafe fn wl_data_device_manager_get_version(wl_data_device_manager: *mut wl_data_device_manager) -> u32 {
+    unsafe { wl_proxy_get_version(wl_data_device_manager.cast()) }
+}
+
+#[inline]
+pub unsafe fn wl_data_device_manager_set_user_data(
+    wl_data_device_manager: *mut wl_data_device_manager,
+    user_data: *mut c_void,
+) {
+    unsafe {
+        wl_proxy_set_user_data(
+            wl_data_device_manager.cast(),
+            user_data,
+        )
+    }
+}
+
+#[inline]
+pub unsafe fn wl_data_device_set_user_data(
+    wl_data_device: *mut wl_data_device,
+    user_data: *mut c_void,
+) {
+    unsafe {
+        wl_proxy_set_user_data(
+            wl_data_device.cast(),
+            user_data,
+        )
+    }
+}
+
+#[inline]
 pub unsafe fn wl_data_offer_add_listener(
     wl_data_offer: *mut wl_data_offer,
     listener: *const wl_data_offer_listener,
@@ -1023,6 +1138,29 @@ pub unsafe fn wl_data_offer_add_listener(
             wl_data_offer.cast(),
             listener.cast_mut().cast(),
             data,
+        )
+    }
+}
+
+#[inline]
+pub unsafe fn wl_data_offer_get_user_data(wl_data_offer: *mut wl_data_offer) -> *mut c_void {
+    unsafe { wl_proxy_get_user_data(wl_data_offer.cast()) }
+}
+
+#[inline]
+pub unsafe fn wl_data_offer_get_version(wl_data_offer: *mut wl_data_offer) -> u32 {
+    unsafe { wl_proxy_get_version(wl_data_offer.cast()) }
+}
+
+#[inline]
+pub unsafe fn wl_data_offer_set_user_data(
+    wl_data_offer: *mut wl_data_offer,
+    user_data: *mut c_void,
+) {
+    unsafe {
+        wl_proxy_set_user_data(
+            wl_data_offer.cast(),
+            user_data,
         )
     }
 }
@@ -1043,6 +1181,29 @@ pub unsafe fn wl_data_source_add_listener(
 }
 
 #[inline]
+pub unsafe fn wl_data_source_get_user_data(wl_data_source: *mut wl_data_source) -> *mut c_void {
+    unsafe { wl_proxy_get_user_data(wl_data_source.cast()) }
+}
+
+#[inline]
+pub unsafe fn wl_data_source_get_version(wl_data_source: *mut wl_data_source) -> u32 {
+    unsafe { wl_proxy_get_version(wl_data_source.cast()) }
+}
+
+#[inline]
+pub unsafe fn wl_data_source_set_user_data(
+    wl_data_source: *mut wl_data_source,
+    user_data: *mut c_void,
+) {
+    unsafe {
+        wl_proxy_set_user_data(
+            wl_data_source.cast(),
+            user_data,
+        )
+    }
+}
+
+#[inline]
 pub unsafe fn wl_display_add_listener(
     wl_display: *mut wl_display,
     listener: *const wl_display_listener,
@@ -1053,6 +1214,52 @@ pub unsafe fn wl_display_add_listener(
             wl_display.cast(),
             listener.cast_mut().cast(),
             data,
+        )
+    }
+}
+
+#[inline]
+pub unsafe fn wl_display_get_user_data(wl_display: *mut wl_display) -> *mut c_void {
+    unsafe { wl_proxy_get_user_data(wl_display.cast()) }
+}
+
+#[inline]
+pub unsafe fn wl_display_get_version(wl_display: *mut wl_display) -> u32 {
+    unsafe { wl_proxy_get_version(wl_display.cast()) }
+}
+
+#[inline]
+pub unsafe fn wl_display_set_user_data(
+    wl_display: *mut wl_display,
+    user_data: *mut c_void,
+) {
+    unsafe {
+        wl_proxy_set_user_data(
+            wl_display.cast(),
+            user_data,
+        )
+    }
+}
+
+#[inline]
+pub unsafe fn wl_fixes_get_user_data(wl_fixes: *mut wl_fixes) -> *mut c_void {
+    unsafe { wl_proxy_get_user_data(wl_fixes.cast()) }
+}
+
+#[inline]
+pub unsafe fn wl_fixes_get_version(wl_fixes: *mut wl_fixes) -> u32 {
+    unsafe { wl_proxy_get_version(wl_fixes.cast()) }
+}
+
+#[inline]
+pub unsafe fn wl_fixes_set_user_data(
+    wl_fixes: *mut wl_fixes,
+    user_data: *mut c_void,
+) {
+    unsafe {
+        wl_proxy_set_user_data(
+            wl_fixes.cast(),
+            user_data,
         )
     }
 }
@@ -1073,6 +1280,29 @@ pub unsafe fn wl_keyboard_add_listener(
 }
 
 #[inline]
+pub unsafe fn wl_keyboard_get_user_data(wl_keyboard: *mut wl_keyboard) -> *mut c_void {
+    unsafe { wl_proxy_get_user_data(wl_keyboard.cast()) }
+}
+
+#[inline]
+pub unsafe fn wl_keyboard_get_version(wl_keyboard: *mut wl_keyboard) -> u32 {
+    unsafe { wl_proxy_get_version(wl_keyboard.cast()) }
+}
+
+#[inline]
+pub unsafe fn wl_keyboard_set_user_data(
+    wl_keyboard: *mut wl_keyboard,
+    user_data: *mut c_void,
+) {
+    unsafe {
+        wl_proxy_set_user_data(
+            wl_keyboard.cast(),
+            user_data,
+        )
+    }
+}
+
+#[inline]
 pub unsafe fn wl_output_add_listener(
     wl_output: *mut wl_output,
     listener: *const wl_output_listener,
@@ -1083,6 +1313,29 @@ pub unsafe fn wl_output_add_listener(
             wl_output.cast(),
             listener.cast_mut().cast(),
             data,
+        )
+    }
+}
+
+#[inline]
+pub unsafe fn wl_output_get_user_data(wl_output: *mut wl_output) -> *mut c_void {
+    unsafe { wl_proxy_get_user_data(wl_output.cast()) }
+}
+
+#[inline]
+pub unsafe fn wl_output_get_version(wl_output: *mut wl_output) -> u32 {
+    unsafe { wl_proxy_get_version(wl_output.cast()) }
+}
+
+#[inline]
+pub unsafe fn wl_output_set_user_data(
+    wl_output: *mut wl_output,
+    user_data: *mut c_void,
+) {
+    unsafe {
+        wl_proxy_set_user_data(
+            wl_output.cast(),
+            user_data,
         )
     }
 }
@@ -1103,6 +1356,52 @@ pub unsafe fn wl_pointer_add_listener(
 }
 
 #[inline]
+pub unsafe fn wl_pointer_get_user_data(wl_pointer: *mut wl_pointer) -> *mut c_void {
+    unsafe { wl_proxy_get_user_data(wl_pointer.cast()) }
+}
+
+#[inline]
+pub unsafe fn wl_pointer_get_version(wl_pointer: *mut wl_pointer) -> u32 {
+    unsafe { wl_proxy_get_version(wl_pointer.cast()) }
+}
+
+#[inline]
+pub unsafe fn wl_pointer_set_user_data(
+    wl_pointer: *mut wl_pointer,
+    user_data: *mut c_void,
+) {
+    unsafe {
+        wl_proxy_set_user_data(
+            wl_pointer.cast(),
+            user_data,
+        )
+    }
+}
+
+#[inline]
+pub unsafe fn wl_region_get_user_data(wl_region: *mut wl_region) -> *mut c_void {
+    unsafe { wl_proxy_get_user_data(wl_region.cast()) }
+}
+
+#[inline]
+pub unsafe fn wl_region_get_version(wl_region: *mut wl_region) -> u32 {
+    unsafe { wl_proxy_get_version(wl_region.cast()) }
+}
+
+#[inline]
+pub unsafe fn wl_region_set_user_data(
+    wl_region: *mut wl_region,
+    user_data: *mut c_void,
+) {
+    unsafe {
+        wl_proxy_set_user_data(
+            wl_region.cast(),
+            user_data,
+        )
+    }
+}
+
+#[inline]
 pub unsafe fn wl_registry_add_listener(
     wl_registry: *mut wl_registry,
     listener: *const wl_registry_listener,
@@ -1113,6 +1412,29 @@ pub unsafe fn wl_registry_add_listener(
             wl_registry.cast(),
             listener.cast_mut().cast(),
             data,
+        )
+    }
+}
+
+#[inline]
+pub unsafe fn wl_registry_get_user_data(wl_registry: *mut wl_registry) -> *mut c_void {
+    unsafe { wl_proxy_get_user_data(wl_registry.cast()) }
+}
+
+#[inline]
+pub unsafe fn wl_registry_get_version(wl_registry: *mut wl_registry) -> u32 {
+    unsafe { wl_proxy_get_version(wl_registry.cast()) }
+}
+
+#[inline]
+pub unsafe fn wl_registry_set_user_data(
+    wl_registry: *mut wl_registry,
+    user_data: *mut c_void,
+) {
+    unsafe {
+        wl_proxy_set_user_data(
+            wl_registry.cast(),
+            user_data,
         )
     }
 }
@@ -1133,6 +1455,52 @@ pub unsafe fn wl_seat_add_listener(
 }
 
 #[inline]
+pub unsafe fn wl_seat_get_user_data(wl_seat: *mut wl_seat) -> *mut c_void {
+    unsafe { wl_proxy_get_user_data(wl_seat.cast()) }
+}
+
+#[inline]
+pub unsafe fn wl_seat_get_version(wl_seat: *mut wl_seat) -> u32 {
+    unsafe { wl_proxy_get_version(wl_seat.cast()) }
+}
+
+#[inline]
+pub unsafe fn wl_seat_set_user_data(
+    wl_seat: *mut wl_seat,
+    user_data: *mut c_void,
+) {
+    unsafe {
+        wl_proxy_set_user_data(
+            wl_seat.cast(),
+            user_data,
+        )
+    }
+}
+
+#[inline]
+pub unsafe fn wl_shell_get_user_data(wl_shell: *mut wl_shell) -> *mut c_void {
+    unsafe { wl_proxy_get_user_data(wl_shell.cast()) }
+}
+
+#[inline]
+pub unsafe fn wl_shell_get_version(wl_shell: *mut wl_shell) -> u32 {
+    unsafe { wl_proxy_get_version(wl_shell.cast()) }
+}
+
+#[inline]
+pub unsafe fn wl_shell_set_user_data(
+    wl_shell: *mut wl_shell,
+    user_data: *mut c_void,
+) {
+    unsafe {
+        wl_proxy_set_user_data(
+            wl_shell.cast(),
+            user_data,
+        )
+    }
+}
+
+#[inline]
 pub unsafe fn wl_shell_surface_add_listener(
     wl_shell_surface: *mut wl_shell_surface,
     listener: *const wl_shell_surface_listener,
@@ -1143,6 +1511,29 @@ pub unsafe fn wl_shell_surface_add_listener(
             wl_shell_surface.cast(),
             listener.cast_mut().cast(),
             data,
+        )
+    }
+}
+
+#[inline]
+pub unsafe fn wl_shell_surface_get_user_data(wl_shell_surface: *mut wl_shell_surface) -> *mut c_void {
+    unsafe { wl_proxy_get_user_data(wl_shell_surface.cast()) }
+}
+
+#[inline]
+pub unsafe fn wl_shell_surface_get_version(wl_shell_surface: *mut wl_shell_surface) -> u32 {
+    unsafe { wl_proxy_get_version(wl_shell_surface.cast()) }
+}
+
+#[inline]
+pub unsafe fn wl_shell_surface_set_user_data(
+    wl_shell_surface: *mut wl_shell_surface,
+    user_data: *mut c_void,
+) {
+    unsafe {
+        wl_proxy_set_user_data(
+            wl_shell_surface.cast(),
+            user_data,
         )
     }
 }
@@ -1163,6 +1554,98 @@ pub unsafe fn wl_shm_add_listener(
 }
 
 #[inline]
+pub unsafe fn wl_shm_get_user_data(wl_shm: *mut wl_shm) -> *mut c_void {
+    unsafe { wl_proxy_get_user_data(wl_shm.cast()) }
+}
+
+#[inline]
+pub unsafe fn wl_shm_get_version(wl_shm: *mut wl_shm) -> u32 {
+    unsafe { wl_proxy_get_version(wl_shm.cast()) }
+}
+
+#[inline]
+pub unsafe fn wl_shm_pool_get_user_data(wl_shm_pool: *mut wl_shm_pool) -> *mut c_void {
+    unsafe { wl_proxy_get_user_data(wl_shm_pool.cast()) }
+}
+
+#[inline]
+pub unsafe fn wl_shm_pool_get_version(wl_shm_pool: *mut wl_shm_pool) -> u32 {
+    unsafe { wl_proxy_get_version(wl_shm_pool.cast()) }
+}
+
+#[inline]
+pub unsafe fn wl_shm_pool_set_user_data(
+    wl_shm_pool: *mut wl_shm_pool,
+    user_data: *mut c_void,
+) {
+    unsafe {
+        wl_proxy_set_user_data(
+            wl_shm_pool.cast(),
+            user_data,
+        )
+    }
+}
+
+#[inline]
+pub unsafe fn wl_shm_set_user_data(
+    wl_shm: *mut wl_shm,
+    user_data: *mut c_void,
+) {
+    unsafe {
+        wl_proxy_set_user_data(
+            wl_shm.cast(),
+            user_data,
+        )
+    }
+}
+
+#[inline]
+pub unsafe fn wl_subcompositor_get_user_data(wl_subcompositor: *mut wl_subcompositor) -> *mut c_void {
+    unsafe { wl_proxy_get_user_data(wl_subcompositor.cast()) }
+}
+
+#[inline]
+pub unsafe fn wl_subcompositor_get_version(wl_subcompositor: *mut wl_subcompositor) -> u32 {
+    unsafe { wl_proxy_get_version(wl_subcompositor.cast()) }
+}
+
+#[inline]
+pub unsafe fn wl_subcompositor_set_user_data(
+    wl_subcompositor: *mut wl_subcompositor,
+    user_data: *mut c_void,
+) {
+    unsafe {
+        wl_proxy_set_user_data(
+            wl_subcompositor.cast(),
+            user_data,
+        )
+    }
+}
+
+#[inline]
+pub unsafe fn wl_subsurface_get_user_data(wl_subsurface: *mut wl_subsurface) -> *mut c_void {
+    unsafe { wl_proxy_get_user_data(wl_subsurface.cast()) }
+}
+
+#[inline]
+pub unsafe fn wl_subsurface_get_version(wl_subsurface: *mut wl_subsurface) -> u32 {
+    unsafe { wl_proxy_get_version(wl_subsurface.cast()) }
+}
+
+#[inline]
+pub unsafe fn wl_subsurface_set_user_data(
+    wl_subsurface: *mut wl_subsurface,
+    user_data: *mut c_void,
+) {
+    unsafe {
+        wl_proxy_set_user_data(
+            wl_subsurface.cast(),
+            user_data,
+        )
+    }
+}
+
+#[inline]
 pub unsafe fn wl_surface_add_listener(
     wl_surface: *mut wl_surface,
     listener: *const wl_surface_listener,
@@ -1178,6 +1661,29 @@ pub unsafe fn wl_surface_add_listener(
 }
 
 #[inline]
+pub unsafe fn wl_surface_get_user_data(wl_surface: *mut wl_surface) -> *mut c_void {
+    unsafe { wl_proxy_get_user_data(wl_surface.cast()) }
+}
+
+#[inline]
+pub unsafe fn wl_surface_get_version(wl_surface: *mut wl_surface) -> u32 {
+    unsafe { wl_proxy_get_version(wl_surface.cast()) }
+}
+
+#[inline]
+pub unsafe fn wl_surface_set_user_data(
+    wl_surface: *mut wl_surface,
+    user_data: *mut c_void,
+) {
+    unsafe {
+        wl_proxy_set_user_data(
+            wl_surface.cast(),
+            user_data,
+        )
+    }
+}
+
+#[inline]
 pub unsafe fn wl_touch_add_listener(
     wl_touch: *mut wl_touch,
     listener: *const wl_touch_listener,
@@ -1188,6 +1694,29 @@ pub unsafe fn wl_touch_add_listener(
             wl_touch.cast(),
             listener.cast_mut().cast(),
             data,
+        )
+    }
+}
+
+#[inline]
+pub unsafe fn wl_touch_get_user_data(wl_touch: *mut wl_touch) -> *mut c_void {
+    unsafe { wl_proxy_get_user_data(wl_touch.cast()) }
+}
+
+#[inline]
+pub unsafe fn wl_touch_get_version(wl_touch: *mut wl_touch) -> u32 {
+    unsafe { wl_proxy_get_version(wl_touch.cast()) }
+}
+
+#[inline]
+pub unsafe fn wl_touch_set_user_data(
+    wl_touch: *mut wl_touch,
+    user_data: *mut c_void,
+) {
+    unsafe {
+        wl_proxy_set_user_data(
+            wl_touch.cast(),
+            user_data,
         )
     }
 }
