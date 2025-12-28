@@ -6,5 +6,6 @@ This repository contains three projects:
     headers for C/C++.
   * [wayland-headers-generator](wayland-headers-generator) uses
     `wayland-protocol` to generate the `wayland-headers` Rust library.
-  * [wayland-protocol](wayland-protocol) parses `wayland.xml` into Rust data
-    structures.
+  * [wayland-protocol](wayland-protocol) parses
+    [wayland.xml](https://gitlab.freedesktop.org/wayland/wayland/-/blob/1.18.0/protocol/wayland.xml?ref_type=tags)
+    into Rust data structures.
