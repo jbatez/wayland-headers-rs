@@ -67,7 +67,6 @@ unsafe extern "C" {
     ) -> c_int;
 
     pub fn wl_event_queue_destroy(queue: *mut wl_event_queue);
-    pub fn wl_event_queue_get_name(queue: *const wl_event_queue) -> *const c_char;
     pub fn wl_log_set_handler_client(handler: wl_log_func_t);
 
     pub fn wl_proxy_add_dispatcher(
