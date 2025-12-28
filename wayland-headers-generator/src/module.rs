@@ -5,8 +5,8 @@ pub(crate) struct Module {
     pub(crate) imports: Vec<String>,
     pub(crate) structs: Vec<(String, String)>,
     pub(crate) constants: Vec<(String, String)>,
-    pub(crate) functions: Vec<(String, String)>,
     pub(crate) extern_statics: Vec<(String, String)>,
+    pub(crate) functions: Vec<(String, String)>,
 }
 
 impl Module {
