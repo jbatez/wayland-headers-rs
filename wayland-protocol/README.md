@@ -1,4 +1,4 @@
-# Vulkan API Registry for Rust
+# Wayland Protocol for Rust
 
 This library parses
 [wayland.xml](https://gitlab.freedesktop.org/wayland/wayland/-/blob/1.18.0/protocol/wayland.xml?ref_type=tags)
