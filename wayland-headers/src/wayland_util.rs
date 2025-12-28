@@ -150,7 +150,6 @@ pub struct wl_object {
 
 pub const WL_ITERATOR_CONTINUE: wl_iterator_result = 1;
 pub const WL_ITERATOR_STOP: wl_iterator_result = 0;
-pub const WL_MAX_MESSAGE_SIZE: usize = 4096;
 
 unsafe extern "C" {
     pub fn wl_array_add(array: *mut wl_array, size: usize) -> *mut c_void;
