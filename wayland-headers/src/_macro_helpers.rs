@@ -2,19 +2,19 @@ use core::ptr::NonNull;
 
 use crate::wayland_util::{wl_array, wl_list};
 
-pub use core::mem::offset_of;
-
 pub use u8;
 
+pub use core::mem::offset_of;
+
 pub struct WlArrayForEachIter<T> {
-    pos: *mut T,
+    next: *mut T,
     array: NonNull<wl_array>,
 }
 
 impl<T> WlArrayForEachIter<T> {
     pub unsafe fn new(array: *const wl_array) -> Self {
         Self {
-            pos: unsafe { (*array).data.cast() },
+            next: unsafe { (*array).data.cast() },
             array: unsafe { NonNull::new_unchecked(array.cast_mut()) },
         }
     }
@@ -24,10 +24,10 @@ impl<T> Iterator for WlArrayForEachIter<T> {
     type Item = NonNull<T>;
     fn next(&mut self) -> Option<Self::Item> {
         unsafe {
-            let pos = self.pos;
+            let pos = self.next;
             let array = self.array.as_ref();
             if array.size != 0 && pos.cast::<u8>() < array.data.cast::<u8>().add(array.size) {
-                self.pos = pos.add(1);
+                self.next = pos.add(1);
                 Some(NonNull::new_unchecked(pos))
             } else {
                 None
