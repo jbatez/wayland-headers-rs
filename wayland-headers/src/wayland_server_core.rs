@@ -8,7 +8,30 @@ pub use super::wayland_util::*;
 #[doc(no_inline)]
 pub use super::wayland_version::*;
 
-// TODO: Document.
+/// Roughly equivalent to the `wl_client_for_each(client, list)` C macro.
+/// 
+/// It can only be invoked inside an `unsafe` block.
+/// 
+/// The following Rust code:
+///
+/// ```rust
+/// let client_list: *const wl_list = /*...*/;
+/// unsafe {
+///     wl_client_for_each!(c: *mut wl_client, client_list, {
+///         // ...
+///     });
+/// }
+/// ```
+///
+/// is roughly equivalent to the following C code:
+///
+/// ```c
+/// const struct wl_list *client_list = /*...*/;
+/// struct wl_client *c;
+/// wl_client_for_each(c, client_list) {
+///     // ...
+/// }
+/// ```
 #[macro_export]
 macro_rules! wl_client_for_each {
     ($client:ident: $T:ty, $list:expr, $body:block) => {
@@ -20,7 +43,30 @@ macro_rules! wl_client_for_each {
 }
 pub use wl_client_for_each;
 
-// TODO: Document.
+/// Roughly equivalent to the `wl_resource_for_each(resource, list)` C macro.
+/// 
+/// It can only be invoked inside an `unsafe` block.
+/// 
+/// The following Rust code:
+///
+/// ```rust
+/// let resource_list: *const wl_list = /*...*/;
+/// unsafe {
+///     wl_resource_for_each!(r: *mut wl_resource, resource_list, {
+///         // ...
+///     });
+/// }
+/// ```
+///
+/// is roughly equivalent to the following C code:
+///
+/// ```c
+/// const struct wl_list *resource_list = /*...*/;
+/// struct wl_resource *r;
+/// wl_resource_for_each(r, resource_list) {
+///     // ...
+/// }
+/// ```
 #[macro_export]
 macro_rules! wl_resource_for_each {
     ($resource:ident: $T:ty, $list:expr, $body:block) => {
@@ -33,7 +79,33 @@ macro_rules! wl_resource_for_each {
 }
 pub use wl_resource_for_each;
 
-// TODO: Document.
+
+/// Roughly equivalent to the `wl_resource_for_each_safe(resource, tmp, list)` C macro.
+/// 
+/// This version does not require a `tmp` argument, unlike the C version.
+/// 
+/// It can only be invoked inside an `unsafe` block.
+/// 
+/// The following Rust code:
+///
+/// ```rust
+/// let resource_list: *const wl_list = /*...*/;
+/// unsafe {
+///     wl_resource_for_each_safe!(r: *mut wl_resource, resource_list, {
+///         // ...
+///     });
+/// }
+/// ```
+///
+/// is roughly equivalent to the following C code:
+///
+/// ```c
+/// const struct wl_list *resource_list = /*...*/;
+/// struct wl_resource *r, tmp;
+/// wl_resource_for_each_safe(r, tmp, resource_list) {
+///     // ...
+/// }
+/// ```
 #[macro_export]
 macro_rules! wl_resource_for_each_safe {
     ($resource:ident: $T:ty, $list:expr, $body:block) => {

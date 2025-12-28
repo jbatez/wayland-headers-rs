@@ -1,6 +1,29 @@
 use crate::prelude::*;
 
-// TODO: Document.
+/// Roughly equivalent to the `wl_array_for_each(pos, array)` C macro.
+/// 
+/// It can only be invoked inside an `unsafe` block.
+/// 
+/// The following Rust code:
+///
+/// ```rust
+/// let a: *const wl_array = /*...*/;
+/// unsafe {
+///     wl_array_for_each!(p: *mut c_int, a, {
+///         // ...
+///     });
+/// }
+/// ```
+///
+/// is roughly equivalent to the following C code:
+///
+/// ```c
+/// const struct wl_array *a = /*...*/;
+/// int *p;
+/// wl_array_for_each(p, a) {
+///     // ...
+/// }
+/// ```
 #[macro_export]
 macro_rules! wl_array_for_each {
     ($pos:ident: *const $T:ty, $array:expr, $body:block) => {
@@ -18,7 +41,12 @@ macro_rules! wl_array_for_each {
 }
 pub use wl_array_for_each;
 
-// TODO: Document.
+/// Roughly equivalent to the `wl_container_of(ptr, sample, member)` C macro.
+/// 
+/// This version requires a pointer type to the container type as the second argument,
+/// unlike the C version which takes a sample expression.
+/// 
+/// It can only be invoked inside an `unsafe` block.
 #[macro_export]
 macro_rules! wl_container_of {
     ($ptr:expr, *const $Container:ty, $member:ident) => {{
@@ -36,7 +64,40 @@ macro_rules! wl_container_of {
 }
 pub use wl_container_of;
 
-// TODO: Document.
+/// Roughly equivalent to the `wl_list_for_each(pos, head, member)` C macro.
+/// 
+/// It can only be invoked inside an `unsafe` block.
+/// 
+/// The following Rust code:
+///
+/// ```rust
+/// struct message {
+///     contents: *mut c_char,
+///     link: wl_list,
+/// }
+/// 
+/// let message_list: *const wl_list = /*...*/;
+/// unsafe {
+///     wl_list_for_each!(m: *mut message, message_list, link, {
+///         // ...
+///     });
+/// }
+/// ```
+///
+/// is roughly equivalent to the following C code:
+///
+/// ```c
+/// struct message {
+///     char *contents;
+///     struct wl_list link;
+/// }
+/// 
+/// const struct wl_list *message_list = /*...*/;
+/// struct message *m;
+/// wl_list_for_each(m, message_list, link) {
+///     // ...
+/// }
+/// ```
 #[macro_export]
 macro_rules! wl_list_for_each {
     ($pos:ident: *const $T:ty, $head:expr, $member:ident, $body:block) => {
@@ -54,7 +115,40 @@ macro_rules! wl_list_for_each {
 }
 pub use wl_list_for_each;
 
-// TODO: Document.
+/// Roughly equivalent to the `wl_list_for_each_reverse(pos, head, member)` C macro.
+/// 
+/// It can only be invoked inside an `unsafe` block.
+/// 
+/// The following Rust code:
+///
+/// ```rust
+/// struct message {
+///     contents: *mut c_char,
+///     link: wl_list,
+/// }
+/// 
+/// let message_list: *const wl_list = /*...*/;
+/// unsafe {
+///     wl_list_for_each_reverse!(m: *mut message, message_list, link, {
+///         // ...
+///     });
+/// }
+/// ```
+///
+/// is roughly equivalent to the following C code:
+///
+/// ```c
+/// struct message {
+///     char *contents;
+///     struct wl_list link;
+/// }
+/// 
+/// const struct wl_list *message_list = /*...*/;
+/// struct message *m;
+/// wl_list_for_each_reverse(m, message_list, link) {
+///     // ...
+/// }
+/// ```
 #[macro_export]
 macro_rules! wl_list_for_each_reverse {
     ($pos:ident: *const $T:ty, $head:expr, $member:ident, $body:block) => {
@@ -72,7 +166,42 @@ macro_rules! wl_list_for_each_reverse {
 }
 pub use wl_list_for_each_reverse;
 
-// TODO: Document.
+/// Roughly equivalent to the `wl_list_for_each_reverse_safe(pos, tmp, head, member)` C macro.
+/// 
+/// This version does not require a `tmp` argument, unlike the C version.
+/// 
+/// It can only be invoked inside an `unsafe` block.
+/// 
+/// The following Rust code:
+///
+/// ```rust
+/// struct message {
+///     contents: *mut c_char,
+///     link: wl_list,
+/// }
+/// 
+/// let message_list: *const wl_list = /*...*/;
+/// unsafe {
+///     wl_list_for_each_reverse_safe!(m: *mut message, message_list, link, {
+///         // ...
+///     });
+/// }
+/// ```
+///
+/// is roughly equivalent to the following C code:
+///
+/// ```c
+/// struct message {
+///     char *contents;
+///     struct wl_list link;
+/// }
+/// 
+/// const struct wl_list *message_list = /*...*/;
+/// struct message *m, tmp;
+/// wl_list_for_each_reverse_safe(m, tmp, message_list, link) {
+///     // ...
+/// }
+/// ```
 #[macro_export]
 macro_rules! wl_list_for_each_reverse_safe {
     ($pos:ident: *const $T:ty, $head:expr, $member:ident, $body:block) => {
@@ -90,7 +219,42 @@ macro_rules! wl_list_for_each_reverse_safe {
 }
 pub use wl_list_for_each_reverse_safe;
 
-// TODO: Document.
+/// Roughly equivalent to the `wl_list_for_each_safe(pos, tmp, head, member)` C macro.
+/// 
+/// This version does not require a `tmp` argument, unlike the C version.
+/// 
+/// It can only be invoked inside an `unsafe` block.
+/// 
+/// The following Rust code:
+///
+/// ```rust
+/// struct message {
+///     contents: *mut c_char,
+///     link: wl_list,
+/// }
+/// 
+/// let message_list: *const wl_list = /*...*/;
+/// unsafe {
+///     wl_list_for_each_safe!(m: *mut message, message_list, link, {
+///         // ...
+///     });
+/// }
+/// ```
+///
+/// is roughly equivalent to the following C code:
+///
+/// ```c
+/// struct message {
+///     char *contents;
+///     struct wl_list link;
+/// }
+/// 
+/// const struct wl_list *message_list = /*...*/;
+/// struct message *m, tmp;
+/// wl_list_for_each_safe(m, tmp, message_list, link) {
+///     // ...
+/// }
+/// ```
 #[macro_export]
 macro_rules! wl_list_for_each_safe {
     ($pos:ident: *const $T:ty, $head:expr, $member:ident, $body:block) => {
