@@ -3,6 +3,11 @@ name = "wayland-protocol"
 version.workspace = true
 edition = "2024"
 rust-version = "1.85.0"
+description = "Parses wayland.xml"
+repository.workspace = true
+license-file = "../LICENSE.md"
+keywords.workspace = true
+categories.workspace = true
 
 [dependencies]
 quick-xml = "0.38.4"

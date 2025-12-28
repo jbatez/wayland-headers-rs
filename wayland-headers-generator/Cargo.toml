@@ -3,6 +3,11 @@ name = "wayland-headers-generator"
 version.workspace = true
 edition = "2024"
 rust-version = "1.88.0"
+description = "Generate parts of the wayland-headers crate"
+repository.workspace = true
+license = "MIT-0"
+keywords.workspace = true
+categories.workspace = true
 
 [dependencies]
 wayland-protocol.workspace = true

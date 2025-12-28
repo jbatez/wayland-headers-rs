@@ -8,6 +8,16 @@ members = [
 
 [workspace.package]
 version = "0.1.0+1.18.0"
+repository = "https://github.com/jbatez/wayland-headers-rs"
+keywords = [
+    "wayland",
+    "headers",
+    "bindings",
+]
+categories = [
+    "api-bindings",
+    "gui",
+]
 
 [workspace.dependencies]
 wayland-protocol = { path = "wayland-protocol", version = "0.1.0" }

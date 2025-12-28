@@ -3,6 +3,11 @@ name = "wayland-headers"
 version.workspace = true
 edition = "2024"
 rust-version = "1.85.0"
+description = "Minimalist Rust FFI bindings for Wayland"
+repository.workspace = true
+license = "MIT-0"
+keywords.workspace = true
+categories.workspace = true
 
 [dependencies.libc]
 version = "0.2"
