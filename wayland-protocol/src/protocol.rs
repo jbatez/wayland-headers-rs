@@ -33,7 +33,6 @@ pub enum InterfaceContent {
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct Message {
-    pub deprecated_since: Option<String>,
     pub name: Option<String>,
     pub since: Option<String>,
     pub typ: Option<String>,

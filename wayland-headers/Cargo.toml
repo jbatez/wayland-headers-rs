@@ -7,6 +7,3 @@ rust-version = "1.85.0"
 [dependencies.libc]
 version = "0.2"
 default-features = false
-
-[features]
-std = []

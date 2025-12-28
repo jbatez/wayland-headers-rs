@@ -131,7 +131,6 @@ pub const WL_PROTOCOL_LOGGER_EVENT: wl_protocol_logger_type = 1;
 pub const WL_PROTOCOL_LOGGER_REQUEST: wl_protocol_logger_type = 0;
 
 unsafe extern "C" {
-    pub fn wl_client_add_destroy_late_listener(client: *mut wl_client, listener: *mut wl_listener);
     pub fn wl_client_add_destroy_listener(client: *mut wl_client, listener: *mut wl_listener);
 
     pub fn wl_client_add_resource_created_listener(
@@ -152,16 +151,11 @@ unsafe extern "C" {
     pub fn wl_client_from_link(link: *mut wl_list) -> *mut wl_client;
 
     pub fn wl_client_get_credentials(
-        client: *const wl_client,
+        client: *mut wl_client,
         pid: *mut pid_t,
         uid: *mut uid_t,
         gid: *mut gid_t,
     );
-
-    pub fn wl_client_get_destroy_late_listener(
-        client: *mut wl_client,
-        notify: wl_notify_func_t,
-    ) -> *mut wl_listener;
 
     pub fn wl_client_get_destroy_listener(
         client: *mut wl_client,
@@ -172,16 +166,8 @@ unsafe extern "C" {
     pub fn wl_client_get_fd(client: *mut wl_client) -> c_int;
     pub fn wl_client_get_link(client: *mut wl_client) -> *mut wl_list;
     pub fn wl_client_get_object(client: *mut wl_client, id: u32) -> *mut wl_resource;
-    pub fn wl_client_get_user_data(client: *mut wl_client) -> *mut c_void;
     pub fn wl_client_post_implementation_error(client: *mut wl_client, msg: *const c_char, ...);
     pub fn wl_client_post_no_memory(client: *mut wl_client);
-    pub fn wl_client_set_max_buffer_size(client: *mut wl_client, max_buffer_size: usize);
-
-    pub fn wl_client_set_user_data(
-        client: *mut wl_client,
-        data: *mut c_void,
-        dtor: wl_user_data_destroy_func_t,
-    );
 
     pub fn wl_display_add_client_created_listener(
         display: *mut wl_display,
@@ -212,11 +198,10 @@ unsafe extern "C" {
     ) -> *mut wl_listener;
 
     pub fn wl_display_get_event_loop(display: *mut wl_display) -> *mut wl_event_loop;
-    pub fn wl_display_get_serial(display: *const wl_display) -> u32;
+    pub fn wl_display_get_serial(display: *mut wl_display) -> u32;
     pub fn wl_display_init_shm(display: *mut wl_display) -> c_int;
     pub fn wl_display_next_serial(display: *mut wl_display) -> u32;
     pub fn wl_display_run(display: *mut wl_display);
-    pub fn wl_display_set_default_max_buffer_size(display: *mut wl_display, max_buffer_size: usize);
 
     pub fn wl_display_set_global_filter(
         display: *mut wl_display,
@@ -283,11 +268,8 @@ unsafe extern "C" {
     ) -> *mut wl_global;
 
     pub fn wl_global_destroy(global: *mut wl_global);
-    pub fn wl_global_get_display(global: *const wl_global) -> *mut wl_display;
     pub fn wl_global_get_interface(global: *const wl_global) -> *const wl_interface;
-    pub fn wl_global_get_name(global: *const wl_global, client: *const wl_client) -> u32;
     pub fn wl_global_get_user_data(global: *const wl_global) -> *mut c_void;
-    pub fn wl_global_get_version(global: *const wl_global) -> u32;
     pub fn wl_global_remove(global: *mut wl_global);
     pub fn wl_global_set_user_data(global: *mut wl_global, data: *mut c_void);
     pub fn wl_log_set_handler_server(handler: wl_log_func_t);
@@ -309,7 +291,7 @@ unsafe extern "C" {
     ) -> *mut wl_resource;
 
     pub fn wl_resource_from_link(resource: *mut wl_list) -> *mut wl_resource;
-    pub fn wl_resource_get_class(resource: *const wl_resource) -> *const c_char;
+    pub fn wl_resource_get_class(resource: *mut wl_resource) -> *const c_char;
     pub fn wl_resource_get_client(resource: *mut wl_resource) -> *mut wl_client;
 
     pub fn wl_resource_get_destroy_listener(
@@ -317,11 +299,10 @@ unsafe extern "C" {
         notify: wl_notify_func_t,
     ) -> *mut wl_listener;
 
-    pub fn wl_resource_get_id(resource: *const wl_resource) -> u32;
-    pub fn wl_resource_get_interface(resource: *mut wl_resource) -> *const wl_interface;
+    pub fn wl_resource_get_id(resource: *mut wl_resource) -> u32;
     pub fn wl_resource_get_link(resource: *mut wl_resource) -> *mut wl_list;
     pub fn wl_resource_get_user_data(resource: *mut wl_resource) -> *mut c_void;
-    pub fn wl_resource_get_version(resource: *const wl_resource) -> c_int;
+    pub fn wl_resource_get_version(resource: *mut wl_resource) -> c_int;
 
     pub fn wl_resource_instance_of(
         resource: *mut wl_resource,
@@ -330,14 +311,6 @@ unsafe extern "C" {
     ) -> c_int;
 
     pub fn wl_resource_post_error(resource: *mut wl_resource, code: u32, msg: *const c_char, ...);
-
-    pub fn wl_resource_post_error_vargs(
-        resource: *mut wl_resource,
-        code: u32,
-        msg: *const c_char,
-        argp: *mut c_void, // TODO: VaList
-    );
-
     pub fn wl_resource_post_event(resource: *mut wl_resource, opcode: u32, ...);
 
     pub fn wl_resource_post_event_array(
@@ -380,13 +353,11 @@ unsafe extern "C" {
     pub fn wl_shm_buffer_end_access(buffer: *mut wl_shm_buffer);
     pub fn wl_shm_buffer_get(resource: *mut wl_resource) -> *mut wl_shm_buffer;
     pub fn wl_shm_buffer_get_data(buffer: *mut wl_shm_buffer) -> *mut c_void;
-    pub fn wl_shm_buffer_get_format(buffer: *const wl_shm_buffer) -> u32;
-    pub fn wl_shm_buffer_get_height(buffer: *const wl_shm_buffer) -> i32;
-    pub fn wl_shm_buffer_get_stride(buffer: *const wl_shm_buffer) -> i32;
-    pub fn wl_shm_buffer_get_width(buffer: *const wl_shm_buffer) -> i32;
-    pub fn wl_shm_buffer_ref(buffer: *mut wl_shm_buffer) -> *mut wl_shm_buffer;
+    pub fn wl_shm_buffer_get_format(buffer: *mut wl_shm_buffer) -> u32;
+    pub fn wl_shm_buffer_get_height(buffer: *mut wl_shm_buffer) -> i32;
+    pub fn wl_shm_buffer_get_stride(buffer: *mut wl_shm_buffer) -> i32;
+    pub fn wl_shm_buffer_get_width(buffer: *mut wl_shm_buffer) -> i32;
     pub fn wl_shm_buffer_ref_pool(buffer: *mut wl_shm_buffer) -> *mut wl_shm_pool;
-    pub fn wl_shm_buffer_unref(buffer: *mut wl_shm_buffer);
     pub fn wl_shm_pool_unref(pool: *mut wl_shm_pool);
 }
 
@@ -402,10 +373,6 @@ pub unsafe extern "C" fn wl_signal_emit(signal: *mut wl_signal, data: *mut c_voi
             (*l).notify.unwrap_unchecked()(l, data);
         })
     }
-}
-
-unsafe extern "C" {
-    pub fn wl_signal_emit_mutable(signal: *mut wl_signal, data: *mut c_void);
 }
 
 #[inline]
@@ -467,4 +434,3 @@ pub type wl_protocol_logger_func_t = Option<
 
 pub type wl_protocol_logger_type = c_int;
 pub type wl_resource_destroy_func_t = Option<unsafe extern "C" fn(resource: *mut wl_resource)>;
-pub type wl_user_data_destroy_func_t = Option<unsafe extern "C" fn(data: *mut c_void)>;

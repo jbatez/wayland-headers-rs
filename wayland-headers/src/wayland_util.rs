@@ -159,11 +159,10 @@ unsafe extern "C" {
     pub fn wl_array_release(array: *mut wl_array);
 }
 
-/// Available if built with `std`.
-#[cfg(any(doc, feature = "std"))]
 #[inline]
 pub extern "C" fn wl_fixed_from_double(d: c_double) -> wl_fixed_t {
-    (d * 256.0).round() as wl_fixed_t
+    let d = d + ((3i64 << (51 - 8)) as c_double);
+    d.to_bits() as wl_fixed_t
 }
 
 #[inline]
@@ -173,7 +172,8 @@ pub extern "C" fn wl_fixed_from_int(i: c_int) -> wl_fixed_t {
 
 #[inline]
 pub extern "C" fn wl_fixed_to_double(f: wl_fixed_t) -> c_double {
-    (f as c_double) / 256.0
+    let i = ((1023i64 + 44i64) << 52) + (1i64 << 51) + (f as i64);
+    c_double::from_bits(i as u64) - ((3i64 << 43) as c_double)
 }
 
 #[inline]
@@ -192,11 +192,11 @@ unsafe extern "C" {
 
 pub type wl_dispatcher_func_t = Option<
     unsafe extern "C" fn(
-        user_data: *const c_void,
-        target: *mut c_void,
-        opcode: u32,
-        msg: *const wl_message,
-        args: *mut wl_argument,
+        _: *const c_void,
+        _: *mut c_void,
+        _: u32,
+        _: *const wl_message,
+        _: *mut wl_argument,
     ) -> c_int,
 >;
 
@@ -205,8 +205,8 @@ pub type wl_iterator_result = c_int;
 
 pub type wl_log_func_t = Option<
     unsafe extern "C" fn(
-        fmt: *const c_char,
-        args: *mut c_void, // TODO: VaList
+        _: *const c_char,
+        _: *mut c_void, // TODO: VaList
     ),
 >;
 

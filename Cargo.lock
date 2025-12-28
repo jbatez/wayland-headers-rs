@@ -25,21 +25,21 @@ dependencies = [
 
 [[package]]
 name = "wayland-headers"
-version = "0.1.0+1.24.0"
+version = "0.1.0+1.18.0"
 dependencies = [
  "libc",
 ]
 
 [[package]]
 name = "wayland-headers-generator"
-version = "0.1.0+1.24.0"
+version = "0.1.0+1.18.0"
 dependencies = [
  "wayland-protocol",
 ]
 
 [[package]]
 name = "wayland-protocol"
-version = "0.1.0+1.24.0"
+version = "0.1.0+1.18.0"
 dependencies = [
  "quick-xml",
 ]

@@ -250,7 +250,6 @@ impl<'a> Parser<'a> {
     }
 
     fn parse_message(&mut self, elem: Elem) -> Message {
-        let mut deprecated_since = None;
         let mut name = None;
         let mut since = None;
         let mut typ = None;
@@ -258,7 +257,6 @@ impl<'a> Parser<'a> {
         for attr in elem.start.attributes() {
             let attr = attr.unwrap();
             match attr.key.as_ref() {
-                b"deprecated-since" => self.save_attr(attr, &mut deprecated_since),
                 b"name" => self.save_attr(attr, &mut name),
                 b"since" => self.save_attr(attr, &mut since),
                 b"type" => self.save_attr(attr, &mut typ),
@@ -285,7 +283,6 @@ impl<'a> Parser<'a> {
         });
 
         Message {
-            deprecated_since,
             name,
             since,
             typ,

@@ -26,7 +26,7 @@ impl<T> Iterator for WlArrayForEachIter<T> {
         unsafe {
             let pos = self.next;
             let array = self.array.as_ref();
-            if array.size != 0 && pos.cast::<u8>() < array.data.cast::<u8>().add(array.size) {
+            if pos.cast::<u8>() < array.data.cast::<u8>().add(array.size) {
                 self.next = pos.add(1);
                 Some(NonNull::new_unchecked(pos))
             } else {

@@ -173,12 +173,6 @@ pub struct wl_display_listener {
 }
 
 #[repr(C)]
-pub struct wl_fixes {
-    _data: (),
-    _marker: PhantomData<(*mut u8, PhantomPinned)>,
-}
-
-#[repr(C)]
 pub struct wl_keyboard {
     _data: (),
     _marker: PhantomData<(*mut u8, PhantomPinned)>,
@@ -270,16 +264,6 @@ pub struct wl_output_listener {
         wl_output: *mut wl_output,
         factor: i32,
     )>,
-    pub name: Option<unsafe extern "C" fn(
-        data: *mut c_void,
-        wl_output: *mut wl_output,
-        name: *const c_char,
-    )>,
-    pub description: Option<unsafe extern "C" fn(
-        data: *mut c_void,
-        wl_output: *mut wl_output,
-        description: *const c_char,
-    )>,
 }
 
 #[repr(C)]
@@ -347,18 +331,6 @@ pub struct wl_pointer_listener {
         wl_pointer: *mut wl_pointer,
         axis: u32,
         discrete: i32,
-    )>,
-    pub axis_value120: Option<unsafe extern "C" fn(
-        data: *mut c_void,
-        wl_pointer: *mut wl_pointer,
-        axis: u32,
-        value120: i32,
-    )>,
-    pub axis_relative_direction: Option<unsafe extern "C" fn(
-        data: *mut c_void,
-        wl_pointer: *mut wl_pointer,
-        axis: u32,
-        direction: u32,
     )>,
 }
 
@@ -498,16 +470,6 @@ pub struct wl_surface_listener {
         wl_surface: *mut wl_surface,
         output: *mut wl_output,
     )>,
-    pub preferred_buffer_scale: Option<unsafe extern "C" fn(
-        data: *mut c_void,
-        wl_surface: *mut wl_surface,
-        factor: i32,
-    )>,
-    pub preferred_buffer_transform: Option<unsafe extern "C" fn(
-        data: *mut c_void,
-        wl_surface: *mut wl_surface,
-        transform: u32,
-    )>,
 }
 
 #[repr(C)]
@@ -579,7 +541,6 @@ pub const WL_DATA_DEVICE_DATA_OFFER_SINCE_VERSION: u32 = 1;
 pub const WL_DATA_DEVICE_DROP_SINCE_VERSION: u32 = 1;
 pub const WL_DATA_DEVICE_ENTER_SINCE_VERSION: u32 = 1;
 pub const WL_DATA_DEVICE_ERROR_ROLE: u32 = 0;
-pub const WL_DATA_DEVICE_ERROR_USED_SOURCE: u32 = 1;
 pub const WL_DATA_DEVICE_LEAVE_SINCE_VERSION: u32 = 1;
 pub const WL_DATA_DEVICE_MANAGER_CREATE_DATA_SOURCE: u32 = 0;
 pub const WL_DATA_DEVICE_MANAGER_CREATE_DATA_SOURCE_SINCE_VERSION: u32 = 1;
@@ -638,10 +599,6 @@ pub const WL_DISPLAY_GET_REGISTRY: u32 = 1;
 pub const WL_DISPLAY_GET_REGISTRY_SINCE_VERSION: u32 = 1;
 pub const WL_DISPLAY_SYNC: u32 = 0;
 pub const WL_DISPLAY_SYNC_SINCE_VERSION: u32 = 1;
-pub const WL_FIXES_DESTROY: u32 = 0;
-pub const WL_FIXES_DESTROY_REGISTRY: u32 = 1;
-pub const WL_FIXES_DESTROY_REGISTRY_SINCE_VERSION: u32 = 1;
-pub const WL_FIXES_DESTROY_SINCE_VERSION: u32 = 1;
 pub const WL_KEYBOARD_ENTER_SINCE_VERSION: u32 = 1;
 pub const WL_KEYBOARD_KEYMAP_FORMAT_NO_KEYMAP: u32 = 0;
 pub const WL_KEYBOARD_KEYMAP_FORMAT_XKB_V1: u32 = 1;
@@ -649,20 +606,16 @@ pub const WL_KEYBOARD_KEYMAP_SINCE_VERSION: u32 = 1;
 pub const WL_KEYBOARD_KEY_SINCE_VERSION: u32 = 1;
 pub const WL_KEYBOARD_KEY_STATE_PRESSED: u32 = 1;
 pub const WL_KEYBOARD_KEY_STATE_RELEASED: u32 = 0;
-pub const WL_KEYBOARD_KEY_STATE_REPEATED: u32 = 2;
-pub const WL_KEYBOARD_KEY_STATE_REPEATED_SINCE_VERSION: u32 = 10;
 pub const WL_KEYBOARD_LEAVE_SINCE_VERSION: u32 = 1;
 pub const WL_KEYBOARD_MODIFIERS_SINCE_VERSION: u32 = 1;
 pub const WL_KEYBOARD_RELEASE: u32 = 0;
 pub const WL_KEYBOARD_RELEASE_SINCE_VERSION: u32 = 3;
 pub const WL_KEYBOARD_REPEAT_INFO_SINCE_VERSION: u32 = 4;
-pub const WL_OUTPUT_DESCRIPTION_SINCE_VERSION: u32 = 4;
 pub const WL_OUTPUT_DONE_SINCE_VERSION: u32 = 2;
 pub const WL_OUTPUT_GEOMETRY_SINCE_VERSION: u32 = 1;
 pub const WL_OUTPUT_MODE_CURRENT: u32 = 0x1;
 pub const WL_OUTPUT_MODE_PREFERRED: u32 = 0x2;
 pub const WL_OUTPUT_MODE_SINCE_VERSION: u32 = 1;
-pub const WL_OUTPUT_NAME_SINCE_VERSION: u32 = 4;
 pub const WL_OUTPUT_RELEASE: u32 = 0;
 pub const WL_OUTPUT_RELEASE_SINCE_VERSION: u32 = 3;
 pub const WL_OUTPUT_SCALE_SINCE_VERSION: u32 = 2;
@@ -682,9 +635,6 @@ pub const WL_OUTPUT_TRANSFORM_FLIPPED_90: u32 = 5;
 pub const WL_OUTPUT_TRANSFORM_NORMAL: u32 = 0;
 pub const WL_POINTER_AXIS_DISCRETE_SINCE_VERSION: u32 = 5;
 pub const WL_POINTER_AXIS_HORIZONTAL_SCROLL: u32 = 1;
-pub const WL_POINTER_AXIS_RELATIVE_DIRECTION_IDENTICAL: u32 = 0;
-pub const WL_POINTER_AXIS_RELATIVE_DIRECTION_INVERTED: u32 = 1;
-pub const WL_POINTER_AXIS_RELATIVE_DIRECTION_SINCE_VERSION: u32 = 9;
 pub const WL_POINTER_AXIS_SINCE_VERSION: u32 = 1;
 pub const WL_POINTER_AXIS_SOURCE_CONTINUOUS: u32 = 2;
 pub const WL_POINTER_AXIS_SOURCE_FINGER: u32 = 1;
@@ -693,7 +643,6 @@ pub const WL_POINTER_AXIS_SOURCE_WHEEL: u32 = 0;
 pub const WL_POINTER_AXIS_SOURCE_WHEEL_TILT: u32 = 3;
 pub const WL_POINTER_AXIS_SOURCE_WHEEL_TILT_SINCE_VERSION: u32 = 6;
 pub const WL_POINTER_AXIS_STOP_SINCE_VERSION: u32 = 5;
-pub const WL_POINTER_AXIS_VALUE120_SINCE_VERSION: u32 = 8;
 pub const WL_POINTER_AXIS_VERTICAL_SCROLL: u32 = 0;
 pub const WL_POINTER_BUTTON_SINCE_VERSION: u32 = 1;
 pub const WL_POINTER_BUTTON_STATE_PRESSED: u32 = 1;
@@ -721,7 +670,6 @@ pub const WL_SEAT_CAPABILITIES_SINCE_VERSION: u32 = 1;
 pub const WL_SEAT_CAPABILITY_KEYBOARD: u32 = 2;
 pub const WL_SEAT_CAPABILITY_POINTER: u32 = 1;
 pub const WL_SEAT_CAPABILITY_TOUCH: u32 = 4;
-pub const WL_SEAT_ERROR_MISSING_CAPABILITY: u32 = 0;
 pub const WL_SEAT_GET_KEYBOARD: u32 = 1;
 pub const WL_SEAT_GET_KEYBOARD_SINCE_VERSION: u32 = 1;
 pub const WL_SEAT_GET_POINTER: u32 = 0;
@@ -777,19 +725,15 @@ pub const WL_SHM_ERROR_INVALID_FD: u32 = 2;
 pub const WL_SHM_ERROR_INVALID_FORMAT: u32 = 0;
 pub const WL_SHM_ERROR_INVALID_STRIDE: u32 = 1;
 pub const WL_SHM_FORMAT_ABGR1555: u32 = 0x35314241;
-pub const WL_SHM_FORMAT_ABGR16161616: u32 = 0x38344241;
 pub const WL_SHM_FORMAT_ABGR16161616F: u32 = 0x48344241;
 pub const WL_SHM_FORMAT_ABGR2101010: u32 = 0x30334241;
 pub const WL_SHM_FORMAT_ABGR4444: u32 = 0x32314241;
 pub const WL_SHM_FORMAT_ABGR8888: u32 = 0x34324241;
 pub const WL_SHM_FORMAT_ARGB1555: u32 = 0x35315241;
-pub const WL_SHM_FORMAT_ARGB16161616: u32 = 0x38345241;
 pub const WL_SHM_FORMAT_ARGB16161616F: u32 = 0x48345241;
 pub const WL_SHM_FORMAT_ARGB2101010: u32 = 0x30335241;
 pub const WL_SHM_FORMAT_ARGB4444: u32 = 0x32315241;
 pub const WL_SHM_FORMAT_ARGB8888: u32 = 0;
-pub const WL_SHM_FORMAT_AVUY8888: u32 = 0x59555641;
-pub const WL_SHM_FORMAT_AXBXGXRX106106106106: u32 = 0x30314241;
 pub const WL_SHM_FORMAT_AYUV: u32 = 0x56555941;
 pub const WL_SHM_FORMAT_BGR233: u32 = 0x38524742;
 pub const WL_SHM_FORMAT_BGR565: u32 = 0x36314742;
@@ -805,18 +749,10 @@ pub const WL_SHM_FORMAT_BGRX4444: u32 = 0x32315842;
 pub const WL_SHM_FORMAT_BGRX5551: u32 = 0x35315842;
 pub const WL_SHM_FORMAT_BGRX8888: u32 = 0x34325842;
 pub const WL_SHM_FORMAT_BGRX8888_A8: u32 = 0x38415842;
-pub const WL_SHM_FORMAT_C1: u32 = 0x20203143;
-pub const WL_SHM_FORMAT_C2: u32 = 0x20203243;
-pub const WL_SHM_FORMAT_C4: u32 = 0x20203443;
 pub const WL_SHM_FORMAT_C8: u32 = 0x20203843;
-pub const WL_SHM_FORMAT_D1: u32 = 0x20203144;
-pub const WL_SHM_FORMAT_D2: u32 = 0x20203244;
-pub const WL_SHM_FORMAT_D4: u32 = 0x20203444;
-pub const WL_SHM_FORMAT_D8: u32 = 0x20203844;
 pub const WL_SHM_FORMAT_GR1616: u32 = 0x32335247;
 pub const WL_SHM_FORMAT_GR88: u32 = 0x38385247;
 pub const WL_SHM_FORMAT_NV12: u32 = 0x3231564e;
-pub const WL_SHM_FORMAT_NV15: u32 = 0x3531564e;
 pub const WL_SHM_FORMAT_NV16: u32 = 0x3631564e;
 pub const WL_SHM_FORMAT_NV21: u32 = 0x3132564e;
 pub const WL_SHM_FORMAT_NV24: u32 = 0x3432564e;
@@ -825,16 +761,8 @@ pub const WL_SHM_FORMAT_NV61: u32 = 0x3136564e;
 pub const WL_SHM_FORMAT_P010: u32 = 0x30313050;
 pub const WL_SHM_FORMAT_P012: u32 = 0x32313050;
 pub const WL_SHM_FORMAT_P016: u32 = 0x36313050;
-pub const WL_SHM_FORMAT_P030: u32 = 0x30333050;
 pub const WL_SHM_FORMAT_P210: u32 = 0x30313250;
-pub const WL_SHM_FORMAT_Q401: u32 = 0x31303451;
-pub const WL_SHM_FORMAT_Q410: u32 = 0x30313451;
-pub const WL_SHM_FORMAT_R1: u32 = 0x20203152;
-pub const WL_SHM_FORMAT_R10: u32 = 0x20303152;
-pub const WL_SHM_FORMAT_R12: u32 = 0x20323152;
 pub const WL_SHM_FORMAT_R16: u32 = 0x20363152;
-pub const WL_SHM_FORMAT_R2: u32 = 0x20203252;
-pub const WL_SHM_FORMAT_R4: u32 = 0x20203452;
 pub const WL_SHM_FORMAT_R8: u32 = 0x20203852;
 pub const WL_SHM_FORMAT_RG1616: u32 = 0x32334752;
 pub const WL_SHM_FORMAT_RG88: u32 = 0x38384752;
@@ -860,20 +788,17 @@ pub const WL_SHM_FORMAT_VYUY: u32 = 0x59555956;
 pub const WL_SHM_FORMAT_X0L0: u32 = 0x304c3058;
 pub const WL_SHM_FORMAT_X0L2: u32 = 0x324c3058;
 pub const WL_SHM_FORMAT_XBGR1555: u32 = 0x35314258;
-pub const WL_SHM_FORMAT_XBGR16161616: u32 = 0x38344258;
 pub const WL_SHM_FORMAT_XBGR16161616F: u32 = 0x48344258;
 pub const WL_SHM_FORMAT_XBGR2101010: u32 = 0x30334258;
 pub const WL_SHM_FORMAT_XBGR4444: u32 = 0x32314258;
 pub const WL_SHM_FORMAT_XBGR8888: u32 = 0x34324258;
 pub const WL_SHM_FORMAT_XBGR8888_A8: u32 = 0x38414258;
 pub const WL_SHM_FORMAT_XRGB1555: u32 = 0x35315258;
-pub const WL_SHM_FORMAT_XRGB16161616: u32 = 0x38345258;
 pub const WL_SHM_FORMAT_XRGB16161616F: u32 = 0x48345258;
 pub const WL_SHM_FORMAT_XRGB2101010: u32 = 0x30335258;
 pub const WL_SHM_FORMAT_XRGB4444: u32 = 0x32315258;
 pub const WL_SHM_FORMAT_XRGB8888: u32 = 1;
 pub const WL_SHM_FORMAT_XRGB8888_A8: u32 = 0x38415258;
-pub const WL_SHM_FORMAT_XVUY8888: u32 = 0x59555658;
 pub const WL_SHM_FORMAT_XVYU12_16161616: u32 = 0x36335658;
 pub const WL_SHM_FORMAT_XVYU16161616: u32 = 0x38345658;
 pub const WL_SHM_FORMAT_XVYU2101010: u32 = 0x30335658;
@@ -906,11 +831,8 @@ pub const WL_SHM_POOL_DESTROY: u32 = 1;
 pub const WL_SHM_POOL_DESTROY_SINCE_VERSION: u32 = 1;
 pub const WL_SHM_POOL_RESIZE: u32 = 2;
 pub const WL_SHM_POOL_RESIZE_SINCE_VERSION: u32 = 1;
-pub const WL_SHM_RELEASE: u32 = 1;
-pub const WL_SHM_RELEASE_SINCE_VERSION: u32 = 2;
 pub const WL_SUBCOMPOSITOR_DESTROY: u32 = 0;
 pub const WL_SUBCOMPOSITOR_DESTROY_SINCE_VERSION: u32 = 1;
-pub const WL_SUBCOMPOSITOR_ERROR_BAD_PARENT: u32 = 1;
 pub const WL_SUBCOMPOSITOR_ERROR_BAD_SURFACE: u32 = 0;
 pub const WL_SUBCOMPOSITOR_GET_SUBSURFACE: u32 = 1;
 pub const WL_SUBCOMPOSITOR_GET_SUBSURFACE_SINCE_VERSION: u32 = 1;
@@ -938,18 +860,11 @@ pub const WL_SURFACE_DAMAGE_SINCE_VERSION: u32 = 1;
 pub const WL_SURFACE_DESTROY: u32 = 0;
 pub const WL_SURFACE_DESTROY_SINCE_VERSION: u32 = 1;
 pub const WL_SURFACE_ENTER_SINCE_VERSION: u32 = 1;
-pub const WL_SURFACE_ERROR_DEFUNCT_ROLE_OBJECT: u32 = 4;
-pub const WL_SURFACE_ERROR_INVALID_OFFSET: u32 = 3;
 pub const WL_SURFACE_ERROR_INVALID_SCALE: u32 = 0;
-pub const WL_SURFACE_ERROR_INVALID_SIZE: u32 = 2;
 pub const WL_SURFACE_ERROR_INVALID_TRANSFORM: u32 = 1;
 pub const WL_SURFACE_FRAME: u32 = 3;
 pub const WL_SURFACE_FRAME_SINCE_VERSION: u32 = 1;
 pub const WL_SURFACE_LEAVE_SINCE_VERSION: u32 = 1;
-pub const WL_SURFACE_OFFSET: u32 = 10;
-pub const WL_SURFACE_OFFSET_SINCE_VERSION: u32 = 5;
-pub const WL_SURFACE_PREFERRED_BUFFER_SCALE_SINCE_VERSION: u32 = 6;
-pub const WL_SURFACE_PREFERRED_BUFFER_TRANSFORM_SINCE_VERSION: u32 = 6;
 pub const WL_SURFACE_SET_BUFFER_SCALE: u32 = 8;
 pub const WL_SURFACE_SET_BUFFER_SCALE_SINCE_VERSION: u32 = 3;
 pub const WL_SURFACE_SET_BUFFER_TRANSFORM: u32 = 7;
@@ -977,7 +892,6 @@ unsafe extern "C" {
     pub static wl_data_offer_interface: wl_interface;
     pub static wl_data_source_interface: wl_interface;
     pub static wl_display_interface: wl_interface;
-    pub static wl_fixes_interface: wl_interface;
     pub static wl_keyboard_interface: wl_interface;
     pub static wl_output_interface: wl_interface;
     pub static wl_pointer_interface: wl_interface;
@@ -1014,12 +928,12 @@ pub unsafe extern "C" fn wl_buffer_destroy(
     wl_buffer: *mut wl_buffer,
 ) {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal(
             wl_buffer.cast(),
             WL_BUFFER_DESTROY,
-            null(),
-            wl_proxy_get_version(wl_buffer.cast()),
-            WL_MARSHAL_FLAG_DESTROY,
+        );
+        wl_proxy_destroy(
+            wl_buffer.cast(),
         );
     }
 }
@@ -1105,12 +1019,10 @@ pub unsafe extern "C" fn wl_compositor_create_region(
     wl_compositor: *mut wl_compositor,
 ) -> *mut wl_region {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal_constructor(
             wl_compositor.cast(),
             WL_COMPOSITOR_CREATE_REGION,
             &wl_region_interface,
-            wl_proxy_get_version(wl_compositor.cast()),
-            0,
             null_mut::<c_void>(),
         ).cast()
     }
@@ -1121,12 +1033,10 @@ pub unsafe extern "C" fn wl_compositor_create_surface(
     wl_compositor: *mut wl_compositor,
 ) -> *mut wl_surface {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal_constructor(
             wl_compositor.cast(),
             WL_COMPOSITOR_CREATE_SURFACE,
             &wl_surface_interface,
-            wl_proxy_get_version(wl_compositor.cast()),
-            0,
             null_mut::<c_void>(),
         ).cast()
     }
@@ -1207,12 +1117,10 @@ pub unsafe extern "C" fn wl_data_device_manager_create_data_source(
     wl_data_device_manager: *mut wl_data_device_manager,
 ) -> *mut wl_data_source {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal_constructor(
             wl_data_device_manager.cast(),
             WL_DATA_DEVICE_MANAGER_CREATE_DATA_SOURCE,
             &wl_data_source_interface,
-            wl_proxy_get_version(wl_data_device_manager.cast()),
-            0,
             null_mut::<c_void>(),
         ).cast()
     }
@@ -1231,12 +1139,10 @@ pub unsafe extern "C" fn wl_data_device_manager_get_data_device(
     seat: *mut wl_seat,
 ) -> *mut wl_data_device {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal_constructor(
             wl_data_device_manager.cast(),
             WL_DATA_DEVICE_MANAGER_GET_DATA_DEVICE,
             &wl_data_device_interface,
-            wl_proxy_get_version(wl_data_device_manager.cast()),
-            0,
             null_mut::<c_void>(),
             seat,
         ).cast()
@@ -1275,12 +1181,12 @@ pub unsafe extern "C" fn wl_data_device_release(
     wl_data_device: *mut wl_data_device,
 ) {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal(
             wl_data_device.cast(),
             WL_DATA_DEVICE_RELEASE,
-            null(),
-            wl_proxy_get_version(wl_data_device.cast()),
-            WL_MARSHAL_FLAG_DESTROY,
+        );
+        wl_proxy_destroy(
+            wl_data_device.cast(),
         );
     }
 }
@@ -1292,12 +1198,9 @@ pub unsafe extern "C" fn wl_data_device_set_selection(
     serial: u32,
 ) {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal(
             wl_data_device.cast(),
             WL_DATA_DEVICE_SET_SELECTION,
-            null(),
-            wl_proxy_get_version(wl_data_device.cast()),
-            0,
             source,
             serial,
         );
@@ -1326,12 +1229,9 @@ pub unsafe extern "C" fn wl_data_device_start_drag(
     serial: u32,
 ) {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal(
             wl_data_device.cast(),
             WL_DATA_DEVICE_START_DRAG,
-            null(),
-            wl_proxy_get_version(wl_data_device.cast()),
-            0,
             source,
             origin,
             icon,
@@ -1347,12 +1247,9 @@ pub unsafe extern "C" fn wl_data_offer_accept(
     mime_type: *const c_char,
 ) {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal(
             wl_data_offer.cast(),
             WL_DATA_OFFER_ACCEPT,
-            null(),
-            wl_proxy_get_version(wl_data_offer.cast()),
-            0,
             serial,
             mime_type,
         );
@@ -1379,12 +1276,12 @@ pub unsafe extern "C" fn wl_data_offer_destroy(
     wl_data_offer: *mut wl_data_offer,
 ) {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal(
             wl_data_offer.cast(),
             WL_DATA_OFFER_DESTROY,
-            null(),
-            wl_proxy_get_version(wl_data_offer.cast()),
-            WL_MARSHAL_FLAG_DESTROY,
+        );
+        wl_proxy_destroy(
+            wl_data_offer.cast(),
         );
     }
 }
@@ -1394,12 +1291,9 @@ pub unsafe extern "C" fn wl_data_offer_finish(
     wl_data_offer: *mut wl_data_offer,
 ) {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal(
             wl_data_offer.cast(),
             WL_DATA_OFFER_FINISH,
-            null(),
-            wl_proxy_get_version(wl_data_offer.cast()),
-            0,
         );
     }
 }
@@ -1425,12 +1319,9 @@ pub unsafe extern "C" fn wl_data_offer_receive(
     fd: i32,
 ) {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal(
             wl_data_offer.cast(),
             WL_DATA_OFFER_RECEIVE,
-            null(),
-            wl_proxy_get_version(wl_data_offer.cast()),
-            0,
             mime_type,
             fd,
         );
@@ -1444,12 +1335,9 @@ pub unsafe extern "C" fn wl_data_offer_set_actions(
     preferred_action: u32,
 ) {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal(
             wl_data_offer.cast(),
             WL_DATA_OFFER_SET_ACTIONS,
-            null(),
-            wl_proxy_get_version(wl_data_offer.cast()),
-            0,
             dnd_actions,
             preferred_action,
         );
@@ -1489,12 +1377,12 @@ pub unsafe extern "C" fn wl_data_source_destroy(
     wl_data_source: *mut wl_data_source,
 ) {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal(
             wl_data_source.cast(),
             WL_DATA_SOURCE_DESTROY,
-            null(),
-            wl_proxy_get_version(wl_data_source.cast()),
-            WL_MARSHAL_FLAG_DESTROY,
+        );
+        wl_proxy_destroy(
+            wl_data_source.cast(),
         );
     }
 }
@@ -1519,12 +1407,9 @@ pub unsafe extern "C" fn wl_data_source_offer(
     mime_type: *const c_char,
 ) {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal(
             wl_data_source.cast(),
             WL_DATA_SOURCE_OFFER,
-            null(),
-            wl_proxy_get_version(wl_data_source.cast()),
-            0,
             mime_type,
         );
     }
@@ -1536,12 +1421,9 @@ pub unsafe extern "C" fn wl_data_source_set_actions(
     dnd_actions: u32,
 ) {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal(
             wl_data_source.cast(),
             WL_DATA_SOURCE_SET_ACTIONS,
-            null(),
-            wl_proxy_get_version(wl_data_source.cast()),
-            0,
             dnd_actions,
         );
     }
@@ -1580,12 +1462,10 @@ pub unsafe extern "C" fn wl_display_get_registry(
     wl_display: *mut wl_display,
 ) -> *mut wl_registry {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal_constructor(
             wl_display.cast(),
             WL_DISPLAY_GET_REGISTRY,
             &wl_registry_interface,
-            wl_proxy_get_version(wl_display.cast()),
-            0,
             null_mut::<c_void>(),
         ).cast()
     }
@@ -1623,73 +1503,12 @@ pub unsafe extern "C" fn wl_display_sync(
     wl_display: *mut wl_display,
 ) -> *mut wl_callback {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal_constructor(
             wl_display.cast(),
             WL_DISPLAY_SYNC,
             &wl_callback_interface,
-            wl_proxy_get_version(wl_display.cast()),
-            0,
             null_mut::<c_void>(),
         ).cast()
-    }
-}
-
-#[inline]
-pub unsafe extern "C" fn wl_fixes_destroy(
-    wl_fixes: *mut wl_fixes,
-) {
-    unsafe {
-        wl_proxy_marshal_flags(
-            wl_fixes.cast(),
-            WL_FIXES_DESTROY,
-            null(),
-            wl_proxy_get_version(wl_fixes.cast()),
-            WL_MARSHAL_FLAG_DESTROY,
-        );
-    }
-}
-
-#[inline]
-pub unsafe extern "C" fn wl_fixes_destroy_registry(
-    wl_fixes: *mut wl_fixes,
-    registry: *mut wl_registry,
-) {
-    unsafe {
-        wl_proxy_marshal_flags(
-            wl_fixes.cast(),
-            WL_FIXES_DESTROY_REGISTRY,
-            null(),
-            wl_proxy_get_version(wl_fixes.cast()),
-            0,
-            registry,
-        );
-    }
-}
-
-#[inline]
-pub unsafe extern "C" fn wl_fixes_get_user_data(
-    wl_fixes: *mut wl_fixes,
-) -> *mut c_void {
-    unsafe { wl_proxy_get_user_data(wl_fixes.cast()) }
-}
-
-#[inline]
-pub unsafe extern "C" fn wl_fixes_get_version(
-    wl_fixes: *mut wl_fixes,
-) -> u32 {
-    unsafe { wl_proxy_get_version(wl_fixes.cast()) }
-}
-
-#[inline]
-pub unsafe extern "C" fn wl_fixes_set_user_data(
-    wl_fixes: *mut wl_fixes,
-    user_data: *mut c_void,
-) {
-    unsafe {
-        wl_proxy_set_user_data(
-            wl_fixes.cast(),
-            user_data,
-        )
     }
 }
 
@@ -1734,12 +1553,12 @@ pub unsafe extern "C" fn wl_keyboard_release(
     wl_keyboard: *mut wl_keyboard,
 ) {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal(
             wl_keyboard.cast(),
             WL_KEYBOARD_RELEASE,
-            null(),
-            wl_proxy_get_version(wl_keyboard.cast()),
-            WL_MARSHAL_FLAG_DESTROY,
+        );
+        wl_proxy_destroy(
+            wl_keyboard.cast(),
         );
     }
 }
@@ -1798,12 +1617,12 @@ pub unsafe extern "C" fn wl_output_release(
     wl_output: *mut wl_output,
 ) {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal(
             wl_output.cast(),
             WL_OUTPUT_RELEASE,
-            null(),
-            wl_proxy_get_version(wl_output.cast()),
-            WL_MARSHAL_FLAG_DESTROY,
+        );
+        wl_proxy_destroy(
+            wl_output.cast(),
         );
     }
 }
@@ -1862,12 +1681,12 @@ pub unsafe extern "C" fn wl_pointer_release(
     wl_pointer: *mut wl_pointer,
 ) {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal(
             wl_pointer.cast(),
             WL_POINTER_RELEASE,
-            null(),
-            wl_proxy_get_version(wl_pointer.cast()),
-            WL_MARSHAL_FLAG_DESTROY,
+        );
+        wl_proxy_destroy(
+            wl_pointer.cast(),
         );
     }
 }
@@ -1881,12 +1700,9 @@ pub unsafe extern "C" fn wl_pointer_set_cursor(
     hotspot_y: i32,
 ) {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal(
             wl_pointer.cast(),
             WL_POINTER_SET_CURSOR,
-            null(),
-            wl_proxy_get_version(wl_pointer.cast()),
-            0,
             serial,
             surface,
             hotspot_x,
@@ -1917,12 +1733,9 @@ pub unsafe extern "C" fn wl_region_add(
     height: i32,
 ) {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal(
             wl_region.cast(),
             WL_REGION_ADD,
-            null(),
-            wl_proxy_get_version(wl_region.cast()),
-            0,
             x,
             y,
             width,
@@ -1936,12 +1749,12 @@ pub unsafe extern "C" fn wl_region_destroy(
     wl_region: *mut wl_region,
 ) {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal(
             wl_region.cast(),
             WL_REGION_DESTROY,
-            null(),
-            wl_proxy_get_version(wl_region.cast()),
-            WL_MARSHAL_FLAG_DESTROY,
+        );
+        wl_proxy_destroy(
+            wl_region.cast(),
         );
     }
 }
@@ -1982,12 +1795,9 @@ pub unsafe extern "C" fn wl_region_subtract(
     height: i32,
 ) {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal(
             wl_region.cast(),
             WL_REGION_SUBTRACT,
-            null(),
-            wl_proxy_get_version(wl_region.cast()),
-            0,
             x,
             y,
             width,
@@ -2019,12 +1829,11 @@ pub unsafe extern "C" fn wl_registry_bind(
     version: u32,
 ) -> *mut c_void {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal_constructor_versioned(
             wl_registry.cast(),
             WL_REGISTRY_BIND,
             interface,
             version,
-            0,
             name,
             (*interface).name,
             version,
@@ -2094,12 +1903,10 @@ pub unsafe extern "C" fn wl_seat_get_keyboard(
     wl_seat: *mut wl_seat,
 ) -> *mut wl_keyboard {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal_constructor(
             wl_seat.cast(),
             WL_SEAT_GET_KEYBOARD,
             &wl_keyboard_interface,
-            wl_proxy_get_version(wl_seat.cast()),
-            0,
             null_mut::<c_void>(),
         ).cast()
     }
@@ -2110,12 +1917,10 @@ pub unsafe extern "C" fn wl_seat_get_pointer(
     wl_seat: *mut wl_seat,
 ) -> *mut wl_pointer {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal_constructor(
             wl_seat.cast(),
             WL_SEAT_GET_POINTER,
             &wl_pointer_interface,
-            wl_proxy_get_version(wl_seat.cast()),
-            0,
             null_mut::<c_void>(),
         ).cast()
     }
@@ -2126,12 +1931,10 @@ pub unsafe extern "C" fn wl_seat_get_touch(
     wl_seat: *mut wl_seat,
 ) -> *mut wl_touch {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal_constructor(
             wl_seat.cast(),
             WL_SEAT_GET_TOUCH,
             &wl_touch_interface,
-            wl_proxy_get_version(wl_seat.cast()),
-            0,
             null_mut::<c_void>(),
         ).cast()
     }
@@ -2156,12 +1959,12 @@ pub unsafe extern "C" fn wl_seat_release(
     wl_seat: *mut wl_seat,
 ) {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal(
             wl_seat.cast(),
             WL_SEAT_RELEASE,
-            null(),
-            wl_proxy_get_version(wl_seat.cast()),
-            WL_MARSHAL_FLAG_DESTROY,
+        );
+        wl_proxy_destroy(
+            wl_seat.cast(),
         );
     }
 }
@@ -2192,12 +1995,10 @@ pub unsafe extern "C" fn wl_shell_get_shell_surface(
     surface: *mut wl_surface,
 ) -> *mut wl_shell_surface {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal_constructor(
             wl_shell.cast(),
             WL_SHELL_GET_SHELL_SURFACE,
             &wl_shell_surface_interface,
-            wl_proxy_get_version(wl_shell.cast()),
-            0,
             null_mut::<c_void>(),
             surface,
         ).cast()
@@ -2274,12 +2075,9 @@ pub unsafe extern "C" fn wl_shell_surface_move(
     serial: u32,
 ) {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal(
             wl_shell_surface.cast(),
             WL_SHELL_SURFACE_MOVE,
-            null(),
-            wl_proxy_get_version(wl_shell_surface.cast()),
-            0,
             seat,
             serial,
         );
@@ -2292,12 +2090,9 @@ pub unsafe extern "C" fn wl_shell_surface_pong(
     serial: u32,
 ) {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal(
             wl_shell_surface.cast(),
             WL_SHELL_SURFACE_PONG,
-            null(),
-            wl_proxy_get_version(wl_shell_surface.cast()),
-            0,
             serial,
         );
     }
@@ -2311,12 +2106,9 @@ pub unsafe extern "C" fn wl_shell_surface_resize(
     edges: u32,
 ) {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal(
             wl_shell_surface.cast(),
             WL_SHELL_SURFACE_RESIZE,
-            null(),
-            wl_proxy_get_version(wl_shell_surface.cast()),
-            0,
             seat,
             serial,
             edges,
@@ -2330,12 +2122,9 @@ pub unsafe extern "C" fn wl_shell_surface_set_class(
     class_: *const c_char,
 ) {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal(
             wl_shell_surface.cast(),
             WL_SHELL_SURFACE_SET_CLASS,
-            null(),
-            wl_proxy_get_version(wl_shell_surface.cast()),
-            0,
             class_,
         );
     }
@@ -2349,12 +2138,9 @@ pub unsafe extern "C" fn wl_shell_surface_set_fullscreen(
     output: *mut wl_output,
 ) {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal(
             wl_shell_surface.cast(),
             WL_SHELL_SURFACE_SET_FULLSCREEN,
-            null(),
-            wl_proxy_get_version(wl_shell_surface.cast()),
-            0,
             method,
             framerate,
             output,
@@ -2368,12 +2154,9 @@ pub unsafe extern "C" fn wl_shell_surface_set_maximized(
     output: *mut wl_output,
 ) {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal(
             wl_shell_surface.cast(),
             WL_SHELL_SURFACE_SET_MAXIMIZED,
-            null(),
-            wl_proxy_get_version(wl_shell_surface.cast()),
-            0,
             output,
         );
     }
@@ -2390,12 +2173,9 @@ pub unsafe extern "C" fn wl_shell_surface_set_popup(
     flags: u32,
 ) {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal(
             wl_shell_surface.cast(),
             WL_SHELL_SURFACE_SET_POPUP,
-            null(),
-            wl_proxy_get_version(wl_shell_surface.cast()),
-            0,
             seat,
             serial,
             parent,
@@ -2412,12 +2192,9 @@ pub unsafe extern "C" fn wl_shell_surface_set_title(
     title: *const c_char,
 ) {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal(
             wl_shell_surface.cast(),
             WL_SHELL_SURFACE_SET_TITLE,
-            null(),
-            wl_proxy_get_version(wl_shell_surface.cast()),
-            0,
             title,
         );
     }
@@ -2428,12 +2205,9 @@ pub unsafe extern "C" fn wl_shell_surface_set_toplevel(
     wl_shell_surface: *mut wl_shell_surface,
 ) {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal(
             wl_shell_surface.cast(),
             WL_SHELL_SURFACE_SET_TOPLEVEL,
-            null(),
-            wl_proxy_get_version(wl_shell_surface.cast()),
-            0,
         );
     }
 }
@@ -2447,12 +2221,9 @@ pub unsafe extern "C" fn wl_shell_surface_set_transient(
     flags: u32,
 ) {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal(
             wl_shell_surface.cast(),
             WL_SHELL_SURFACE_SET_TRANSIENT,
-            null(),
-            wl_proxy_get_version(wl_shell_surface.cast()),
-            0,
             parent,
             x,
             y,
@@ -2496,12 +2267,10 @@ pub unsafe extern "C" fn wl_shm_create_pool(
     size: i32,
 ) -> *mut wl_shm_pool {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal_constructor(
             wl_shm.cast(),
             WL_SHM_CREATE_POOL,
             &wl_shm_pool_interface,
-            wl_proxy_get_version(wl_shm.cast()),
-            0,
             null_mut::<c_void>(),
             fd,
             size,
@@ -2540,12 +2309,10 @@ pub unsafe extern "C" fn wl_shm_pool_create_buffer(
     format: u32,
 ) -> *mut wl_buffer {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal_constructor(
             wl_shm_pool.cast(),
             WL_SHM_POOL_CREATE_BUFFER,
             &wl_buffer_interface,
-            wl_proxy_get_version(wl_shm_pool.cast()),
-            0,
             null_mut::<c_void>(),
             offset,
             width,
@@ -2561,12 +2328,12 @@ pub unsafe extern "C" fn wl_shm_pool_destroy(
     wl_shm_pool: *mut wl_shm_pool,
 ) {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal(
             wl_shm_pool.cast(),
             WL_SHM_POOL_DESTROY,
-            null(),
-            wl_proxy_get_version(wl_shm_pool.cast()),
-            WL_MARSHAL_FLAG_DESTROY,
+        );
+        wl_proxy_destroy(
+            wl_shm_pool.cast(),
         );
     }
 }
@@ -2591,12 +2358,9 @@ pub unsafe extern "C" fn wl_shm_pool_resize(
     size: i32,
 ) {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal(
             wl_shm_pool.cast(),
             WL_SHM_POOL_RESIZE,
-            null(),
-            wl_proxy_get_version(wl_shm_pool.cast()),
-            0,
             size,
         );
     }
@@ -2612,21 +2376,6 @@ pub unsafe extern "C" fn wl_shm_pool_set_user_data(
             wl_shm_pool.cast(),
             user_data,
         )
-    }
-}
-
-#[inline]
-pub unsafe extern "C" fn wl_shm_release(
-    wl_shm: *mut wl_shm,
-) {
-    unsafe {
-        wl_proxy_marshal_flags(
-            wl_shm.cast(),
-            WL_SHM_RELEASE,
-            null(),
-            wl_proxy_get_version(wl_shm.cast()),
-            WL_MARSHAL_FLAG_DESTROY,
-        );
     }
 }
 
@@ -2648,12 +2397,12 @@ pub unsafe extern "C" fn wl_subcompositor_destroy(
     wl_subcompositor: *mut wl_subcompositor,
 ) {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal(
             wl_subcompositor.cast(),
             WL_SUBCOMPOSITOR_DESTROY,
-            null(),
-            wl_proxy_get_version(wl_subcompositor.cast()),
-            WL_MARSHAL_FLAG_DESTROY,
+        );
+        wl_proxy_destroy(
+            wl_subcompositor.cast(),
         );
     }
 }
@@ -2665,12 +2414,10 @@ pub unsafe extern "C" fn wl_subcompositor_get_subsurface(
     parent: *mut wl_surface,
 ) -> *mut wl_subsurface {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal_constructor(
             wl_subcompositor.cast(),
             WL_SUBCOMPOSITOR_GET_SUBSURFACE,
             &wl_subsurface_interface,
-            wl_proxy_get_version(wl_subcompositor.cast()),
-            0,
             null_mut::<c_void>(),
             surface,
             parent,
@@ -2710,12 +2457,12 @@ pub unsafe extern "C" fn wl_subsurface_destroy(
     wl_subsurface: *mut wl_subsurface,
 ) {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal(
             wl_subsurface.cast(),
             WL_SUBSURFACE_DESTROY,
-            null(),
-            wl_proxy_get_version(wl_subsurface.cast()),
-            WL_MARSHAL_FLAG_DESTROY,
+        );
+        wl_proxy_destroy(
+            wl_subsurface.cast(),
         );
     }
 }
@@ -2740,12 +2487,9 @@ pub unsafe extern "C" fn wl_subsurface_place_above(
     sibling: *mut wl_surface,
 ) {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal(
             wl_subsurface.cast(),
             WL_SUBSURFACE_PLACE_ABOVE,
-            null(),
-            wl_proxy_get_version(wl_subsurface.cast()),
-            0,
             sibling,
         );
     }
@@ -2757,12 +2501,9 @@ pub unsafe extern "C" fn wl_subsurface_place_below(
     sibling: *mut wl_surface,
 ) {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal(
             wl_subsurface.cast(),
             WL_SUBSURFACE_PLACE_BELOW,
-            null(),
-            wl_proxy_get_version(wl_subsurface.cast()),
-            0,
             sibling,
         );
     }
@@ -2773,12 +2514,9 @@ pub unsafe extern "C" fn wl_subsurface_set_desync(
     wl_subsurface: *mut wl_subsurface,
 ) {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal(
             wl_subsurface.cast(),
             WL_SUBSURFACE_SET_DESYNC,
-            null(),
-            wl_proxy_get_version(wl_subsurface.cast()),
-            0,
         );
     }
 }
@@ -2790,12 +2528,9 @@ pub unsafe extern "C" fn wl_subsurface_set_position(
     y: i32,
 ) {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal(
             wl_subsurface.cast(),
             WL_SUBSURFACE_SET_POSITION,
-            null(),
-            wl_proxy_get_version(wl_subsurface.cast()),
-            0,
             x,
             y,
         );
@@ -2807,12 +2542,9 @@ pub unsafe extern "C" fn wl_subsurface_set_sync(
     wl_subsurface: *mut wl_subsurface,
 ) {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal(
             wl_subsurface.cast(),
             WL_SUBSURFACE_SET_SYNC,
-            null(),
-            wl_proxy_get_version(wl_subsurface.cast()),
-            0,
         );
     }
 }
@@ -2853,12 +2585,9 @@ pub unsafe extern "C" fn wl_surface_attach(
     y: i32,
 ) {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal(
             wl_surface.cast(),
             WL_SURFACE_ATTACH,
-            null(),
-            wl_proxy_get_version(wl_surface.cast()),
-            0,
             buffer,
             x,
             y,
@@ -2871,12 +2600,9 @@ pub unsafe extern "C" fn wl_surface_commit(
     wl_surface: *mut wl_surface,
 ) {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal(
             wl_surface.cast(),
             WL_SURFACE_COMMIT,
-            null(),
-            wl_proxy_get_version(wl_surface.cast()),
-            0,
         );
     }
 }
@@ -2890,12 +2616,9 @@ pub unsafe extern "C" fn wl_surface_damage(
     height: i32,
 ) {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal(
             wl_surface.cast(),
             WL_SURFACE_DAMAGE,
-            null(),
-            wl_proxy_get_version(wl_surface.cast()),
-            0,
             x,
             y,
             width,
@@ -2913,12 +2636,9 @@ pub unsafe extern "C" fn wl_surface_damage_buffer(
     height: i32,
 ) {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal(
             wl_surface.cast(),
             WL_SURFACE_DAMAGE_BUFFER,
-            null(),
-            wl_proxy_get_version(wl_surface.cast()),
-            0,
             x,
             y,
             width,
@@ -2932,12 +2652,12 @@ pub unsafe extern "C" fn wl_surface_destroy(
     wl_surface: *mut wl_surface,
 ) {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal(
             wl_surface.cast(),
             WL_SURFACE_DESTROY,
-            null(),
-            wl_proxy_get_version(wl_surface.cast()),
-            WL_MARSHAL_FLAG_DESTROY,
+        );
+        wl_proxy_destroy(
+            wl_surface.cast(),
         );
     }
 }
@@ -2947,12 +2667,10 @@ pub unsafe extern "C" fn wl_surface_frame(
     wl_surface: *mut wl_surface,
 ) -> *mut wl_callback {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal_constructor(
             wl_surface.cast(),
             WL_SURFACE_FRAME,
             &wl_callback_interface,
-            wl_proxy_get_version(wl_surface.cast()),
-            0,
             null_mut::<c_void>(),
         ).cast()
     }
@@ -2973,36 +2691,14 @@ pub unsafe extern "C" fn wl_surface_get_version(
 }
 
 #[inline]
-pub unsafe extern "C" fn wl_surface_offset(
-    wl_surface: *mut wl_surface,
-    x: i32,
-    y: i32,
-) {
-    unsafe {
-        wl_proxy_marshal_flags(
-            wl_surface.cast(),
-            WL_SURFACE_OFFSET,
-            null(),
-            wl_proxy_get_version(wl_surface.cast()),
-            0,
-            x,
-            y,
-        );
-    }
-}
-
-#[inline]
 pub unsafe extern "C" fn wl_surface_set_buffer_scale(
     wl_surface: *mut wl_surface,
     scale: i32,
 ) {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal(
             wl_surface.cast(),
             WL_SURFACE_SET_BUFFER_SCALE,
-            null(),
-            wl_proxy_get_version(wl_surface.cast()),
-            0,
             scale,
         );
     }
@@ -3014,12 +2710,9 @@ pub unsafe extern "C" fn wl_surface_set_buffer_transform(
     transform: i32,
 ) {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal(
             wl_surface.cast(),
             WL_SURFACE_SET_BUFFER_TRANSFORM,
-            null(),
-            wl_proxy_get_version(wl_surface.cast()),
-            0,
             transform,
         );
     }
@@ -3031,12 +2724,9 @@ pub unsafe extern "C" fn wl_surface_set_input_region(
     region: *mut wl_region,
 ) {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal(
             wl_surface.cast(),
             WL_SURFACE_SET_INPUT_REGION,
-            null(),
-            wl_proxy_get_version(wl_surface.cast()),
-            0,
             region,
         );
     }
@@ -3048,12 +2738,9 @@ pub unsafe extern "C" fn wl_surface_set_opaque_region(
     region: *mut wl_region,
 ) {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal(
             wl_surface.cast(),
             WL_SURFACE_SET_OPAQUE_REGION,
-            null(),
-            wl_proxy_get_version(wl_surface.cast()),
-            0,
             region,
         );
     }
@@ -3113,12 +2800,12 @@ pub unsafe extern "C" fn wl_touch_release(
     wl_touch: *mut wl_touch,
 ) {
     unsafe {
-        wl_proxy_marshal_flags(
+        wl_proxy_marshal(
             wl_touch.cast(),
             WL_TOUCH_RELEASE,
-            null(),
-            wl_proxy_get_version(wl_touch.cast()),
-            WL_MARSHAL_FLAG_DESTROY,
+        );
+        wl_proxy_destroy(
+            wl_touch.cast(),
         );
     }
 }

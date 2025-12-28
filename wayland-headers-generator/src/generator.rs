@@ -68,7 +68,7 @@ impl Generator {
             Side::Server => self.add_send_event_fns(interface),
         }
 
-        self.add_enums(interface, side);
+        self.add_enums(interface);
     }
 
     fn add_interface_extern_type(&mut self, interface: &Interface, side: Side) {
@@ -422,41 +422,27 @@ pub unsafe extern \"C\" fn {name}(
 
         text += &format!(" {{\n");
         text += &format!("    unsafe {{\n");
-        text += &format!("        wl_proxy_marshal_flags(\n");
-        text += &format!("            {interface_name}.cast(),\n");
-        text += &format!("            {},\n", name.to_ascii_uppercase());
 
-        // interface
-        text += "            ";
+        let opcode = format!("{interface_name}_{request_name}").to_uppercase();
         if let Some(ret_arg) = ret_arg {
             if let Some(ret_interface) = ret_arg.interface.as_ref() {
-                text += &format!("&{ret_interface}_interface,\n");
+                text += &format!("        wl_proxy_marshal_constructor(\n");
+                text += &format!("            {interface_name}.cast(),\n");
+                text += &format!("            {opcode},\n");
+                text += &format!("            &{ret_interface}_interface,\n");
             } else {
-                text += "interface,\n";
+                text += &format!("        wl_proxy_marshal_constructor_versioned(\n");
+                text += &format!("            {interface_name}.cast(),\n");
+                text += &format!("            {opcode},\n");
+                text += &format!("            interface,\n");
+                text += &format!("            version,\n");
             }
         } else {
-            text += "null(),\n";
+            text += &format!("        wl_proxy_marshal(\n");
+            text += &format!("            {interface_name}.cast(),\n");
+            text += &format!("            {opcode},\n");
         }
 
-        // version
-        text += "            ";
-        if let Some(ret_arg) = ret_arg
-            && ret_arg.interface.is_none()
-        {
-            text += "version,\n";
-        } else {
-            text += &format!("wl_proxy_get_version({interface_name}.cast()),\n");
-        }
-
-        // flags
-        text += "            ";
-        if request.typ.as_ref().map(String::as_str) == Some("destructor") {
-            text += "WL_MARSHAL_FLAG_DESTROY,\n";
-        } else {
-            text += "0,\n";
-        }
-
-        // args
         for content in &request.contents {
             if let MessageContent::Arg(arg) = content {
                 if arg.typ.as_ref().unwrap() == "new_id" {
@@ -473,7 +459,6 @@ pub unsafe extern \"C\" fn {name}(
             }
         }
 
-        // return
         text += "        )";
         if ret_arg.is_some() {
             text += ".cast()\n";
@@ -481,7 +466,12 @@ pub unsafe extern \"C\" fn {name}(
             text += ";\n"
         }
 
-        // done
+        if request.typ.as_ref().map(String::as_str) == Some("destructor") {
+            text += &format!("        wl_proxy_destroy(\n");
+            text += &format!("            {interface_name}.cast(),\n");
+            text += &format!("        );\n");
+        }
+
         text += "    }\n";
         text += "}";
         self.module.functions.push((name, text));
@@ -542,23 +532,19 @@ pub unsafe extern \"C\" fn {name}(
         self.module.functions.push((name, text));
     }
 
-    fn add_enums(&mut self, interface: &Interface, side: Side) {
+    fn add_enums(&mut self, interface: &Interface) {
         for content in &interface.contents {
             if let InterfaceContent::Enum(enu) = content {
-                self.add_enum(interface, enu, side)
+                self.add_enum(interface, enu)
             }
         }
     }
 
-    fn add_enum(&mut self, interface: &Interface, enu: &Enum, side: Side) {
+    fn add_enum(&mut self, interface: &Interface, enu: &Enum) {
         for content in &enu.contents {
             if let EnumContent::Entry(entry) = content {
                 self.add_enum_entry(interface, enu, entry);
             }
-        }
-
-        if side == Side::Server {
-            self.add_enum_is_valid_fn(interface, enu);
         }
     }
 
@@ -595,58 +581,5 @@ pub unsafe extern \"C\" fn {name}(
             let text = format!("pub const {name}: u32 = {since};");
             self.module.constants.push((name, text));
         }
-    }
-
-    fn add_enum_is_valid_fn(&mut self, interface: &Interface, enu: &Enum) {
-        let interface_name = interface.name.as_ref().unwrap();
-        let enum_name = enu.name.as_ref().unwrap();
-        let name = format!("{interface_name}_{enum_name}_is_valid");
-
-        let mut text = String::new();
-        text += &format!("#[inline]\n");
-        text += &format!("pub extern \"C\" fn {name}(\n");
-        text += &format!("    value: u32,\n");
-        text += &format!("    version: u32,\n");
-        text += &format!(") -> bool {{\n");
-
-        let is_bitfield = match enu.bitfield.as_ref().map(String::as_str) {
-            None => false,
-            Some("true") => true,
-            Some("false") => false,
-            Some(value) => panic!("unexpected bitfield attribute value: {value:?}"),
-        };
-
-        if is_bitfield {
-            text += "    let mut valid = 0;\n";
-        } else {
-            text += "    match value {\n";
-        }
-
-        for content in &enu.contents {
-            let EnumContent::Entry(entry) = content else {
-                continue;
-            };
-
-            let name = Self::build_enum_entry_name(interface, enu, entry);
-            let since = entry.since.as_ref().map(String::as_str).unwrap_or("1");
-
-            if is_bitfield {
-                text += &format!("    if version >= {since} {{\n");
-                text += &format!("        valid |= {name};\n");
-                text += &format!("    }}\n");
-            } else {
-                text += &format!("        {name} => version >= {since},\n")
-            }
-        }
-
-        if is_bitfield {
-            text += "    (value & !valid) == 0\n";
-        } else {
-            text += "        _ => false,\n";
-            text += "    }\n";
-        }
-
-        text += "}";
-        self.module.functions.push((name, text));
     }
 }
