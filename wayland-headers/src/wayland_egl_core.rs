@@ -8,6 +8,8 @@ pub struct wl_egl_window {
     _marker: PhantomData<(*mut u8, PhantomPinned)>,
 }
 
+pub const WL_EGL_PLATFORM: c_int = 1;
+
 unsafe extern "C" {
     pub fn wl_egl_window_create(
         surface: *mut wl_surface,
