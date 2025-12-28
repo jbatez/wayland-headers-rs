@@ -2,11 +2,9 @@
 
 This file falls under the MIT License.
 
-Copyright © 2008-2011 Kristian Høgsberg
-
-Copyright © 2010-2011 Intel Corporation
-
-Copyright © 2012-2013 Collabora, Ltd.
+Copyright © 2008-2011 Kristian Høgsberg  
+Copyright © 2010-2011 Intel Corporation  
+Copyright © 2012-2013 Collabora, Ltd.  
 
 Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation files
