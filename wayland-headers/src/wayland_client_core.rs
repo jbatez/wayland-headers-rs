@@ -3,10 +3,10 @@ use libc::timespec;
 use crate::prelude::*;
 
 #[doc(no_inline)]
-pub use crate::wayland_util::*;
+pub use super::wayland_util::*;
 
 #[doc(no_inline)]
-pub use crate::wayland_version::*;
+pub use super::wayland_version::*;
 
 #[repr(C)]
 pub struct wl_display {

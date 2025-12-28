@@ -3,10 +3,10 @@ use libc::{gid_t, pid_t, uid_t};
 use crate::prelude::*;
 
 #[doc(no_inline)]
-pub use crate::wayland_util::*;
+pub use super::wayland_util::*;
 
 #[doc(no_inline)]
-pub use crate::wayland_version::*;
+pub use super::wayland_version::*;
 
 // TODO: Document.
 #[macro_export]

@@ -37,6 +37,7 @@ impl Module {
 
         self.imports.sort();
         for text in &self.imports {
+            writeln!(file).unwrap();
             writeln!(file, "{text}").unwrap();
         }
     }

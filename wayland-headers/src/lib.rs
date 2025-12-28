@@ -9,6 +9,7 @@ mod prelude;
 pub mod wayland_client;
 pub mod wayland_client_core;
 pub mod wayland_client_protocol;
+pub mod wayland_cursor;
 pub mod wayland_server;
 pub mod wayland_server_core;
 pub mod wayland_server_protocol;

@@ -1,5 +1,5 @@
 #[doc(no_inline)]
-pub use crate::wayland_client_core::*;
+pub use super::wayland_client_core::*;
 
 #[doc(no_inline)]
-pub use crate::wayland_client_protocol::*;
+pub use super::wayland_client_protocol::*;
