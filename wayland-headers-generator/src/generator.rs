@@ -74,6 +74,7 @@ impl Generator {
     fn add_interface_extern_type(&mut self, interface: &Interface, side: Side) {
         let name = interface.name.as_ref().unwrap();
         if name == "wl_display" || (side == Side::Server && name == "wl_shm_pool") {
+            // These are provided by `use super::wayland_{side_name}_core::*;`
             return;
         }
 
@@ -102,6 +103,7 @@ pub struct {name} {{
             Side::Client => "listener",
             Side::Server => "interface",
         };
+        
         let name = format!("{interface_name}_{suffix}");
 
         let mut text = String::new();
