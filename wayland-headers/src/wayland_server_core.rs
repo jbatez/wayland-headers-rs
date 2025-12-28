@@ -9,9 +9,9 @@ pub use super::wayland_util::*;
 pub use super::wayland_version::*;
 
 /// Roughly equivalent to the `wl_client_for_each(client, list)` C macro.
-/// 
+///
 /// It can only be invoked inside an `unsafe` block.
-/// 
+///
 /// The following Rust code:
 ///
 /// ```rust
@@ -44,9 +44,9 @@ macro_rules! wl_client_for_each {
 pub use wl_client_for_each;
 
 /// Roughly equivalent to the `wl_resource_for_each(resource, list)` C macro.
-/// 
+///
 /// It can only be invoked inside an `unsafe` block.
-/// 
+///
 /// The following Rust code:
 ///
 /// ```rust
@@ -79,13 +79,12 @@ macro_rules! wl_resource_for_each {
 }
 pub use wl_resource_for_each;
 
-
 /// Roughly equivalent to the `wl_resource_for_each_safe(resource, tmp, list)` C macro.
-/// 
+///
 /// This version does not require a `tmp` argument, unlike the C version.
-/// 
+///
 /// It can only be invoked inside an `unsafe` block.
-/// 
+///
 /// The following Rust code:
 ///
 /// ```rust
@@ -211,7 +210,9 @@ unsafe extern "C" {
     );
 
     pub fn wl_client_create(display: *mut wl_display, fd: c_int) -> *mut wl_client;
+
     pub fn wl_client_destroy(client: *mut wl_client);
+
     pub fn wl_client_flush(client: *mut wl_client);
 
     pub fn wl_client_for_each_resource(
@@ -235,10 +236,15 @@ unsafe extern "C" {
     ) -> *mut wl_listener;
 
     pub fn wl_client_get_display(client: *mut wl_client) -> *mut wl_display;
+
     pub fn wl_client_get_fd(client: *mut wl_client) -> c_int;
+
     pub fn wl_client_get_link(client: *mut wl_client) -> *mut wl_list;
+
     pub fn wl_client_get_object(client: *mut wl_client, id: u32) -> *mut wl_resource;
+
     pub fn wl_client_post_implementation_error(client: *mut wl_client, msg: *const c_char, ...);
+
     pub fn wl_client_post_no_memory(client: *mut wl_client);
 
     pub fn wl_display_add_client_created_listener(
@@ -255,13 +261,21 @@ unsafe extern "C" {
     ) -> *mut wl_protocol_logger;
 
     pub fn wl_display_add_shm_format(display: *mut wl_display, format: u32) -> *mut u32;
+
     pub fn wl_display_add_socket(display: *mut wl_display, name: *const c_char) -> c_int;
+
     pub fn wl_display_add_socket_auto(display: *mut wl_display) -> *const c_char;
+
     pub fn wl_display_add_socket_fd(display: *mut wl_display, sock_fd: c_int) -> c_int;
+
     pub fn wl_display_create() -> *mut wl_display;
+
     pub fn wl_display_destroy(display: *mut wl_display);
+
     pub fn wl_display_destroy_clients(display: *mut wl_display);
+
     pub fn wl_display_flush_clients(display: *mut wl_display);
+
     pub fn wl_display_get_client_list(display: *mut wl_display) -> *mut wl_list;
 
     pub fn wl_display_get_destroy_listener(
@@ -270,9 +284,13 @@ unsafe extern "C" {
     ) -> *mut wl_listener;
 
     pub fn wl_display_get_event_loop(display: *mut wl_display) -> *mut wl_event_loop;
+
     pub fn wl_display_get_serial(display: *mut wl_display) -> u32;
+
     pub fn wl_display_init_shm(display: *mut wl_display) -> c_int;
+
     pub fn wl_display_next_serial(display: *mut wl_display) -> u32;
+
     pub fn wl_display_run(display: *mut wl_display);
 
     pub fn wl_display_set_global_filter(
@@ -316,8 +334,11 @@ unsafe extern "C" {
     ) -> *mut wl_event_source;
 
     pub fn wl_event_loop_create() -> *mut wl_event_loop;
+
     pub fn wl_event_loop_destroy(_loop: *mut wl_event_loop);
+
     pub fn wl_event_loop_dispatch(_loop: *mut wl_event_loop, timeout: c_int) -> c_int;
+
     pub fn wl_event_loop_dispatch_idle(_loop: *mut wl_event_loop);
 
     pub fn wl_event_loop_get_destroy_listener(
@@ -326,9 +347,13 @@ unsafe extern "C" {
     ) -> *mut wl_listener;
 
     pub fn wl_event_loop_get_fd(_loop: *mut wl_event_loop) -> c_int;
+
     pub fn wl_event_source_check(source: *mut wl_event_source);
+
     pub fn wl_event_source_fd_update(source: *mut wl_event_source, mask: u32) -> c_int;
+
     pub fn wl_event_source_remove(source: *mut wl_event_source) -> c_int;
+
     pub fn wl_event_source_timer_update(source: *mut wl_event_source, ms_delay: c_int) -> c_int;
 
     pub fn wl_global_create(
@@ -340,12 +365,19 @@ unsafe extern "C" {
     ) -> *mut wl_global;
 
     pub fn wl_global_destroy(global: *mut wl_global);
+
     pub fn wl_global_get_interface(global: *const wl_global) -> *const wl_interface;
+
     pub fn wl_global_get_user_data(global: *const wl_global) -> *mut c_void;
+
     pub fn wl_global_remove(global: *mut wl_global);
+
     pub fn wl_global_set_user_data(global: *mut wl_global, data: *mut c_void);
+
     pub fn wl_log_set_handler_server(handler: wl_log_func_t);
+
     pub fn wl_protocol_logger_destroy(logger: *mut wl_protocol_logger);
+
     pub fn wl_resource_add_destroy_listener(resource: *mut wl_resource, listener: *mut wl_listener);
 
     pub fn wl_resource_create(
@@ -363,7 +395,9 @@ unsafe extern "C" {
     ) -> *mut wl_resource;
 
     pub fn wl_resource_from_link(resource: *mut wl_list) -> *mut wl_resource;
+
     pub fn wl_resource_get_class(resource: *mut wl_resource) -> *const c_char;
+
     pub fn wl_resource_get_client(resource: *mut wl_resource) -> *mut wl_client;
 
     pub fn wl_resource_get_destroy_listener(
@@ -372,8 +406,11 @@ unsafe extern "C" {
     ) -> *mut wl_listener;
 
     pub fn wl_resource_get_id(resource: *mut wl_resource) -> u32;
+
     pub fn wl_resource_get_link(resource: *mut wl_resource) -> *mut wl_list;
+
     pub fn wl_resource_get_user_data(resource: *mut wl_resource) -> *mut c_void;
+
     pub fn wl_resource_get_version(resource: *mut wl_resource) -> c_int;
 
     pub fn wl_resource_instance_of(
@@ -383,6 +420,7 @@ unsafe extern "C" {
     ) -> c_int;
 
     pub fn wl_resource_post_error(resource: *mut wl_resource, code: u32, msg: *const c_char, ...);
+
     pub fn wl_resource_post_event(resource: *mut wl_resource, opcode: u32, ...);
 
     pub fn wl_resource_post_event_array(
@@ -392,6 +430,7 @@ unsafe extern "C" {
     );
 
     pub fn wl_resource_post_no_memory(resource: *mut wl_resource);
+
     pub fn wl_resource_queue_event(resource: *mut wl_resource, opcode: u32, ...);
 
     pub fn wl_resource_queue_event_array(
@@ -421,15 +460,25 @@ unsafe extern "C" {
     );
 
     pub fn wl_resource_set_user_data(resource: *mut wl_resource, data: *mut c_void);
+
     pub fn wl_shm_buffer_begin_access(buffer: *mut wl_shm_buffer);
+
     pub fn wl_shm_buffer_end_access(buffer: *mut wl_shm_buffer);
+
     pub fn wl_shm_buffer_get(resource: *mut wl_resource) -> *mut wl_shm_buffer;
+
     pub fn wl_shm_buffer_get_data(buffer: *mut wl_shm_buffer) -> *mut c_void;
+
     pub fn wl_shm_buffer_get_format(buffer: *mut wl_shm_buffer) -> u32;
+
     pub fn wl_shm_buffer_get_height(buffer: *mut wl_shm_buffer) -> i32;
+
     pub fn wl_shm_buffer_get_stride(buffer: *mut wl_shm_buffer) -> i32;
+
     pub fn wl_shm_buffer_get_width(buffer: *mut wl_shm_buffer) -> i32;
+
     pub fn wl_shm_buffer_ref_pool(buffer: *mut wl_shm_buffer) -> *mut wl_shm_pool;
+
     pub fn wl_shm_pool_unref(pool: *mut wl_shm_pool);
 }
 

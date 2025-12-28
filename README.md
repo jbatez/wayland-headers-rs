@@ -9,8 +9,7 @@ This repository contains three projects:
     [wayland_client_protocol.rs](wayland-headers/src/wayland_client_protocol.rs)
     and
     [wayland_server_protocol.rs](wayland-headers/src/wayland_server_protocol.rs)
-    for the
-    `wayland-headers` Rust library.
+    for the `wayland-headers` Rust library.
   * [wayland-protocol](wayland-protocol) parses
     [wayland.xml](https://gitlab.freedesktop.org/wayland/wayland/-/blob/1.18.0/protocol/wayland.xml?ref_type=tags)
     into Rust data structures.

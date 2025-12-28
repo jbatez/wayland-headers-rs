@@ -103,7 +103,7 @@ pub struct {name} {{
             Side::Client => "listener",
             Side::Server => "interface",
         };
-        
+
         let name = format!("{interface_name}_{suffix}");
 
         let mut text = String::new();

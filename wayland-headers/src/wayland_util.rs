@@ -1,9 +1,9 @@
 use crate::prelude::*;
 
 /// Roughly equivalent to the `wl_array_for_each(pos, array)` C macro.
-/// 
+///
 /// It can only be invoked inside an `unsafe` block.
-/// 
+///
 /// The following Rust code:
 ///
 /// ```rust
@@ -42,10 +42,10 @@ macro_rules! wl_array_for_each {
 pub use wl_array_for_each;
 
 /// Roughly equivalent to the `wl_container_of(ptr, sample, member)` C macro.
-/// 
+///
 /// This version requires a pointer type to the container type as the second argument,
 /// unlike the C version which takes a sample expression.
-/// 
+///
 /// It can only be invoked inside an `unsafe` block.
 #[macro_export]
 macro_rules! wl_container_of {
@@ -65,9 +65,9 @@ macro_rules! wl_container_of {
 pub use wl_container_of;
 
 /// Roughly equivalent to the `wl_list_for_each(pos, head, member)` C macro.
-/// 
+///
 /// It can only be invoked inside an `unsafe` block.
-/// 
+///
 /// The following Rust code:
 ///
 /// ```rust
@@ -75,7 +75,7 @@ pub use wl_container_of;
 ///     contents: *mut c_char,
 ///     link: wl_list,
 /// }
-/// 
+///
 /// let message_list: *const wl_list = /*...*/;
 /// unsafe {
 ///     wl_list_for_each!(m: *mut message, message_list, link, {
@@ -91,7 +91,7 @@ pub use wl_container_of;
 ///     char *contents;
 ///     struct wl_list link;
 /// }
-/// 
+///
 /// const struct wl_list *message_list = /*...*/;
 /// struct message *m;
 /// wl_list_for_each(m, message_list, link) {
@@ -116,9 +116,9 @@ macro_rules! wl_list_for_each {
 pub use wl_list_for_each;
 
 /// Roughly equivalent to the `wl_list_for_each_reverse(pos, head, member)` C macro.
-/// 
+///
 /// It can only be invoked inside an `unsafe` block.
-/// 
+///
 /// The following Rust code:
 ///
 /// ```rust
@@ -126,7 +126,7 @@ pub use wl_list_for_each;
 ///     contents: *mut c_char,
 ///     link: wl_list,
 /// }
-/// 
+///
 /// let message_list: *const wl_list = /*...*/;
 /// unsafe {
 ///     wl_list_for_each_reverse!(m: *mut message, message_list, link, {
@@ -142,7 +142,7 @@ pub use wl_list_for_each;
 ///     char *contents;
 ///     struct wl_list link;
 /// }
-/// 
+///
 /// const struct wl_list *message_list = /*...*/;
 /// struct message *m;
 /// wl_list_for_each_reverse(m, message_list, link) {
@@ -167,11 +167,11 @@ macro_rules! wl_list_for_each_reverse {
 pub use wl_list_for_each_reverse;
 
 /// Roughly equivalent to the `wl_list_for_each_reverse_safe(pos, tmp, head, member)` C macro.
-/// 
+///
 /// This version does not require a `tmp` argument, unlike the C version.
-/// 
+///
 /// It can only be invoked inside an `unsafe` block.
-/// 
+///
 /// The following Rust code:
 ///
 /// ```rust
@@ -179,7 +179,7 @@ pub use wl_list_for_each_reverse;
 ///     contents: *mut c_char,
 ///     link: wl_list,
 /// }
-/// 
+///
 /// let message_list: *const wl_list = /*...*/;
 /// unsafe {
 ///     wl_list_for_each_reverse_safe!(m: *mut message, message_list, link, {
@@ -195,7 +195,7 @@ pub use wl_list_for_each_reverse;
 ///     char *contents;
 ///     struct wl_list link;
 /// }
-/// 
+///
 /// const struct wl_list *message_list = /*...*/;
 /// struct message *m, tmp;
 /// wl_list_for_each_reverse_safe(m, tmp, message_list, link) {
@@ -220,11 +220,11 @@ macro_rules! wl_list_for_each_reverse_safe {
 pub use wl_list_for_each_reverse_safe;
 
 /// Roughly equivalent to the `wl_list_for_each_safe(pos, tmp, head, member)` C macro.
-/// 
+///
 /// This version does not require a `tmp` argument, unlike the C version.
-/// 
+///
 /// It can only be invoked inside an `unsafe` block.
-/// 
+///
 /// The following Rust code:
 ///
 /// ```rust
@@ -232,7 +232,7 @@ pub use wl_list_for_each_reverse_safe;
 ///     contents: *mut c_char,
 ///     link: wl_list,
 /// }
-/// 
+///
 /// let message_list: *const wl_list = /*...*/;
 /// unsafe {
 ///     wl_list_for_each_safe!(m: *mut message, message_list, link, {
@@ -248,7 +248,7 @@ pub use wl_list_for_each_reverse_safe;
 ///     char *contents;
 ///     struct wl_list link;
 /// }
-/// 
+///
 /// const struct wl_list *message_list = /*...*/;
 /// struct message *m, tmp;
 /// wl_list_for_each_safe(m, tmp, message_list, link) {
@@ -317,8 +317,11 @@ pub const WL_ITERATOR_STOP: wl_iterator_result = 0;
 
 unsafe extern "C" {
     pub fn wl_array_add(array: *mut wl_array, size: usize) -> *mut c_void;
+
     pub fn wl_array_copy(array: *mut wl_array, source: *mut wl_array) -> c_int;
+
     pub fn wl_array_init(array: *mut wl_array);
+
     pub fn wl_array_release(array: *mut wl_array);
 }
 
@@ -346,10 +349,15 @@ pub extern "C" fn wl_fixed_to_int(f: wl_fixed_t) -> c_int {
 
 unsafe extern "C" {
     pub fn wl_list_empty(list: *const wl_list) -> c_int;
+
     pub fn wl_list_init(list: *mut wl_list);
+
     pub fn wl_list_insert(list: *mut wl_list, elm: *mut wl_list);
+
     pub fn wl_list_insert_list(list: *mut wl_list, other: *mut wl_list);
+
     pub fn wl_list_length(list: *const wl_list) -> c_int;
+
     pub fn wl_list_remove(elm: *mut wl_list);
 }
 
