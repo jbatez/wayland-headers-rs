@@ -26,3 +26,10 @@ those are the versions provided by
 
 Using this library does not automatically link against any `libwayland-*.so`
 libraries.
+
+## Extension Protocol `wl_interface` Statics
+
+For the extension protocol `wl_interface` statics (e.g.
+`xdg_shell_client_protocol::xdg_popup_interface`), only external declarations
+are provided. See [wayland-protocol-statics](../wayland-protocol-statics) for a
+convenient way to include their definitions in a Rust program.

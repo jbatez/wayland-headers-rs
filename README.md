@@ -1,4 +1,4 @@
-This repository contains three projects:
+This repository contains four projects:
 
   * [wayland-headers](wayland-headers) contains minimalist Rust FFI bindings for
     Wayland in a way that's roughly equivalent to the official
@@ -10,3 +10,5 @@ This repository contains three projects:
     `wayland-headers` Rust library.
   * [wayland-protocol](wayland-protocol) parses Wayland protocol XML files into
     Rust data structures.
+  * [wayland-protocol-statics](wayland-protocol-statics) provides definitions
+    for stable Wayland extension protocol `wl_interface` statics.
