@@ -4,6 +4,7 @@ members = [
     "wayland-headers",
     "wayland-headers-generator",
     "wayland-protocol",
+    "wayland-protocol-statics",
 ]
 
 [workspace.package]

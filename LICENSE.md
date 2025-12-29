@@ -1,4 +1,8 @@
-# `wayland-protocol/src/protocols/*`
+# `wayland-protocol/src/protocols/*.xml`
+
+These files each fall under their own license.
+
+# `wayland-protocol-statics/src/*/*.c`
 
 These files each fall under their own license.
 
