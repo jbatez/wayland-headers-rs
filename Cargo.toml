@@ -7,7 +7,7 @@ members = [
 ]
 
 [workspace.package]
-version = "0.1.0+1.18.0"
+version = "0.1.0+wayland-1.18.0-protocols-1.20"
 repository = "https://github.com/jbatez/wayland-headers-rs"
 keywords = [
     "wayland",

@@ -8,7 +8,7 @@ use crate::protocol::*;
 
 impl Protocol {
     /// Parses the given XML text. This library is only tested with the bundled
-    /// XML file version, but may work with others.
+    /// XML file versions, but may work with others.
     pub fn parse(xml: &str) -> Self {
         let mut parser = Parser {
             reader: Reader::from_str(xml),
@@ -17,9 +17,27 @@ impl Protocol {
     }
 
     /// Parses the bundled copy of
-    /// [wayland.xml](https://gitlab.freedesktop.org/wayland/wayland/-/blob/main/protocol/wayland.xml).
+    /// [presentation-time.xml](https://gitlab.freedesktop.org/wayland/wayland-protocols/-/blob/1.20/stable/presentation-time/presentation-time.xml?ref_type=tags).
+    pub fn presentation_time() -> Self {
+        Self::parse(include_str!("protocols/presentation-time.xml"))
+    }
+
+    /// Parses the bundled copy of
+    /// [viewporter.xml](https://gitlab.freedesktop.org/wayland/wayland-protocols/-/blob/1.20/stable/viewporter/viewporter.xml?ref_type=tags).
+    pub fn viewporter() -> Self {
+        Self::parse(include_str!("protocols/viewporter.xml"))
+    }
+
+    /// Parses the bundled copy of
+    /// [wayland.xml](https://gitlab.freedesktop.org/wayland/wayland/-/blob/1.18.0/protocol/wayland.xml?ref_type=tags).
     pub fn wayland() -> Self {
-        Self::parse(include_str!("wayland.xml"))
+        Self::parse(include_str!("protocols/wayland.xml"))
+    }
+
+    /// Parses the bundled copy of
+    /// [xdg-shell.xml](https://gitlab.freedesktop.org/wayland/wayland-protocols/-/blob/1.20/stable/xdg-shell/xdg-shell.xml?ref_type=tags).
+    pub fn xdg_shell() -> Self {
+        Self::parse(include_str!("protocols/xdg-shell.xml"))
     }
 }
 
@@ -52,7 +70,7 @@ impl<'a> Parser<'a> {
 
     fn assert_is_ws(&mut self, text: &[u8]) {
         for &b in text {
-            assert!(matches!(b, b'\n' | b'\r' | b' '));
+            assert!(matches!(b, b'\t' | b'\n' | b'\r' | b' '));
         }
     }
 
@@ -380,12 +398,26 @@ impl<'a> Parser<'a> {
             }
         }
 
-        assert_eq!(elem.is_empty, true);
+        let mut contents = Vec::new();
+        self.parse_contents(elem, |this, content| match content {
+            Content::Text(text) => this.assert_is_ws(text.as_bytes()),
+            Content::Elem(elem) => match elem.start.name().as_ref() {
+                b"description" => {
+                    let description = this.parse_description(elem);
+                    contents.push(EntryContent::Description(description));
+                }
+                _ => {
+                    panic!("unexpected elem: {elem:?}");
+                }
+            },
+        });
+
         Entry {
             name,
             since,
             summary,
             value,
+            contents,
         }
     }
 }

@@ -75,4 +75,10 @@ pub struct Entry {
     pub since: Option<String>,
     pub summary: Option<String>,
     pub value: Option<String>,
+    pub contents: Vec<EntryContent>,
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub enum EntryContent {
+    Description(Description),
 }

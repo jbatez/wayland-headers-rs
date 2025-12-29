@@ -22,28 +22,42 @@ pub(crate) struct Generator {
 }
 
 impl Generator {
-    fn new(name: String) -> Self {
+    fn new(module_name: String) -> Self {
         Self {
-            module: Module::new(name),
+            module: Module::new(module_name),
         }
     }
 
     pub(crate) fn generate() {
-        let protocol = Protocol::wayland();
+        Self::generate_protocol_modules(&Protocol::presentation_time());
+        Self::generate_protocol_modules(&Protocol::viewporter());
+        Self::generate_protocol_modules(&Protocol::wayland());
+        Self::generate_protocol_modules(&Protocol::xdg_shell());
+    }
+
+    fn generate_protocol_modules(protocol: &Protocol) {
         Self::generate_protocol_module(&protocol, Side::Client);
         Self::generate_protocol_module(&protocol, Side::Server);
     }
 
     fn generate_protocol_module(protocol: &Protocol, side: Side) {
+        let protocol_name = protocol.name.as_ref().unwrap();
+        let protocol_name = protocol_name.replace("-", "_");
         let side_name = side.name();
-        let mut generator = Generator::new(format!("wayland_{side_name}_protocol"));
-        generator.add_import_side_core(side_name);
+        let module_name = format!("{protocol_name}_{side_name}_protocol");
+
+        let mut generator = Generator::new(module_name);
+        generator.add_import_side(&protocol_name, side_name);
         generator.add_protocol(protocol, side);
         generator.module.write_file();
     }
 
-    fn add_import_side_core(&mut self, side_name: &str) {
-        let text = format!("use super::wayland_{side_name}_core::*;");
+    fn add_import_side(&mut self, protocol_name: &str, side_name: &str) {
+        let text = if protocol_name == "wayland" {
+            format!("use super::wayland_{side_name}_core::*;")
+        } else {
+            format!("use super::wayland_{side_name}::*;")
+        };
         self.module.imports.push(text);
     }
 

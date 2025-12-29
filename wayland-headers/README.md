@@ -3,8 +3,10 @@
 This library contains minimalist Rust FFI bindings for Wayland in a way that's
 roughly equivalent to the official
 [Wayland 1.18.0](https://gitlab.freedesktop.org/wayland/wayland/-/tree/1.18.0?ref_type=tags)
-headers for C/C++. It makes no attempt at providing safe or idiomatic Rust
-wrappers and doesn't rename any C identifiers to match Rust's style guidelines.
+headers for C/C++ along with the stable protocols found in
+[wayland-protocols 1.20](https://gitlab.freedesktop.org/wayland/wayland-protocols/-/tree/1.20?ref_type=tags).
+It makes no attempt at providing safe or idiomatic Rust wrappers and doesn't
+rename any C identifiers to match Rust's style guidelines.
 
 For example, the following Rust code:
 
@@ -18,8 +20,8 @@ is roughly equivalent to the following C code:
 #include <wayland-client.h>
 ```
 
-This library is based specifically on Wayland 1.18.0 since that's the version
-provided by
+This library is based specifically on Wayland 1.18.0 and protocols 1.20 since
+those are the versions provided by
 [Steam Runtime 3 'sniper'](https://gitlab.steamos.cloud/steamrt/steamrt/-/blob/steamrt/sniper/README.md).
 
 Using this library does not automatically link against any `libwayland-*.so`
