@@ -14,4 +14,19 @@ version = "0.1"
 features = ["private-xdg-shell"]
 ```
 
+Then you need to convince Rust to link to the generated static library in your own code, e.g.:
+
+```rust
+#[link(name = "wayland-protocol-statics")]
+unsafe extern "C" {}
+```
+
+or by explicitly using the crate, e.g.:
+
+```rust
+extern crate wayland_protocol_statics;
+```
+
+See [rust-lang/cargo#9391](https://github.com/rust-lang/cargo/issues/9391) for why simply having the dependency is insufficient.
+
 This library only provides C definitions. To access them from Rust, see [wayland-headers](https://crates.io/crates/wayland-headers).
