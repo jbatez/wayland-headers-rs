@@ -1,12 +1,6 @@
 # Wayland Headers for Rust
 
-This library contains minimalist Rust FFI bindings for Wayland in a way that's
-roughly equivalent to the official
-[Wayland 1.18.0](https://gitlab.freedesktop.org/wayland/wayland/-/tree/1.18.0?ref_type=tags)
-headers for C/C++ along with the stable protocols found in
-[wayland-protocols 1.20](https://gitlab.freedesktop.org/wayland/wayland-protocols/-/tree/1.20?ref_type=tags).
-It makes no attempt at providing safe or idiomatic Rust wrappers and doesn't
-rename any C identifiers to match Rust's style guidelines.
+This library contains minimalist Rust FFI bindings for Wayland in a way that's roughly equivalent to the official [Wayland 1.18.0](https://gitlab.freedesktop.org/wayland/wayland/-/tree/1.18.0?ref_type=tags) headers for C/C++ along with the stable protocols found in [wayland-protocols 1.20](https://gitlab.freedesktop.org/wayland/wayland-protocols/-/tree/1.20?ref_type=tags). It makes no attempt at providing safe or idiomatic Rust wrappers and doesn't rename any C identifiers to match Rust's style guidelines.
 
 For example, the following Rust code:
 
@@ -20,16 +14,10 @@ is roughly equivalent to the following C code:
 #include <wayland-client.h>
 ```
 
-This library is based specifically on Wayland 1.18.0 and protocols 1.20 since
-those are the versions provided by
-[Steam Runtime 3 'sniper'](https://gitlab.steamos.cloud/steamrt/steamrt/-/blob/steamrt/sniper/README.md).
+This library is based specifically on Wayland 1.18.0 and protocols 1.20 since those are the versions provided by [Steam Runtime 3 'sniper'](https://gitlab.steamos.cloud/steamrt/steamrt/-/blob/steamrt/sniper/README.md).
 
-Using this library does not automatically link against any `libwayland-*.so`
-libraries.
+Using this library does not automatically link against any `libwayland-*.so` libraries.
 
 ## Extension Protocol `wl_interface` Statics
 
-For the extension protocol `wl_interface` statics (e.g.
-`xdg_shell_client_protocol::xdg_popup_interface`), only external declarations
-are provided. See [wayland-protocol-statics](../wayland-protocol-statics) for a
-convenient way to include their definitions in a Rust program.
+For the extension protocol `wl_interface` statics (e.g. `xdg_shell_client_protocol::xdg_popup_interface`), only external declarations are provided. See [wayland-protocol-statics](https://crates.io/crates/wayland-protocol-statics) for a convenient way to include their definitions in a Rust program.

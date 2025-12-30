@@ -1,8 +1,6 @@
 # Generate Wayland Headers for Rust
 
-This program uses [wayland-protocol](../wayland-protocol) to generate
-`*_protocol` modules for the [wayland-headers](../wayland-headers) Rust
-library.
+This program uses [wayland-protocol](../wayland-protocol) to generate `*_protocol` modules for the [wayland-headers](../wayland-headers) Rust library.
 
 ## Usage
 
