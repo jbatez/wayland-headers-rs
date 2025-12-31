@@ -47,28 +47,28 @@ checksum = "0fda2ff0d084019ba4d7c6f371c95d8fd75ce3524c3cb8fb653a3023f6323e64"
 
 [[package]]
 name = "wayland-headers"
-version = "0.1.2+wayland-1.18.0-protocols-1.20"
+version = "0.2.0+wayland-1.18.0-protocols-1.20"
 dependencies = [
  "libc",
 ]
 
 [[package]]
 name = "wayland-headers-generator"
-version = "0.1.2+wayland-1.18.0-protocols-1.20"
+version = "0.2.0+wayland-1.18.0-protocols-1.20"
 dependencies = [
  "wayland-protocol",
 ]
 
 [[package]]
 name = "wayland-protocol"
-version = "0.1.2+wayland-1.18.0-protocols-1.20"
+version = "0.2.0+wayland-1.18.0-protocols-1.20"
 dependencies = [
  "quick-xml",
 ]
 
 [[package]]
 name = "wayland-protocol-statics"
-version = "0.1.2+wayland-1.18.0-protocols-1.20"
+version = "0.2.0+wayland-1.18.0-protocols-1.20"
 dependencies = [
  "cc",
 ]
