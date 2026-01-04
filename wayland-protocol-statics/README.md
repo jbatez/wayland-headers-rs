@@ -10,7 +10,7 @@ For example, if you need `xdg-shell` statics defined in your program and don't n
 
 ```toml
 [dependencies.wayland-protocol-statics]
-version = "0.1"
+version = "0.2"
 features = ["private-xdg-shell"]
 ```
 
